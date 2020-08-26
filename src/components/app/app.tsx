@@ -3,7 +3,8 @@ import {
   BrowserRouter as Router, Route, Link, Switch,
 } from 'react-router-dom';
 
-import { Table } from 'antd';
+import './app.scss';
+import { Table, Button } from 'antd';
 import 'antd/dist/antd.css';
 
 const dataSource = [
@@ -38,7 +39,7 @@ const Schedule = () => (
     <Switch>
       <Route
         path="/"
-        render={() => <Link to="/schedule"> Go to schedule</Link>}
+        render={() => <Link to="/schedule"><Button>Go to schedule</Button></Link>}
         exact
       />
       <Route

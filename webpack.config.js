@@ -1,6 +1,7 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 
 module.exports = {
@@ -55,6 +56,12 @@ module.exports = {
     }),
     new MiniCssExtractPlugin({
       filename: 'style.css',
+    }),
+    new CopyPlugin({
+      patterns: [
+        { from: './src/img/favicon.ico', to: './favicon.ico' },
+        { from: './netlify.toml', to: './netlify.toml' },
+      ],
     }),
   ],
   resolve: {

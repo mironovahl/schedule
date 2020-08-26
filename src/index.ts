@@ -1,5 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Schedule from './components/Schedule';
+import app from './components/app';
 
-ReactDOM.render(React.createElement(Schedule), document.getElementById('root'));
+ReactDOM.render(React.createElement(app), document.getElementById('root'));
