@@ -8,6 +8,7 @@ module.exports = {
   output: {
     path: path.join(__dirname, '/dist'),
     filename: 'bundle.js',
+    publicPath: '/',
   },
   module: {
     rules: [
@@ -44,6 +45,9 @@ module.exports = {
         ],
       },
     ],
+  },
+  devServer: {
+    historyApiFallback: true,
   },
   plugins: [
     // new BundleAnalyzerPlugin(),

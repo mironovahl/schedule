@@ -1,4 +1,7 @@
 import React from 'react';
+import {
+  BrowserRouter as Router, Route, Link, Switch,
+} from 'react-router-dom';
 
 import { Table } from 'antd';
 import 'antd/dist/antd.css';
@@ -31,9 +34,22 @@ const columns = [
 ];
 
 const Schedule = () => (
-  <div>
-    <Table dataSource={dataSource} columns={columns} pagination={false} />
-  </div>
+  <Router>
+    <Switch>
+      <Route
+        path="/"
+        render={() => <Link to="/schedule"> Go to schedule</Link>}
+        exact
+      />
+      <Route
+        path="/schedule"
+        render={() => <Table dataSource={dataSource} columns={columns} pagination={false} />}
+      />
+      <Route
+        render={() => <h2>404. Page not found.</h2>}
+      />
+    </Switch>
+  </Router>
 );
 
 export default Schedule;
