@@ -34,7 +34,7 @@ const columns = [
   },
 ];
 
-const Schedule = () => (
+const Schedule: React.FC = () => (
   <Router>
     <Switch>
       <Route
