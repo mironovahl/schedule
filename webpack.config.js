@@ -52,14 +52,14 @@ module.exports = {
   plugins: [
     // new BundleAnalyzerPlugin(),
     new HtmlWebpackPlugin({
-      template: './src/index.html',
+      template: './public/index.html',
     }),
     new MiniCssExtractPlugin({
       filename: 'style.css',
     }),
     new CopyPlugin({
       patterns: [
-        { from: './src/img/favicon.ico', to: './favicon.ico' },
+        { from: './public/img/favicon.ico', to: './favicon.ico' },
         { from: './netlify.toml', to: './netlify.toml' },
       ],
     }),
