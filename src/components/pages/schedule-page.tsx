@@ -1,16 +1,10 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Table } from 'antd';
 
-import { ITableData, ITableColumns } from '../../interfaces/table-interfaces';
+import BackendService from '../../services/backend-service';
 
-const dataSource: ITableData[] = [
-  {
-    key: '1',
-    date: '26.08.2020',
-    time: '10:00',
-    name: 'Schedule',
-  },
-];
+import { ITableColumns } from '../../interfaces/table-interfaces';
+import { IEvent } from '../../interfaces/backend-interfaces';
 
 const columns: ITableColumns[] = [
   {
@@ -19,19 +13,48 @@ const columns: ITableColumns[] = [
     key: 'date',
   },
   {
-    title: 'Time',
-    dataIndex: 'time',
-    key: 'time',
+    title: 'Type',
+    dataIndex: 'type',
+    key: 'type',
   },
   {
     title: 'Name',
     dataIndex: 'name',
     key: 'name',
   },
+  {
+    title: 'Description',
+    dataIndex: 'description',
+    key: 'description',
+  },
+  {
+    title: 'URL',
+    dataIndex: 'url',
+    key: 'url',
+  },
+  {
+    title: 'Place',
+    dataIndex: 'place',
+    key: 'place',
+  },
+  {
+    title: 'Comment',
+    dataIndex: 'comment',
+    key: 'comment',
+  },
 ];
 
-const SchedulePage: React.FC = () => (
-  <Table dataSource={dataSource} columns={columns} pagination={false} />
-);
+const SchedulePage: React.FC = () => {
+  const backendService = new BackendService();
+  const [tableData, setTableData] = useState<IEvent[]>();
+
+  useEffect(() => {
+    backendService.getAllEvents().then((data) => setTableData([...data]));
+  });
+
+  return (
+    <Table dataSource={tableData} columns={columns} pagination={false} />
+  );
+};
 
 export default SchedulePage;
