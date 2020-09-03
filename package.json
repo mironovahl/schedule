@@ -2,11 +2,11 @@
   "name": "react-app",
   "version": "1.0.0",
   "description": "Schedule",
-  "main": "index.js",
+  "main": "dist/index.ts",
   "scripts": {
     "start": "webpack-dev-server --mode development --open --hot",
     "build": "webpack --mode production",
-    "report": "npm run build --withReport true"
+    "lint": "npx eslint ./src/ --ext .ts,.tsx --fix"
   },
   "keywords": [],
   "author": "",
