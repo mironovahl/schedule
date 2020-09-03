@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Table } from 'antd';
 
 import BackendService from '../../services/backend-service';
-
+import PageLayout from '../page-layout';
 import { ITableColumns } from '../../interfaces/table-interfaces';
 import { IEvent } from '../../interfaces/backend-interfaces';
 
@@ -47,13 +47,22 @@ const columns: ITableColumns[] = [
 const SchedulePage: React.FC = () => {
   const backendService = new BackendService();
   const [tableData, setTableData] = useState<IEvent[]>();
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    backendService.getAllEvents().then((data) => setTableData([...data]));
-  });
+    setLoading(true);
+    backendService.getAllEvents()
+      .then((data) => {
+        setLoading(false);
+        setTableData([...data]);
+      })
+      .catch(() => setLoading(false));
+  }, []);
 
   return (
-    <Table dataSource={tableData} columns={columns} pagination={false} />
+    <PageLayout loading={loading} title="Schedule">
+      <Table dataSource={tableData} columns={columns} pagination={false} />
+    </PageLayout>
   );
 };
 
