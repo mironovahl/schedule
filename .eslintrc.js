@@ -33,6 +33,7 @@ module.exports = {
     'react/jsx-filename-extension': [2, { extensions: ['.js', '.jsx', '.ts', '.tsx'] }],
     'no-unused-vars': 'off',
     '@typescript-eslint/no-unused-vars': 'error',
+    'linebreak-style': 0,
   },
   settings: {
     'import/resolver': {
