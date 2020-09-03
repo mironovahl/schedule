@@ -1,7 +1,7 @@
 import { IEventBackend, IEvent } from '../interfaces/backend-interfaces';
 
 export default class BackendService {
-  apiBase: string = 'https://cors-schedule.herokuapp.com/rs-react-schedule.firebaseapp.com/api/team/hl12';
+  apiBase: string = 'https://rs-react-schedule.firebaseapp.com/api/team/hl12';
 
   getResource = async (url: string) => {
     const res: Response = await fetch(`${this.apiBase}${url}`, {
