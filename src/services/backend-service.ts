@@ -17,12 +17,12 @@ export default class BackendService {
 
   getAllEvents = async (): Promise<IEvent[]> => {
     const res = await this.getResource('/events');
-    return res.data.map(this.transformEvents);
+    return res.data.map(this.transformEventsToFrontend);
   }
 
   getEvent = async (id: string): Promise<IEvent> => {
     const res = await this.getResource(`/event/${id}`);
-    const transformedEvent: IEvent = this.transformEvents(res);
+    const transformedEvent: IEvent = this.transformEventsToFrontend(res);
     return transformedEvent;
   }
 
@@ -37,14 +37,11 @@ export default class BackendService {
     }
   }
 
-  setNewEvent = async () => {
-    const date = new Date().toISOString();
-    await this.postData('event', {
-      date,
-    });
+  setNewEvent = async (event: IEvent) => {
+    await this.postData('/event', this.transformEventsToBackend(event));
   }
 
-  transformEvents = (event: IEventBackend):IEvent => {
+  transformEventsToFrontend = (event: IEventBackend):IEvent => {
     const { dateTime } = event;
     const date = new Date(dateTime);
     return (
@@ -55,6 +52,25 @@ export default class BackendService {
         url: event.descriptionUrl,
         type: event.type,
         date,
+        place: event.place,
+        comment: event.comment,
+      }
+    );
+  }
+
+  transformEventsToBackend = (event: IEvent):IEventBackend => {
+    const date = new Date();
+    const dateStr = date.toISOString();
+    const timeZone = date.getTimezoneOffset().toString();
+    return (
+      {
+        id: event.id,
+        name: event.name,
+        description: event.description,
+        descriptionUrl: event.url,
+        type: event.type,
+        timeZone,
+        dateTime: dateStr,
         place: event.place,
         comment: event.comment,
       }
