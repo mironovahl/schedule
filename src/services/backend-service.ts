@@ -41,6 +41,35 @@ export default class BackendService {
     await this.postData('/event', this.transformEventsToBackend(event));
   }
 
+  putData = async (url: string, data: object) => {
+    const res: Response = await fetch(`${this.apiBase}${url}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    });
+
+    if (!res.ok) {
+      throw new Error(`Could not put ${url}, received ${res.status}`);
+    }
+  }
+
+  updateEvent = async (event: IEvent) => {
+    await this.putData(`/event/${event.id}`, this.transformEventsToBackend(event));
+  }
+
+  deleteData = async (url: string) => {
+    const res: Response = await fetch(`${this.apiBase}${url}`, {
+      method: 'DELETE',
+    });
+
+    if (!res.ok) {
+      throw new Error(`Could not put ${url}, received ${res.status}`);
+    }
+  }
+
+  deleteEvent = async (id: string) => {
+    await this.deleteData(`/event/${id}`);
+  }
+
   transformEventsToFrontend = (event: IEventBackend):IEvent => {
     const { dateTime } = event;
     const date = new Date(dateTime);
