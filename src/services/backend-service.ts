@@ -1,7 +1,7 @@
 import { IEventBackend, IEvent } from '../interfaces/backend-interfaces';
 
 export default class BackendService {
-  apiBase: string = 'https://cors-schedule.herokuapp.com/rs-react-schedule.firebaseapp.com/api/team/hl12';
+  apiBase: string = 'https://rs-react-schedule.firebaseapp.com/api/team/hl12';
 
   getResource = async (url: string) => {
     const res: Response = await fetch(`${this.apiBase}${url}`, {
@@ -18,6 +18,12 @@ export default class BackendService {
   getAllEvents = async (): Promise<IEvent[]> => {
     const res = await this.getResource('/events');
     return res.data.map(this.transformEvents);
+  }
+
+  getEvent = async (id: string): Promise<IEvent> => {
+    const res = await this.getResource(`/event/${id}`);
+    const transformedEvent: IEvent = this.transformEvents(res);
+    return transformedEvent;
   }
 
   postData = async (url: string, data: object) => {
