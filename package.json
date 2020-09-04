@@ -55,5 +55,15 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-router-dom": "^5.2.0"
+  },
+  "lint-staged": {
+    "*.{js,json,md,scss}": "prettier --write",
+    "*.{js}": "npm run lint"
+  },
+  "config": {
+    "commit-message-validator": {
+      "pattern": "^RS-(XXX|\\d{1,5}) (build|ci|chore|docs|feat|fix|perf|refactor|revert|style|test) ?\\((\\*|.{1,20})\\): ",
+      "errorMessage": "Commit message does not satisfy the requirements"
+    }
   }
 }
