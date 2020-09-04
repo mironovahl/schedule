@@ -1,7 +1,12 @@
 import React from 'react';
-import { Calendar as AntDCalendar, Empty, List } from 'antd';
+import {
+  Calendar as AntDCalendar, Empty, List,
+} from 'antd';
 import * as moment from 'moment';
+import CalendarDate from './calendar-date';
 import { IEvent } from '../../interfaces/backend-interfaces';
+
+import './calendar.scss';
 
 type CalendarProps = {
   dataSource?: IEvent[];
@@ -43,18 +48,7 @@ const Calendar: React.FC<CalendarProps> = ({ dataSource }: CalendarProps) => {
   const dateCellRender = (date: moment.Moment): React.ReactNode => {
     const data = eventsSortByDate(getDayData(date));
     return data.length
-      ? (
-        <List
-          size="small"
-          bordered
-          dataSource={data}
-          renderItem={(item) => (
-            <List.Item>
-              {item.name}
-            </List.Item>
-          )}
-        />
-      )
+      ? <CalendarDate data={data} />
       : null;
   };
 
@@ -68,7 +62,7 @@ const Calendar: React.FC<CalendarProps> = ({ dataSource }: CalendarProps) => {
           dataSource={data}
           renderItem={(item) => (
             <List.Item>
-              {item.name}
+              {`${item.name} ${item.type}`}
             </List.Item>
           )}
         />
@@ -77,11 +71,13 @@ const Calendar: React.FC<CalendarProps> = ({ dataSource }: CalendarProps) => {
   };
 
   return (
-    <AntDCalendar
-      validRange={[getBeginDate(dates), getEndDate(dates)]}
-      dateCellRender={dateCellRender}
-      monthCellRender={dateMonthRender}
-    />
+    <div className="calendar">
+      <AntDCalendar
+        validRange={[getBeginDate(dates), getEndDate(dates)]}
+        dateCellRender={dateCellRender}
+        monthCellRender={dateMonthRender}
+      />
+    </div>
   );
 };
 
