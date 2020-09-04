@@ -4,15 +4,16 @@ import moment from 'moment';
 
 const { Paragraph, Title } = Typography;
 
-const dateRenderer = (value: string) => (value
-  ? moment(value, 'YYYY-MM-DD') : '');
+const dateRenderer = (value: string) => (value ? moment(value, 'YYYY-MM-DD') : '');
 const TaskDescription: React.FC = () => {
-  const isMentor: boolean = true;
   const [title, setTitle] = useState('English for kids');
   const [description, setDescription] = useState('English for kids - приложение для изучения английских слов детьми.');
+  const isMentor: boolean = true;
+
   const date: Date = new Date();
   const dat = Intl.DateTimeFormat().format(date);
   const startDay = dateRenderer(dat);
+
   return (
     <>
       <Title level={2} editable={isMentor ? { onChange: setTitle } : false}>{title}</Title>

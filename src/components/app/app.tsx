@@ -21,7 +21,7 @@ const Schedule: React.FC = () => (
         component={SchedulePage}
       />
       <Route
-        path="/task-page"
+        path="/task-page/:id"
         component={TaskPage}
       />
       <Route
