@@ -20,6 +20,12 @@ export default class BackendService {
     return res.data.map(this.transformEvents);
   }
 
+  getEvent = async (id: string): Promise<IEvent> => {
+    const res = await this.getResource(`/event/${id}`);
+    const transformedEvent: IEvent = this.transformEvents(res);
+    return transformedEvent;
+  }
+
   postData = async (url: string, data: object) => {
     const res: Response = await fetch(`${this.apiBase}${url}`, {
       method: 'POST',
