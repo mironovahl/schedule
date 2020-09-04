@@ -4,7 +4,9 @@ import {
 } from 'react-router-dom';
 
 import './app.scss';
-import { MainPage, SchedulePage, Page404 } from '../pages';
+import {
+  MainPage, SchedulePage, Page404, TaskPage,
+} from '../pages';
 
 const Schedule: React.FC = () => (
   <Router>
@@ -17,6 +19,10 @@ const Schedule: React.FC = () => (
       <Route
         path="/schedule"
         component={SchedulePage}
+      />
+      <Route
+        path="/task-page"
+        component={TaskPage}
       />
       <Route
         component={Page404}
