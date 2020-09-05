@@ -1,9 +1,8 @@
 import React from 'react';
-import {
-  Calendar as AntDCalendar, Empty, List,
-} from 'antd';
+import { Calendar as AntDCalendar, Empty } from 'antd';
 import * as moment from 'moment';
 import CalendarDate from './calendar-date';
+import CalendarMonth from './calendar-month';
 import { IEvent } from '../../interfaces/backend-interfaces';
 
 import './calendar.scss';
@@ -55,18 +54,7 @@ const Calendar: React.FC<CalendarProps> = ({ dataSource }: CalendarProps) => {
   const dateMonthRender = (date: moment.Moment): React.ReactNode => {
     const data = eventsSortByDate(getMonthData(date));
     return data.length
-      ? (
-        <List
-          size="small"
-          bordered
-          dataSource={data}
-          renderItem={(item) => (
-            <List.Item>
-              {`${item.name} ${item.type}`}
-            </List.Item>
-          )}
-        />
-      )
+      ? <CalendarMonth data={data} />
       : null;
   };
 
