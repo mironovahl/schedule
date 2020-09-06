@@ -3,6 +3,7 @@ import { Table } from 'antd';
 
 import BackendService from '../../services/backend-service';
 import PageLayout from '../page-layout';
+import Calendar from '../calendar';
 import { ITableColumns } from '../../interfaces/table-interfaces';
 import { IEvent } from '../../interfaces/backend-interfaces';
 
@@ -61,7 +62,8 @@ const SchedulePage: React.FC = () => {
 
   return (
     <PageLayout loading={loading} title="Schedule">
-      <Table dataSource={tableData} columns={columns} pagination={false} />
+      <Table dataSource={tableData} columns={columns} pagination={false} style={{ display: 'none' }} />
+      <Calendar dataSource={tableData} />
     </PageLayout>
   );
 };

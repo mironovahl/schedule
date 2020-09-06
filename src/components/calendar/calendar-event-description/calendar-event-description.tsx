@@ -7,8 +7,23 @@ type CalendarEventDescriptionProps = {
   event: IEvent;
 };
 
-const CalendarEventDescription: React.FC<CalendarEventDescriptionProps> = ({ event }: CalendarEventDescriptionProps) => (
-  <Descriptions title={event.name} size="small" bordered column={{ xxl: 2, xl: 2, lg: 2, md: 1, sm: 1, xs: 1 }} layout="vertical">
+const CalendarEventDescription: React.FC<CalendarEventDescriptionProps> = (
+  { event }: CalendarEventDescriptionProps,
+) => (
+  <Descriptions
+    title={event.name}
+    size="small"
+    bordered
+    column={{
+      xxl: 2,
+      xl: 2,
+      lg: 2,
+      md: 1,
+      sm: 1,
+      xs: 1,
+    }}
+    layout="vertical"
+  >
     <Descriptions.Item label="Type">
       {event.type}
     </Descriptions.Item>
@@ -19,7 +34,7 @@ const CalendarEventDescription: React.FC<CalendarEventDescriptionProps> = ({ eve
       {event.description}
     </Descriptions.Item>
     <Descriptions.Item label="Url">
-      <a href={event.url} target="_blank">{event.url}</a>
+      <a href={event.url} target="_blank" rel="noreferrer">{event.url}</a>
     </Descriptions.Item>
     <Descriptions.Item label="Place">
       {event.place}
