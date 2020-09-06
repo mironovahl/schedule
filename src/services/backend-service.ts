@@ -1,3 +1,4 @@
+/* eslint-disable sonarjs/prefer-immediate-return */
 import { IEventBackend, IEvent } from '../interfaces/backend-interfaces';
 
 export default class BackendService {
@@ -22,8 +23,7 @@ export default class BackendService {
 
   getEvent = async (id: string): Promise<IEvent> => {
     const res = await this.getResource(`/event/${id}`);
-    const transformedEvent: IEvent = this.transformEventsToFrontend(res);
-    return transformedEvent;
+    return this.transformEventsToFrontend(res);
   }
 
   postData = async (url: string, data: object) => {
@@ -35,10 +35,16 @@ export default class BackendService {
     if (!res.ok) {
       throw new Error(`Could not post ${url}, received ${res.status}`);
     }
+    const content = await res.json();
+    return content;
   }
 
   setNewEvent = async (event: IEvent) => {
-    await this.postData('/event', this.transformEventsToBackend(event));
+    const res: Response = await this.postData('/event', this.transformEventsToBackend(event));
+
+    if (!res.ok) {
+      throw new Error(`Could not post event, received ${res.status}`);
+    }
   }
 
   putData = async (url: string, data: object) => {
