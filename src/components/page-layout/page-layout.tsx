@@ -12,7 +12,9 @@ const PageLayout: React.FC<TProps> = (props: TProps) => {
     <Layout style={{ background: 'transparent' }}>
       <Header title={title!} />
       <Content style={{ margin: 16 }}>
-        <Spin spinning={loading}>{children}</Spin>
+        <Spin spinning={loading} style={{ width: '100%' }}>
+          {loading ? null : children}
+        </Spin>
       </Content>
     </Layout>
   );

@@ -1,22 +1,47 @@
-import React, { useState } from 'react';
+import React, { Dispatch, SetStateAction } from 'react';
 import { Typography, DatePicker } from 'antd';
 import moment from 'moment';
+import { IEvent } from '../../interfaces/backend-interfaces';
 
 const { Paragraph, Title } = Typography;
 
-const dateRenderer = (value: string) => (value ? moment(value, 'YYYY-MM-DD') : '');
-const TaskDescription: React.FC = () => {
-  const [title, setTitle] = useState('English for kids');
-  const [description, setDescription] = useState('English for kids - приложение для изучения английских слов детьми.');
-  const isMentor: boolean = true;
+interface IProps {
+  data: IEvent | undefined;
+  setData: Dispatch<SetStateAction<IEvent | undefined>>;
+}
 
+const dateRenderer = (value: string) => (value ? moment(value, 'YYYY-MM-DD') : '');
+
+const TaskDescription: React.FC<IProps> = (props: IProps) => {
+  const { data, setData } = props;
+  console.log(data);
+
+  const isMentor: boolean = true;
   const date: Date = new Date();
   const dat = Intl.DateTimeFormat().format(date);
   const startDay = dateRenderer(dat);
 
+  const changeValue = (event: string, property: string): void => {
+    setData((oldData: IEvent | undefined) => {
+      if (oldData) {
+        const newData: IEvent = {
+          ...oldData,
+          [property]: event,
+        };
+        return newData;
+      }
+      return oldData;
+    });
+  };
+
   return (
     <>
-      <Title level={2} editable={isMentor ? { onChange: setTitle } : false}>{title}</Title>
+      <Title
+        level={2}
+        editable={isMentor ? { onChange: (e) => changeValue(e, 'name') } : false}
+      >
+        {data?.name}
+      </Title>
       <p>Начало 22.03.2020</p>
       <div>
         <p>Конец</p>
@@ -25,12 +50,16 @@ const TaskDescription: React.FC = () => {
       <p>Задание</p>
       <h3>Описание</h3>
       <Paragraph
-        editable={isMentor ? { onChange: setDescription } : false}
+        editable={isMentor ? { onChange: (e) => changeValue(e, 'description') } : false}
       >
-        {description}
+        {data?.description}
       </Paragraph>
       <h3>Комментарий</h3>
-      <Paragraph editable={isMentor ? { onChange: setTitle } : false}>{title}</Paragraph>
+      <Paragraph
+        editable={isMentor ? { onChange: (e) => changeValue(e, 'comment') } : false}
+      >
+        {data?.comment}
+      </Paragraph>
     </>
   );
 };

@@ -11,19 +11,21 @@ const TaskPage: React.FC = () => {
   const backendService = new BackendService();
   const [loading, setLoading] = useState<boolean>(true);
   const { id } = useParams<RouteParams>();
+  const [data, setData] = useState<IEvent | undefined>();
   useEffect(() => {
     setLoading(true);
     backendService.getEvent(id)
-      .then((data: IEvent) => {
+      .then((item: IEvent) => {
         setLoading(false);
-        console.log(data);
+        console.log(item);
+        setData(item);
       })
       .catch(() => setLoading(false));
   }, []);
   return (
     <>
-      <PageLayout loading={loading} title="Schedule">
-        <TaskDescription />
+      <PageLayout loading={loading} title={data?.name}>
+        <TaskDescription data={data} setData={setData} />
       </PageLayout>
 
     </>
