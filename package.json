@@ -6,7 +6,8 @@
   "scripts": {
     "start": "webpack-dev-server --mode development --open --hot",
     "build": "webpack --mode production",
-    "lint": "npx eslint ./src/ --ext .ts,.tsx --fix"
+    "lint": "npx eslint ./src/ --ext .ts,.tsx --fix",
+    "clean:dist": "rimraf dist"
   },
   "keywords": [],
   "author": "",
