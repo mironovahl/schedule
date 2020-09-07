@@ -1,8 +1,10 @@
 .calendar {
-  &__date {
-    overflow-x: hidden;
+  &__settings {
+    display: flex;
+    justify-content: flex-end;
+    min-width: 100px;
   }
-  &__month {
-
+  &__selected-date {
+    text-align: center;
   }
 }

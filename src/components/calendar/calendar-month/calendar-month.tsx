@@ -21,7 +21,7 @@ const CalendarMonth: React.FC<CalendarMonthProps> = ({ data }: CalendarMonthProp
           color={color}
           style={{ width: '95%', overflow: 'hidden', textOverflow: 'ellipsis' }}
         >
-          {`${moment(event.date).format('MMMM Do, h:mm')} ${event.name}`}
+          {`${moment(event.date).format('MMMM Do, H:mm')} ${event.name}`}
         </Tag>
       </Popover>
     );
