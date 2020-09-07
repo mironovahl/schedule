@@ -1,0 +1,19 @@
+.taskDescription {
+  width: 1020px;
+  margin: auto;
+}
+
+.taskDescription_date {
+  display: flex;
+  margin: 5px 0;
+}
+
+.taskDescription_date-day {
+  width: 150px;
+  &:first-child {
+    margin-right: 5px;
+  }
+  &:last-child {
+    margin-left: 5px;
+  }
+}

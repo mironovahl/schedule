@@ -11,7 +11,7 @@ const TaskPage: React.FC = () => {
   const backendService = new BackendService();
   const [loading, setLoading] = useState<boolean>(true);
   const { id } = useParams<RouteParams>();
-  const [data, setData] = useState<IEvent | undefined>();
+  const [data, setData] = useState<IEvent | null>(null);
   useEffect(() => {
     setLoading(true);
     backendService.getEvent(id)
@@ -25,7 +25,7 @@ const TaskPage: React.FC = () => {
   return (
     <>
       <PageLayout loading={loading} title={data?.name}>
-        <TaskDescription data={data} setData={setData} />
+        {data ? <TaskDescription data={data} setData={setData} /> : null}
       </PageLayout>
 
     </>

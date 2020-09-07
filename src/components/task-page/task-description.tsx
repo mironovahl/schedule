@@ -2,27 +2,31 @@ import React, { Dispatch, SetStateAction } from 'react';
 import { Typography, DatePicker } from 'antd';
 import moment from 'moment';
 import { IEvent } from '../../interfaces/backend-interfaces';
+import './task-description.scss';
+import RenderTag from '../type-task';
 
 const { Paragraph, Title } = Typography;
 
 interface IProps {
-  data: IEvent | undefined;
-  setData: Dispatch<SetStateAction<IEvent | undefined>>;
+  data: IEvent;
+  setData: Dispatch<SetStateAction<IEvent | null>>;
 }
 
-const dateRenderer = (value: string) => (value ? moment(value, 'YYYY-MM-DD') : '');
+const dateRenderer = (value: string):string => (value
+  ? moment(value, 'DD-MM-YYYY')
+    .format('DD-MM-YYYY')
+  : '');
 
 const TaskDescription: React.FC<IProps> = (props: IProps) => {
   const { data, setData } = props;
-  console.log(data);
 
   const isMentor: boolean = true;
-  const date: Date = new Date();
+
+  const date = data?.date;
   const dat = Intl.DateTimeFormat().format(date);
   const startDay = dateRenderer(dat);
-
   const changeValue = (event: string, property: string): void => {
-    setData((oldData: IEvent | undefined) => {
+    setData((oldData: IEvent | null) => {
       if (oldData) {
         const newData: IEvent = {
           ...oldData,
@@ -36,30 +40,38 @@ const TaskDescription: React.FC<IProps> = (props: IProps) => {
 
   return (
     <>
-      <Title
-        level={2}
-        editable={isMentor ? { onChange: (e) => changeValue(e, 'name') } : false}
-      >
-        {data?.name}
-      </Title>
-      <p>Начало 22.03.2020</p>
-      <div>
-        <p>Конец</p>
-        <DatePicker defaultValue={moment(startDay)} />
+      <div className="taskDescription">
+        <Title
+          level={2}
+          editable={isMentor ? { onChange: (e) => changeValue(e, 'name') } : false}
+        >
+          {data?.name}
+        </Title>
+        <RenderTag type={data.type} />
+        <div className="taskDescription_date">
+          <div className="taskDescription_date-day">
+            <span>Начало</span>
+            <DatePicker defaultValue={moment(startDay, 'DD-MM-YYYY')} format="DD-MM-YYYY" />
+          </div>
+          <div className="taskDescription_date-day">
+            <span>Конец</span>
+            <DatePicker defaultValue={moment(startDay, 'DD-MM-YYYY')} format="DD-MM-YYYY" />
+          </div>
+        </div>
+
+        <h3>Описание</h3>
+        <Paragraph
+          editable={isMentor ? { onChange: (e) => changeValue(e, 'description') } : false}
+        >
+          {data?.description}
+        </Paragraph>
+        <h3>Комментарий</h3>
+        <Paragraph
+          editable={isMentor ? { onChange: (e) => changeValue(e, 'comment') } : false}
+        >
+          {data?.comment}
+        </Paragraph>
       </div>
-      <p>Задание</p>
-      <h3>Описание</h3>
-      <Paragraph
-        editable={isMentor ? { onChange: (e) => changeValue(e, 'description') } : false}
-      >
-        {data?.description}
-      </Paragraph>
-      <h3>Комментарий</h3>
-      <Paragraph
-        editable={isMentor ? { onChange: (e) => changeValue(e, 'comment') } : false}
-      >
-        {data?.comment}
-      </Paragraph>
     </>
   );
 };
