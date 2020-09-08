@@ -1,4 +1,4 @@
-type Timezone ='Europe/London'
+type Timezone = 'Europe/London'
   | 'Europe/Warsaw'
   | 'Europe/Kiev'
   | 'Europe/Minsk'
@@ -18,24 +18,24 @@ type ITaskColors = {
 interface ITaskSettings {
   deadline: ITaskColors;
   test: ITaskColors;
-  // task: ITaskColors;
-  // jstask: ITaskColors;
-  // htmltask: ITaskColors;
-  // selfeducation: ITaskColors;
-  // externaltask: ITaskColors;
-  // codewars: ITaskColors;
-  // codejam: ITaskColors;
-  // newtask: ITaskColors;
-  // lecture: ITaskColors;
-  // 'lecture_online': ITaskColors;
-  // 'lecture_offline': ITaskColors;
-  // 'lecture_mixed': ITaskColors;
-  // 'lecture_self_study': ITaskColors;
-  // info: ITaskColors;
-  // warmup: ITaskColors;
-  // meetup: ITaskColors;
-  // workshop: ITaskColors;
-  // interview: ITaskColors;
+  task: ITaskColors;
+  jstask: ITaskColors;
+  htmltask: ITaskColors;
+  selfeducation: ITaskColors;
+  externaltask: ITaskColors;
+  codewars: ITaskColors;
+  codejam: ITaskColors;
+  newtask: ITaskColors;
+  lecture: ITaskColors;
+  'lecture_online': ITaskColors;
+  'lecture_offline': ITaskColors;
+  'lecture_mixed': ITaskColors;
+  'lecture_self_study': ITaskColors;
+  info: ITaskColors;
+  warmup: ITaskColors;
+  meetup: ITaskColors;
+  workshop: ITaskColors;
+  interview: ITaskColors;
 }
 
 export interface ISettings {
