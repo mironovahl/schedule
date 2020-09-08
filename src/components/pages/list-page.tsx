@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 
 import { List, Checkbox } from 'antd';
 
+import moment from 'moment';
+import RenderTag from '../type-task';
 import BackendService from '../../services/backend-service';
 import PageLayout from '../page-layout';
 import { IEvent } from '../../interfaces/backend-interfaces';
@@ -24,6 +26,7 @@ const ListPage: React.FC = () => {
   }, []);
 
   function onChecked(e: { target: { checked: any; }; }) {
+    // eslint-disable-next-line no-console
     console.log(`checked = ${e.target.checked}`);
   }
 
@@ -35,18 +38,16 @@ const ListPage: React.FC = () => {
         pagination={{
           pageSize: 6,
         }}
-        header={<div>Header</div>}
         renderItem={(item) => (
           <List.Item
             className="list-item"
             key={item.id}
+            actions={[<a href={`/task-page/${item.id}`} key="list-item__load-more">more</a>]}
           >
             <Checkbox onChange={onChecked} style={{ margin: 10 }} />
-            <List.Item.Meta
-              title={<a href={item.url}>{item.name}</a>}
-              description={item.type}
-            />
-            <List.Item.Meta className="list-item__description" description={item.description} />
+            <List.Item.Meta description={moment(item.date).format('DD-MM-YYYY')} />
+            <List.Item.Meta title={<a href={item.url}>{item.name}</a>} />
+            <RenderTag type={item.type} />
           </List.Item>
         )}
       />

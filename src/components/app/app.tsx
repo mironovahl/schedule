@@ -9,6 +9,7 @@ import {
   SchedulePage,
   Page404,
   ListPage,
+  TaskPage,
 } from '../pages';
 
 const Schedule: React.FC = () => (
@@ -26,6 +27,10 @@ const Schedule: React.FC = () => (
       <Route
         path="/list"
         component={ListPage}
+      />
+      <Route
+        path="/task-page/:id"
+        component={TaskPage}
       />
       <Route
         component={Page404}
