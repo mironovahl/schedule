@@ -6,6 +6,7 @@ import {
 } from 'antd';
 import { ScheduleView, Timezone } from '../../interfaces/settings-interfaces';
 import timezones from '../../config/timezones';
+import ColorSettings from './color-settings/color-settings';
 
 type SettingsBarProps = {
   view: ScheduleView;
@@ -33,6 +34,9 @@ const SettingsBar: React.FC<SettingsBarProps> = ({
             <Select.Option value={t}>{t}</Select.Option>
           ))}
         </Select>
+      </Col>
+      <Col>
+        <ColorSettings />
       </Col>
     </Row>
   </div>

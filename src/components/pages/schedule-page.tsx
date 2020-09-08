@@ -56,6 +56,10 @@ const SchedulePage: React.FC = () => {
     timezone,
     changeTimezone,
   ] = useState<SettingsInterfaces.Timezone>(Settings.getTimezone());
+  const [
+    tasksSettings,
+    changeTasksSettings,
+  ] = useState<SettingsInterfaces.ITaskSettings>(Settings.getTasksSettings());
 
   const handleChangeView = (value: SettingsInterfaces.ScheduleView): void => {
     changeView(value);
@@ -67,11 +71,26 @@ const SchedulePage: React.FC = () => {
     Settings.setTimezone(value);
   };
 
+  const changeTaskColor = (
+    taskType: keyof SettingsInterfaces.ITaskSettings,
+    color: string,
+  ): void => {
+    const newTaskColors: SettingsInterfaces.ITaskColors = {
+      ...tasksSettings[taskType],
+      color,
+    };
+    const newTaskSettings: SettingsInterfaces.ITaskSettings = {
+      ...tasksSettings,
+      [taskType]: newTaskColors,
+    };
+
+    changeTasksSettings(newTaskSettings);
+    Settings.setTaskSettings(newTaskSettings);
+  };
+
   console.log(
-    Settings.getScheduleView(),
-    Settings.getTaskColor('externaltask'),
-    Settings.getTaskFontColor('deadline'),
-    Settings.getTimezone(),
+    Settings.getAllSettings(),
+    changeTaskColor,
   );
 
   useEffect(() => {

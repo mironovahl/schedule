@@ -7,6 +7,11 @@ export default class SettingsService {
   }
 
   static getTimezone(): SettingsInterfaces.Timezone {
+    if (localStorage.getItem('timezone') === null) {
+      const timezone = Intl.DateTimeFormat()
+        .resolvedOptions().timeZone as SettingsInterfaces.Timezone;
+      SettingsService.setTimezone(timezone);
+    }
     return localStorage.getItem('timezone') as SettingsInterfaces.Timezone || defaultSettings.timezone;
   }
 
@@ -18,16 +23,23 @@ export default class SettingsService {
     return localStorage.getItem('scheduleView') as SettingsInterfaces.ScheduleView || defaultSettings.scheduleView;
   }
 
+  static getTasksSettings(): SettingsInterfaces.ITaskSettings {
+    const taskSettings: string = localStorage.getItem('taskSettings') || JSON.stringify(defaultSettings.taskSettings);
+    return JSON.parse(taskSettings);
+  }
+
+  static setTaskSettings(taskSettings: SettingsInterfaces.ITaskSettings): void {
+    localStorage.setItem('taskSettings', JSON.stringify(taskSettings));
+  }
+
   static setTaskColor(
     taskType: keyof SettingsInterfaces.ITaskSettings,
     taskColor: string,
   ): void {
-    const taskSettings: string = localStorage.getItem('taskSettings') || JSON.stringify(defaultSettings.taskSettings);
+    const taskSettings: SettingsInterfaces.ITaskSettings = SettingsService.getTasksSettings();
 
-    const newTaskSettings: SettingsInterfaces.ITaskSettings = JSON.parse(taskSettings);
-    newTaskSettings[taskType].color = taskColor;
-
-    localStorage.setItem('taskSettings', JSON.stringify(newTaskSettings));
+    taskSettings[taskType].color = taskColor;
+    localStorage.setItem('taskSettings', JSON.stringify(taskSettings));
   }
 
   static getTaskColor(taskType: keyof SettingsInterfaces.ITaskSettings): string {
@@ -41,12 +53,10 @@ export default class SettingsService {
     taskType: keyof SettingsInterfaces.ITaskSettings,
     fontColor: string,
   ): void {
-    const taskSettings: string = localStorage.getItem('taskSettings') || JSON.stringify(defaultSettings.taskSettings);
+    const taskSettings: SettingsInterfaces.ITaskSettings = SettingsService.getTasksSettings();
 
-    const newTaskSettings: typeof defaultSettings.taskSettings = JSON.parse(taskSettings);
-    newTaskSettings[taskType].fontColor = fontColor;
-
-    localStorage.setItem('taskSettings', JSON.stringify(newTaskSettings));
+    taskSettings[taskType].fontColor = fontColor;
+    localStorage.setItem('taskSettings', JSON.stringify(taskSettings));
   }
 
   static getTaskFontColor(taskType: keyof SettingsInterfaces.ITaskSettings): string {
@@ -54,5 +64,17 @@ export default class SettingsService {
     return taskSettings !== null
       ? JSON.parse(taskSettings)[taskType].fontColor
       : defaultSettings.taskSettings[taskType].fontColor;
+  }
+
+  static getAllSettings(): SettingsInterfaces.ISettings {
+    const scheduleView: SettingsInterfaces.ScheduleView = SettingsService.getScheduleView();
+    const timezone: SettingsInterfaces.Timezone = SettingsService.getTimezone();
+    const taskSettings: SettingsInterfaces.ITaskSettings = SettingsService.getTasksSettings();
+
+    return {
+      scheduleView,
+      timezone,
+      taskSettings,
+    };
   }
 }
