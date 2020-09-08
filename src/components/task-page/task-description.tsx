@@ -1,32 +1,23 @@
 import React, { Dispatch, SetStateAction } from 'react';
 import { Typography, DatePicker } from 'antd';
-import moment from 'moment';
 import { IEvent } from '../../interfaces/backend-interfaces';
 import './task-description.scss';
 import RenderTag from '../type-task';
 
 const { Paragraph, Title } = Typography;
 
-const dateFormat = 'DD-MM-YYYY';
-
 interface IProps {
   data: IEvent;
   setData: Dispatch<SetStateAction<IEvent | null>>;
 }
-
-const dateRenderer = (value: string):string => (value
-  ? moment(value, dateFormat)
-    .format(dateFormat)
-  : '');
 
 const TaskDescription: React.FC<IProps> = (props: IProps) => {
   const { data, setData } = props;
 
   const isMentor: boolean = true;
 
-  const date = data?.date;
-  const dat = Intl.DateTimeFormat().format(date);
-  const startDay = dateRenderer(dat);
+  const { date } = data;
+  const startDay = date;
   const changeValue = (event: string, property: string): void => {
     setData((oldData: IEvent | null) => {
       if (oldData) {
@@ -52,11 +43,11 @@ const TaskDescription: React.FC<IProps> = (props: IProps) => {
         <div className="taskDescription_date">
           <div className="taskDescription_date-day">
             <span>Начало</span>
-            <DatePicker defaultValue={moment(startDay, dateFormat)} format="DD-MM-YYYY" />
+            <DatePicker defaultValue={startDay} format="DD-MM-YYYY" />
           </div>
           <div className="taskDescription_date-day">
             <span>Конец</span>
-            <DatePicker defaultValue={moment(startDay, dateFormat)} format="DD-MM-YYYY" />
+            <DatePicker defaultValue={startDay} format="DD-MM-YYYY" />
           </div>
         </div>
 
