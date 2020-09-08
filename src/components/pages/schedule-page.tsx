@@ -1,51 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Table } from 'antd';
 
 import BackendService from '../../services/backend-service';
 import PageLayout from '../page-layout';
-import { ITableColumns } from '../../interfaces/table-interfaces';
+import Table from '../table';
 import { IEvent } from '../../interfaces/backend-interfaces';
 import Settings from '../../services/settings-service';
 import SettingsBar from '../settings-bar';
 import * as SettingsInterfaces from '../../interfaces/settings-interfaces';
-
-const columns: ITableColumns[] = [
-  {
-    title: 'Date',
-    dataIndex: 'date',
-    key: 'date',
-  },
-  {
-    title: 'Type',
-    dataIndex: 'type',
-    key: 'type',
-  },
-  {
-    title: 'Name',
-    dataIndex: 'name',
-    key: 'name',
-  },
-  {
-    title: 'Description',
-    dataIndex: 'description',
-    key: 'description',
-  },
-  {
-    title: 'URL',
-    dataIndex: 'url',
-    key: 'url',
-  },
-  {
-    title: 'Place',
-    dataIndex: 'place',
-    key: 'place',
-  },
-  {
-    title: 'Comment',
-    dataIndex: 'comment',
-    key: 'comment',
-  },
-];
 
 const SchedulePage: React.FC = () => {
   const backendService = new BackendService();
@@ -104,7 +65,7 @@ const SchedulePage: React.FC = () => {
   }, []);
 
   const viewMapping = {
-    table: <Table dataSource={tableData} columns={columns} pagination={false} />,
+    table: <Table dataSource={tableData} />,
     list: <div>Тут будет список</div>,
     calendar: <div>Тут будет календарь</div>,
   };
