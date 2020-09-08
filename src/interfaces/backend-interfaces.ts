@@ -16,7 +16,7 @@ export interface IEvent {
   description: string;
   url: string;
   type: string;
-  date: Date;
+  date: moment.Moment;
   place: string;
   comment: string;
 }
