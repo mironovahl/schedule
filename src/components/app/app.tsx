@@ -4,7 +4,12 @@ import {
 } from 'react-router-dom';
 
 import './app.scss';
-import { MainPage, SchedulePage, Page404 } from '../pages';
+import {
+  MainPage,
+  SchedulePage,
+  Page404,
+  ListPage,
+} from '../pages';
 
 const Schedule: React.FC = () => (
   <Router>
@@ -17,6 +22,10 @@ const Schedule: React.FC = () => (
       <Route
         path="/schedule"
         component={SchedulePage}
+      />
+      <Route
+        path="/list"
+        component={ListPage}
       />
       <Route
         component={Page404}

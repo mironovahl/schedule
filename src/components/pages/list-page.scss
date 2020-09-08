@@ -1,0 +1,6 @@
+.list-item {
+  transition: all .7s ease-in-out;
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.034);
+  }
+}
