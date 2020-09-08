@@ -52,15 +52,24 @@ const SchedulePage: React.FC = () => {
   const [tableData, setTableData] = useState<IEvent[]>();
   const [loading, setLoading] = useState<boolean>(true);
   const [view, changeView] = useState<SettingsInterfaces.ScheduleView>(Settings.getScheduleView());
+  const [
+    timezone,
+    changeTimezone,
+  ] = useState<SettingsInterfaces.Timezone>(Settings.getTimezone());
 
   const handleChangeView = (value: SettingsInterfaces.ScheduleView): void => {
     changeView(value);
     Settings.setScheduleView(value);
   };
 
+  const handleChangeTimezone = (value: SettingsInterfaces.Timezone): void => {
+    changeTimezone(value);
+    Settings.setTimezone(value);
+  };
+
   console.log(
     Settings.getScheduleView(),
-    Settings.getTaskColor('task'),
+    Settings.getTaskColor('externaltask'),
     Settings.getTaskFontColor('deadline'),
     Settings.getTimezone(),
   );
@@ -86,6 +95,8 @@ const SchedulePage: React.FC = () => {
       <SettingsBar
         view={view}
         onViewChange={handleChangeView}
+        timezone={timezone}
+        onTimezoneChange={handleChangeTimezone}
       />
       {viewMapping[view]}
     </PageLayout>
