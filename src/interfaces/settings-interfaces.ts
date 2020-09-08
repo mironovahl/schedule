@@ -1,4 +1,4 @@
-type Timezone = 'Europe/London'
+export type Timezone = 'Europe/London'
   | 'Europe/Warsaw'
   | 'Europe/Kiev'
   | 'Europe/Minsk'
@@ -8,14 +8,14 @@ type Timezone = 'Europe/London'
   | 'Asia/Tashkent'
   | 'Asia/Tbilisi';
 
-type ScheduleView = 'table' | 'calendar' | 'list';
+export type ScheduleView = 'table' | 'calendar' | 'list';
 
-type ITaskColors = {
+export type ITaskColors = {
   color: string;
   fontColor: string;
 }
 
-interface ITaskSettings {
+export interface ITaskSettings {
   deadline: ITaskColors;
   test: ITaskColors;
   task: ITaskColors;

@@ -5,6 +5,9 @@ import BackendService from '../../services/backend-service';
 import PageLayout from '../page-layout';
 import { ITableColumns } from '../../interfaces/table-interfaces';
 import { IEvent } from '../../interfaces/backend-interfaces';
+import Settings from '../../services/settings-service';
+import SettingsBar from '../settings-bar';
+import * as SettingsInterfaces from '../../interfaces/settings-interfaces';
 
 const columns: ITableColumns[] = [
   {
@@ -48,6 +51,19 @@ const SchedulePage: React.FC = () => {
   const backendService = new BackendService();
   const [tableData, setTableData] = useState<IEvent[]>();
   const [loading, setLoading] = useState<boolean>(true);
+  const [view, changeView] = useState<SettingsInterfaces.ScheduleView>(Settings.getScheduleView());
+
+  const handleChangeView = (value: SettingsInterfaces.ScheduleView): void => {
+    changeView(value);
+    Settings.setScheduleView(value);
+  };
+
+  console.log(
+    Settings.getScheduleView(),
+    Settings.getTaskColor('task'),
+    Settings.getTaskFontColor('deadline'),
+    Settings.getTimezone(),
+  );
 
   useEffect(() => {
     setLoading(true);
@@ -59,9 +75,19 @@ const SchedulePage: React.FC = () => {
       .catch(() => setLoading(false));
   }, []);
 
+  const viewMapping = {
+    table: <Table dataSource={tableData} columns={columns} pagination={false} />,
+    list: <div>Тут будет список</div>,
+    calendar: <div>Тут будет календарь</div>,
+  };
+
   return (
     <PageLayout loading={loading} title="Schedule">
-      <Table dataSource={tableData} columns={columns} pagination={false} />
+      <SettingsBar
+        view={view}
+        onViewChange={handleChangeView}
+      />
+      {viewMapping[view]}
     </PageLayout>
   );
 };
