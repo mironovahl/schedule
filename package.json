@@ -6,7 +6,8 @@
   "scripts": {
     "start": "webpack-dev-server --mode development --open --hot",
     "build": "webpack --mode production",
-    "lint": "npx eslint ./src/ --ext .ts,.tsx --fix"
+    "lint": "npx eslint ./src/ --ext .ts,.tsx --fix",
+    "clean:dist": "rimraf dist"
   },
   "keywords": [],
   "author": "",
@@ -19,6 +20,9 @@
     "@typescript-eslint/eslint-plugin": "^3.10.1",
     "@typescript-eslint/parser": "^3.10.1",
     "babel-loader": "^8.1.0",
+    "commit-message-validator": "^0.1.11",
+    "husky": "^4.2.5",
+    "lint-staged": "^10.2.2",
     "copy-webpack-plugin": "^6.0.3",
     "css-loader": "^4.2.2",
     "eslint": "^7.7.0",
@@ -51,6 +55,8 @@
     "@types/react": "^16.9.47",
     "@types/react-dom": "^16.9.8",
     "@types/react-router-dom": "^5.1.5",
+    "moment": "^2.27.0",	
+    "moment-timezone": "^0.5.31",
     "antd": "^4.6.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
@@ -64,7 +70,6 @@
     }
   },
   "lint-staged": {
-    "*.{js,json,md,scss}": "prettier --write",
     "*.{js}": "npm run lint"
   },
   "config": {
