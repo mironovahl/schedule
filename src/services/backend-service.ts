@@ -1,4 +1,5 @@
 /* eslint-disable sonarjs/prefer-immediate-return */
+import moment from 'moment';
 import { IEventBackend, IEvent } from '../interfaces/backend-interfaces';
 
 export default class BackendService {
@@ -78,7 +79,7 @@ export default class BackendService {
 
   transformEventsToFrontend = (event: IEventBackend):IEvent => {
     const { dateTime } = event;
-    const date = new Date(dateTime);
+    const date = moment(dateTime);
     return (
       {
         id: event.id,
@@ -94,9 +95,9 @@ export default class BackendService {
   }
 
   transformEventsToBackend = (event: IEvent):IEventBackend => {
-    const date = new Date();
+    const { date } = event;
     const dateStr = date.toISOString();
-    const timeZone = date.getTimezoneOffset().toString();
+    const timeZone = '0';
     return (
       {
         id: event.id,
