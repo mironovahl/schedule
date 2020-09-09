@@ -12,4 +12,18 @@ const saveToCSV = async (data: IEvent[]) => {
   saveFile(csv, 'csv');
 };
 
-export default saveToCSV;
+const saveToTXT = async (data: IEvent[]) => {
+  const text = data.map((event) => (
+    `${event.type}: ${event.name}
+${event.date.toLocaleString()}
+${event.url}
+Место проведения: ${event.place}
+Описание: ${event.description}
+Комментарий: ${event.comment}
+
+`));
+  const txt = text.join('');
+  saveFile(txt, 'txt');
+};
+
+export { saveToCSV, saveToTXT };
