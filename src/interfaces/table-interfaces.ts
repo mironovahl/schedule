@@ -4,7 +4,7 @@ export interface ITableColumns {
   dataIndex: string
   key: string
   className: string
-  render?: (value: moment.Moment | string) => JSX.Element
+  render?: (value: any) => JSX.Element
 }
 
 export interface IColumnsVisibility {

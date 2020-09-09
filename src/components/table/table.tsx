@@ -33,7 +33,7 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
       dataIndex: 'date',
       key: 'date',
       className: (columnsVisible.date) ? '' : 'hidden',
-      render: (value) => <>{moment(value).format('DD-MM-YYYY')}</>,
+      render: (value: moment.Moment) => <>{moment(value).format('DD-MM-YYYY')}</>,
     },
     {
       title: 'Time',
@@ -41,7 +41,7 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
       dataIndex: 'date',
       key: 'time',
       className: (columnsVisible.time) ? '' : 'hidden',
-      render: (value) => <>{moment(value).format('H:mm')}</>,
+      render: (value: moment.Moment) => <>{moment(value).format('H:mm')}</>,
     },
     {
       title: 'Type',
@@ -66,6 +66,7 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
       dataIndex: 'url',
       key: 'url',
       className: (columnsVisible.url) ? '' : 'hidden',
+      render: (value: string) => <a href={value} target="_blank" rel="noreferrer">{value}</a>,
     },
     {
       title: 'Place',
@@ -124,6 +125,7 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
         dataSource={dataSource}
         columns={columns}
         pagination={false}
+        // scroll={{ x: 'max-content' }}
       />
     </>
   );
