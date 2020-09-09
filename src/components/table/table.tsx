@@ -56,19 +56,13 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
       dataIndex: 'name',
       key: 'name',
       className: (columnsVisible.name) ? '' : 'hidden',
+      render: (value: string, record: IEvent) => <a href={record.url} target="_blank" rel="noreferrer">{value}</a>,
     },
     {
       title: 'Description',
       dataIndex: 'description',
       key: 'description',
       className: (columnsVisible.description) ? '' : 'hidden',
-    },
-    {
-      title: 'URL',
-      dataIndex: 'url',
-      key: 'url',
-      className: (columnsVisible.url) ? '' : 'hidden',
-      render: (value: string) => <a href={value} target="_blank" rel="noreferrer">{value}</a>,
     },
     {
       title: 'Place',
@@ -127,6 +121,7 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
         dataSource={dataSource}
         columns={columns}
         pagination={false}
+        // size="small"
         // scroll={{ x: 'max-content' }}
       />
     </>
