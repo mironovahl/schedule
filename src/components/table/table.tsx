@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import moment from 'moment';
 import {
   Table as AntDTable, Menu, Checkbox, Dropdown, Button,
 } from 'antd';
@@ -15,6 +16,7 @@ type TableProps = {
 const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
   const [columnsVisible, setColumnsVisible] = useState<IColumnsVisibility>({
     date: true,
+    time: true,
     type: true,
     name: true,
     description: true,
@@ -27,9 +29,19 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
   const columns: ITableColumns[] = [
     {
       title: 'Date',
+      width: 120,
       dataIndex: 'date',
       key: 'date',
       className: (columnsVisible.date) ? '' : 'hidden',
+      render: (value) => <>{moment(value).format('DD-MM-YYYY')}</>,
+    },
+    {
+      title: 'Time',
+      width: 60,
+      dataIndex: 'date',
+      key: 'time',
+      className: (columnsVisible.time) ? '' : 'hidden',
+      render: (value) => <>{moment(value).format('H:mm')}</>,
     },
     {
       title: 'Type',
