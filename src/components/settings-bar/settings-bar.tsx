@@ -4,7 +4,7 @@ import {
   Col,
   Select,
 } from 'antd';
-import { ScheduleView, Timezone } from '../../interfaces/settings-interfaces';
+import { ScheduleView, Timezone, ITaskSettings } from '../../interfaces/settings-interfaces';
 import timezones from '../../config/timezones';
 import ColorSettings from './color-settings/color-settings';
 
@@ -13,6 +13,8 @@ type SettingsBarProps = {
   onViewChange: (value: ScheduleView) => void;
   timezone: Timezone;
   onTimezoneChange: (value: Timezone) => void;
+  tasksSettings: ITaskSettings;
+  onTasksSettingsChange: (value: ITaskSettings) => void;
 };
 
 const SettingsBar: React.FC<SettingsBarProps> = ({
@@ -20,6 +22,8 @@ const SettingsBar: React.FC<SettingsBarProps> = ({
   onViewChange,
   timezone,
   onTimezoneChange,
+  tasksSettings,
+  onTasksSettingsChange,
 }: SettingsBarProps) => (
   <div className="settings-bar">
     <Row align="middle" justify="space-between">
@@ -36,7 +40,7 @@ const SettingsBar: React.FC<SettingsBarProps> = ({
         </Select>
       </Col>
       <Col>
-        <ColorSettings />
+        <ColorSettings defaultValue={tasksSettings} onChange={onTasksSettingsChange} />
       </Col>
     </Row>
   </div>

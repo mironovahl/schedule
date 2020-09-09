@@ -23,30 +23,18 @@ const SchedulePage: React.FC = () => {
   ] = useState<SettingsInterfaces.ITaskSettings>(Settings.getTasksSettings());
 
   const handleChangeView = (value: SettingsInterfaces.ScheduleView): void => {
-    changeView(value);
     Settings.setScheduleView(value);
+    changeView(value);
   };
 
   const handleChangeTimezone = (value: SettingsInterfaces.Timezone): void => {
-    changeTimezone(value);
     Settings.setTimezone(value);
+    changeTimezone(value);
   };
 
-  const changeTaskColor = (
-    taskType: keyof SettingsInterfaces.ITaskSettings,
-    color: string,
-  ): void => {
-    const newTaskColors: SettingsInterfaces.ITaskColors = {
-      ...tasksSettings[taskType],
-      color,
-    };
-    const newTaskSettings: SettingsInterfaces.ITaskSettings = {
-      ...tasksSettings,
-      [taskType]: newTaskColors,
-    };
-
-    changeTasksSettings(newTaskSettings);
-    Settings.setTaskSettings(newTaskSettings);
+  const changeTaskColor = (value: SettingsInterfaces.ITaskSettings): void => {
+    Settings.setTaskSettings(value);
+    changeTasksSettings(value);
   };
 
   console.log(
@@ -77,6 +65,8 @@ const SchedulePage: React.FC = () => {
         onViewChange={handleChangeView}
         timezone={timezone}
         onTimezoneChange={handleChangeTimezone}
+        tasksSettings={tasksSettings}
+        onTasksSettingsChange={changeTasksSettings}
       />
       {viewMapping[view]}
     </PageLayout>
