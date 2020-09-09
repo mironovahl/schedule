@@ -6,35 +6,9 @@ import { IEvent } from '../../../interfaces/backend-interfaces';
 
 type CalendarDateProps = {
   data: IEvent[];
-  date: moment.Moment;
 };
 
-// enum EventTypeColor {
-//   deadline = 'red',
-//   test = '#63ab91',
-//   jstask = 'green',
-//   htmltask = 'green',
-//   selfeducation = 'green',
-//   externaltask = 'green',
-//   codewars = 'green',
-//   codejam = 'green',
-//   newtask = 'green',
-//   lecture = 'blue',
-//   /* eslint-disable camelcase */
-//   lecture_online = 'blue',
-//   lecture_offline = 'blue',
-//   lecture_mixed = 'blue',
-//   lecture_self_study = 'blue',
-//   /* eslint-enable camelcase */
-//   info = '#ff7b00',
-//   warmup = '#63ab91',
-//   meetup = '#bde04a',
-//   workshop = '#bde04a',
-//   interview = '#63ab91',
-// }
-
-
-const CalendarDate: React.FC<CalendarDateProps> = ({ data, date }: CalendarDateProps) => {
+const CalendarDate: React.FC<CalendarDateProps> = ({ data }: CalendarDateProps) => {
   const renderItem = (event: IEvent): React.ReactNode => {
     const content: React.ReactNode = (
       <CalendarEventDescription event={event} />

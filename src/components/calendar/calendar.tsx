@@ -43,7 +43,7 @@ const Calendar: React.FC<CalendarProps> = ({ dataSource }: CalendarProps) => {
   if (!dataSource.length) return <CalendarNoData />;
 
   const currentDate: moment.Moment = moment();
-  const dates: moment.Moment[] = [...dataSource.map(({ date }) => moment(date)), currentDate];
+  const dates: moment.Moment[] = [...dataSource.map(({ date }) => date), currentDate];
 
   const getDayData = (date: moment.Moment): IEvent[] => dataSource
     .filter((event) => moment(event.date).isSame(date, 'day'));
@@ -61,14 +61,14 @@ const Calendar: React.FC<CalendarProps> = ({ dataSource }: CalendarProps) => {
   const [value, changeValue] = useState<moment.Moment>(moment(new Date()));
   const [selectedValue, changeSelectedValue] = useState<moment.Moment>(moment(new Date()));
 
-  const onSelect = (value: moment.Moment): void => {
-    changeValue(value);
-    changeSelectedValue(value);
+  const onSelect = (newValue: moment.Moment): void => {
+    changeValue(newValue);
+    changeSelectedValue(newValue);
   };
 
-  const onPanelChange = (value: moment.Moment): void => {
-    changeValue(value);
-  }
+  const onPanelChange = (newValue: moment.Moment): void => {
+    changeValue(newValue);
+  };
 
   type gutterSettings = {
     xs: number;
@@ -132,7 +132,7 @@ const Calendar: React.FC<CalendarProps> = ({ dataSource }: CalendarProps) => {
               </Row>
             </Col>
             <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
-              <CalendarDate data={eventsSortByDate(getDayData(value))} date={value} />
+              <CalendarDate data={eventsSortByDate(getDayData(value))} />
             </Col>
           </Row>
         </Col>

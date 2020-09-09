@@ -4,6 +4,7 @@ import BackendService from '../../services/backend-service';
 import PageLayout from '../page-layout';
 import Table from '../table';
 import { IEvent } from '../../interfaces/backend-interfaces';
+import Calendar from '../calendar';
 
 const SchedulePage: React.FC = () => {
   const backendService = new BackendService();
@@ -23,6 +24,7 @@ const SchedulePage: React.FC = () => {
   return (
     <PageLayout loading={loading} title="Schedule">
       <Table dataSource={tableData} />
+      <Calendar dataSource={tableData} />
     </PageLayout>
   );
 };
