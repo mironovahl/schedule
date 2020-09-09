@@ -3,6 +3,7 @@ import moment from 'moment';
 import {
   Table as AntDTable, Menu, Checkbox, Dropdown, Button,
 } from 'antd';
+import RenderTag from '../type-task';
 
 import { ITableColumns, IColumnsVisibility } from '../../interfaces/table-interfaces';
 import { IEvent } from '../../interfaces/backend-interfaces';
@@ -48,6 +49,7 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
       dataIndex: 'type',
       key: 'type',
       className: (columnsVisible.type) ? '' : 'hidden',
+      render: (value: string) => <RenderTag type={value} />,
     },
     {
       title: 'Name',
