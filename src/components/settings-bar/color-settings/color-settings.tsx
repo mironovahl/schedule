@@ -6,8 +6,9 @@ import {
   Col,
   List,
   Tag,
+  Popover,
 } from 'antd';
-import { ChromePicker } from 'react-color';
+import { ChromePicker, ColorResult } from 'react-color';
 import { ITaskSettings, ITaskColors } from '../../../interfaces/settings-interfaces';
 
 type ColorSettingsProps = {
@@ -36,23 +37,51 @@ const ColorSettings: React.FC<ColorSettingsProps> = ({
     changeColorSettingsVisible(false);
   };
 
-  const renderItem = (k: string) => {
-    const { color }: ITaskColors = currentSettings[k as keyof ITaskSettings];
-    const { fontColor }: ITaskColors = currentSettings[k as keyof ITaskSettings];
+  const getHandleColorChange = (
+    taskType: keyof ITaskSettings,
+  ) => ({ hex }: ColorResult) => {
+    const newColorSettings: ITaskColors = { ...currentSettings[taskType], color: hex };
+    const newCurrentSettings: ITaskSettings = { ...currentSettings, [taskType]: newColorSettings };
+    changeCurrentSettings(newCurrentSettings);
+  };
+
+  const getHandleFontColorChange = (
+    taskType: keyof ITaskSettings,
+  ) => ({ hex }: ColorResult) => {
+    const newColorSettings: ITaskColors = { ...currentSettings[taskType], fontColor: hex };
+    const newCurrentSettings: ITaskSettings = { ...currentSettings, [taskType]: newColorSettings };
+    changeCurrentSettings(newCurrentSettings);
+  };
+
+  const renderItem = (key: string) => {
+    const taskType: keyof ITaskSettings = key as keyof ITaskSettings;
+    const { color }: ITaskColors = currentSettings[taskType];
+    const { fontColor }: ITaskColors = currentSettings[taskType];
+    const tagStyle = { cursor: 'pointer' };
 
     return (
       <List.Item>
         <Row justify="space-between" style={{ width: '100%' }}>
-          <Col>{k}</Col>
-          <Col>
-            <Tag color={color}>color</Tag>
+          <Col flex="33%">{taskType}</Col>
+          <Col flex="33%">
+            <Popover trigger="click" content={<ChromePicker disableAlpha color={color} onChange={getHandleColorChange(taskType)} />}>
+              <Tag color={color} style={tagStyle}>color</Tag>
+            </Popover>
           </Col>
-          <Col>
-            <Tag style={{ color: fontColor }}>font color</Tag>
+          <Col flex="33%">
+            <Popover trigger="click" content={<ChromePicker disableAlpha color={fontColor} onChange={getHandleFontColorChange(taskType)} />}>
+              <b style={{ color: fontColor, ...tagStyle }}>font color</b>
+            </Popover>
           </Col>
         </Row>
       </List.Item>
     );
+  };
+
+  const modalStyle = {
+    maxHeight: '60vh',
+    'overflow-y': 'scroll',
+    'overflow-x': 'hidden',
   };
 
   return (
@@ -64,15 +93,14 @@ const ColorSettings: React.FC<ColorSettingsProps> = ({
         onCancel={handleCancelColorSettings}
         onOk={handleOkClick}
       >
-        <List
-          size="small"
-          bordered
-          dataSource={Object.keys(currentSettings)}
-          renderItem={renderItem}
-        />
-        <ChromePicker disableAlpha />
-        <p>Some contents...</p>
-        <p>Some contents...</p>
+        <div style={modalStyle}>
+          <List
+            size="small"
+            bordered
+            dataSource={Object.keys(currentSettings)}
+            renderItem={renderItem}
+          />
+        </div>
       </Modal>
     </>
   );

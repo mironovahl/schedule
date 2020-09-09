@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
+import { Divider } from 'antd';
 import BackendService from '../../services/backend-service';
 import PageLayout from '../page-layout';
 import Table from '../table';
@@ -39,7 +40,6 @@ const SchedulePage: React.FC = () => {
 
   console.log(
     Settings.getAllSettings(),
-    changeTaskColor,
   );
 
   useEffect(() => {
@@ -58,18 +58,26 @@ const SchedulePage: React.FC = () => {
     calendar: <div>Тут будет календарь</div>,
   };
 
+  const ThemeContext = React.createContext({
+    timezone: Settings.getTimezone(),
+    tasksSettings: Settings.getTasksSettings(),
+  });
+
   return (
-    <PageLayout loading={loading} title="Schedule">
-      <SettingsBar
-        view={view}
-        onViewChange={handleChangeView}
-        timezone={timezone}
-        onTimezoneChange={handleChangeTimezone}
-        tasksSettings={tasksSettings}
-        onTasksSettingsChange={changeTasksSettings}
-      />
-      {viewMapping[view]}
-    </PageLayout>
+    <ThemeContext.Provider value={{ timezone, tasksSettings }}>
+      <PageLayout loading={loading} title="Schedule">
+        <SettingsBar
+          view={view}
+          onViewChange={handleChangeView}
+          timezone={timezone}
+          onTimezoneChange={handleChangeTimezone}
+          tasksSettings={tasksSettings}
+          onTasksSettingsChange={changeTaskColor}
+        />
+        <Divider />
+        {viewMapping[view]}
+      </PageLayout>
+    </ThemeContext.Provider>
   );
 };
 
