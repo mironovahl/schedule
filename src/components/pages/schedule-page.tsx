@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 
 import BackendService from '../../services/backend-service';
 import PageLayout from '../page-layout';
-import Table from '../table';
+// import Table from '../table';
+import Calendar from '../calendar';
 import { IEvent } from '../../interfaces/backend-interfaces';
 
 const SchedulePage: React.FC = () => {
@@ -22,7 +23,7 @@ const SchedulePage: React.FC = () => {
 
   return (
     <PageLayout loading={loading} title="Schedule">
-      <Table dataSource={tableData} />
+      <Calendar dataSource={tableData} />
     </PageLayout>
   );
 };
