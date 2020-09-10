@@ -1,8 +1,9 @@
-import React, { Dispatch, SetStateAction } from 'react';
+import React, { Dispatch, SetStateAction, useContext } from 'react';
 import { Typography, DatePicker } from 'antd';
 import { IEvent } from '../../interfaces/backend-interfaces';
 import './task-description.scss';
 import RenderTag from '../type-task';
+import SettingsContext from '../../context/settings-context';
 
 const { Paragraph, Title } = Typography;
 
@@ -15,6 +16,9 @@ const TaskDescription: React.FC<IProps> = (props: IProps) => {
   const { data, setData } = props;
 
   const isMentor: boolean = true;
+
+  const { timezone, taskSettings } = useContext(SettingsContext);
+  console.log(timezone, taskSettings);
 
   const { date } = data;
   const startDay = date;
