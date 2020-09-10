@@ -1,9 +1,11 @@
 export interface ITableColumns {
   title: string
-  width?: number,
+  width?: number
   dataIndex?: string
   key: string
   className: string
+  ellipsis?: any
+  fixed?: any
   render?: (value: any, record?: any) => JSX.Element
 }
 
