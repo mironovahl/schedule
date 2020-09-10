@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import {
   Calendar as AntDCalendar,
   Empty,
@@ -7,10 +7,12 @@ import {
   Select,
   Divider,
 } from 'antd';
-import * as moment from 'moment';
+import * as moment from 'moment-timezone';
 import CalendarDate from './calendar-date';
 import CalendarMonth from './calendar-month';
 import { IEvent } from '../../interfaces/backend-interfaces';
+import SettingsContext from '../../context/settings-context';
+import { Timezone } from '../../interfaces/settings-interfaces';
 
 import './calendar.scss';
 
@@ -36,19 +38,26 @@ const eventsSortByDate = (events: IEvent[]): IEvent[] => events
     return 1;
   });
 
+const setTimezoneToEvents = (events: IEvent[], timezone: Timezone): IEvent[] => events
+  .map((e: IEvent) => ({ ...e, date: moment(e.date).tz(timezone) }));
+
 const CalendarNoData: React.FC = () => <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />;
 
 const Calendar: React.FC<CalendarProps> = ({ dataSource }: CalendarProps) => {
   if (!dataSource) return <CalendarNoData />;
   if (!dataSource.length) return <CalendarNoData />;
 
-  const currentDate: moment.Moment = moment();
-  const dates: moment.Moment[] = [...dataSource.map(({ date }) => date), currentDate];
+  const { timezone } = useContext(SettingsContext);
+  const parsedDataSource = setTimezoneToEvents(dataSource, timezone);
+  console.log(dataSource[0].date, dataSource[1].date, dataSource[2].date, dataSource[3].date);
 
-  const getDayData = (date: moment.Moment): IEvent[] => dataSource
+  const currentDate: moment.Moment = moment().tz(timezone);
+  const dates: moment.Moment[] = [...parsedDataSource.map(({ date }) => date), currentDate];
+
+  const getDayData = (date: moment.Moment): IEvent[] => parsedDataSource
     .filter((event) => moment(event.date).isSame(date, 'day'));
 
-  const getMonthData = (date: moment.Moment): IEvent[] => dataSource
+  const getMonthData = (date: moment.Moment): IEvent[] => parsedDataSource
     .filter((event) => moment(event.date).isSame(date, 'month'));
 
   const dateMonthRender = (date: moment.Moment): React.ReactNode => {
@@ -58,7 +67,7 @@ const Calendar: React.FC<CalendarProps> = ({ dataSource }: CalendarProps) => {
       : null;
   };
 
-  const [value, changeValue] = useState<moment.Moment>(moment(new Date()));
+  const [value, changeValue] = useState<moment.Moment>(currentDate);
   const [selectedValue, changeSelectedValue] = useState<moment.Moment>(moment(new Date()));
 
   const onSelect = (newValue: moment.Moment): void => {
@@ -110,6 +119,7 @@ const Calendar: React.FC<CalendarProps> = ({ dataSource }: CalendarProps) => {
               onSelect={onSelect}
               onPanelChange={onPanelChange}
               monthCellRender={dateMonthRender}
+              defaultValue={currentDate}
             />
           </div>
         </Col>

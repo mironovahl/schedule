@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, CSSProperties } from 'react';
 import {
   Button,
   Modal,
@@ -78,10 +78,10 @@ const ColorSettings: React.FC<ColorSettingsProps> = ({
     );
   };
 
-  const modalStyle = {
+  const modalStyle: CSSProperties = {
     maxHeight: '60vh',
-    'overflow-y': 'scroll',
-    'overflow-x': 'hidden',
+    overflowY: 'scroll',
+    overflowX: 'hidden',
   };
 
   return (

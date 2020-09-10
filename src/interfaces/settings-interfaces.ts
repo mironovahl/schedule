@@ -4,13 +4,13 @@ export type Timezone = 'Europe/London'
   | 'Europe/Minsk'
   | 'Europe/Moscow'
   | 'Europe/Volgograd'
-  | 'Europe/Yekaterinburg'
+  | 'Asia/Yekaterinburg'
   | 'Asia/Tashkent'
   | 'Asia/Tbilisi';
 
 export type ScheduleView = 'table' | 'calendar' | 'list';
 
-export type ITaskColors = {
+export interface ITaskColors {
   color: string;
   fontColor: string;
 }

@@ -1,13 +1,13 @@
-import defaultSettings from './default-settings';
+import { Timezone } from '../interfaces/settings-interfaces';
 
-const timezones: typeof defaultSettings.timezone[] = [
+const timezones: Timezone[] = [
   'Europe/London',
   'Europe/Warsaw',
   'Europe/Kiev',
   'Europe/Minsk',
   'Europe/Moscow',
   'Europe/Volgograd',
-  'Europe/Yekaterinburg',
+  'Asia/Yekaterinburg',
   'Asia/Tashkent',
   'Asia/Tbilisi',
 ];
