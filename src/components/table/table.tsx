@@ -24,6 +24,7 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
     url: true,
     place: true,
     comment: true,
+    details: true,
   });
   const [menuVisible, setMenuVisible] = useState<boolean>(false);
 
@@ -76,6 +77,13 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
       key: 'comment',
       className: (columnsVisible.comment) ? '' : 'hidden',
     },
+    {
+      title: 'Details',
+      width: 100,
+      key: 'details',
+      className: (columnsVisible.details) ? '' : 'hidden',
+      render: (record: IEvent) => <a href={`/task-page/${record.id}`}>See more</a>,
+    },
   ];
 
   const onCheckboxChange = (e: any) => {
@@ -123,6 +131,7 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
         pagination={false}
         // size="small"
         // scroll={{ x: 'max-content' }}
+        // scroll={{ x: '100vw' }}
       />
     </>
   );

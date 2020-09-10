@@ -1,7 +1,7 @@
 export interface ITableColumns {
   title: string
   width?: number,
-  dataIndex: string
+  dataIndex?: string
   key: string
   className: string
   render?: (value: any, record?: any) => JSX.Element
@@ -16,4 +16,5 @@ export interface IColumnsVisibility {
     url: boolean,
     place: boolean,
     comment: boolean,
+    details: boolean,
 }
