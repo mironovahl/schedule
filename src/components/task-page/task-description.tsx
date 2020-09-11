@@ -3,6 +3,7 @@ import { Typography, DatePicker } from 'antd';
 import { IEvent } from '../../interfaces/backend-interfaces';
 import './task-description.scss';
 import RenderTag from '../type-task';
+import TaskPlace from './task-place';
 
 const { Paragraph, Title } = Typography;
 
@@ -57,12 +58,26 @@ const TaskDescription: React.FC<IProps> = (props: IProps) => {
         >
           {data?.description}
         </Paragraph>
-        <h3>Комментарий</h3>
-        <Paragraph
-          editable={isMentor ? { onChange: (e) => changeValue(e, 'comment') } : false}
-        >
-          {data?.comment}
-        </Paragraph>
+        <div>
+          <div>
+            <h3>Место проведения</h3>
+            <TaskPlace place={data.place} />
+          </div>
+          <div>
+            <h3>Ссылка</h3>
+            <Paragraph
+              editable={isMentor ? { onChange: (e) => changeValue(e, 'url') } : false}
+            >
+              <a href={data?.url}>{data?.url}</a>
+            </Paragraph>
+            <h3>Комментарий</h3>
+            <Paragraph
+              editable={isMentor ? { onChange: (e) => changeValue(e, 'comment') } : false}
+            >
+              {data?.comment}
+            </Paragraph>
+          </div>
+        </div>
       </div>
     </>
   );
