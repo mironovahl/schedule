@@ -1,29 +1,6 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Tag } from 'antd';
-// import SettingsContext from '../context/settings-context';
-
-const colorTagName: Record<string, string> = {
-  deadline: 'red',
-  test: '#63ab91',
-  task: 'green',
-  jstask: 'green',
-  htmltask: 'green',
-  selfeducation: 'green',
-  externaltask: 'green',
-  codewars: 'green',
-  codejam: 'green',
-  newtask: 'green',
-  lecture: 'blue',
-  lecture_online: 'blue',
-  lecture_offline: 'blue',
-  lecture_mixed: 'blue',
-  lecture_self_study: 'blue',
-  info: '#ff7b00',
-  warmup: '#63ab91',
-  meetup: '#bde04a',
-  workshop: '#bde04a',
-  interview: '#63ab91',
-};
+import SettingsContext from '../context/settings-context';
 
 const EventTypeToName: Record<string, string> = {
   deadline: 'deadline',
@@ -52,9 +29,9 @@ interface IProps {
 
 const RenderTag: React.FC<IProps> = (props: IProps) => {
   const { type } = props;
-  // const { taskSettings } = useContext(SettingsContext);
+  const { taskSettings } = useContext(SettingsContext);
   return (
-    <Tag color={colorTagName[type]}>{EventTypeToName[type]}</Tag>
+    <Tag color={taskSettings[type].color}>{EventTypeToName[type]}</Tag>
   );
 };
 
