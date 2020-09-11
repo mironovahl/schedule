@@ -4,7 +4,6 @@ import {
   Empty,
   Row,
   Col,
-  Select,
   Divider,
 } from 'antd';
 import * as moment from 'moment';
@@ -122,13 +121,13 @@ const Calendar: React.FC<CalendarProps> = ({ dataSource }: CalendarProps) => {
           <Row gutter={rowGutterSettings}>
             <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
               <Row justify="end">
-                <Col>
+                {/* <Col>
                   <Select defaultValue="1" style={{ width: '100%' }}>
                     <Select.Option value="1">Day</Select.Option>
                     <Select.Option value="3">3 Days</Select.Option>
                     <Select.Option value="7">Week</Select.Option>
                   </Select>
-                </Col>
+                </Col> */}
                 <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
                   <Divider>
                     {selectedValue && selectedValue.format('MMMM Do YYYY')}
