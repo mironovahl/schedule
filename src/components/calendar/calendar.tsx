@@ -44,7 +44,7 @@ const Calendar: React.FC<CalendarProps> = ({ dataSource }: CalendarProps) => {
   if (!dataSource.length) return <CalendarNoData />;
 
   const { timezone, taskSettings } = useContext(SettingsContext);
-  console.log(timezone, taskSettings);
+  console.log(timezone, taskSettings, taskSettings['123']);
 
   const currentDate: moment.Moment = moment();
   const dates: moment.Moment[] = [...dataSource.map(({ date }) => date), currentDate];
