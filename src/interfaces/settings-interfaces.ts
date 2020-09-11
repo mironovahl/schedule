@@ -21,4 +21,6 @@ export interface ISettings {
   scheduleView: ScheduleView;
   timezone: Timezone;
   taskSettings: TaskSettings;
+  hiddenRows: string[];
+  hiddenCols: string[];
 }

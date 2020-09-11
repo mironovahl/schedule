@@ -85,6 +85,8 @@ const defaultSettings: ISettings = {
       fontColor: '#ff7b00',
     },
   },
+  hiddenRows: [],
+  hiddenCols: [],
 };
 
 export default defaultSettings;
