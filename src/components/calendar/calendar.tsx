@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import {
   Calendar as AntDCalendar,
   Empty,
@@ -11,6 +11,7 @@ import * as moment from 'moment';
 import CalendarDate from './calendar-date';
 import CalendarMonth from './calendar-month';
 import { IEvent } from '../../interfaces/backend-interfaces';
+import SettingsContext from '../../context/settings-context';
 
 import './calendar.scss';
 
@@ -42,6 +43,9 @@ const Calendar: React.FC<CalendarProps> = ({ dataSource }: CalendarProps) => {
   if (!dataSource) return <CalendarNoData />;
   if (!dataSource.length) return <CalendarNoData />;
 
+  const { timezone, taskSettings } = useContext(SettingsContext);
+  console.log(timezone, taskSettings);
+
   const currentDate: moment.Moment = moment();
   const dates: moment.Moment[] = [...dataSource.map(({ date }) => date), currentDate];
 
@@ -58,7 +62,7 @@ const Calendar: React.FC<CalendarProps> = ({ dataSource }: CalendarProps) => {
       : null;
   };
 
-  const [value, changeValue] = useState<moment.Moment>(moment(new Date()));
+  const [value, changeValue] = useState<moment.Moment>(currentDate);
   const [selectedValue, changeSelectedValue] = useState<moment.Moment>(moment(new Date()));
 
   const onSelect = (newValue: moment.Moment): void => {
@@ -110,6 +114,7 @@ const Calendar: React.FC<CalendarProps> = ({ dataSource }: CalendarProps) => {
               onSelect={onSelect}
               onPanelChange={onPanelChange}
               monthCellRender={dateMonthRender}
+              defaultValue={currentDate}
             />
           </div>
         </Col>
