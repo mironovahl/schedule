@@ -42,9 +42,10 @@ const ListPage: React.FC = () => {
           }}
           renderItem={(item) => (
             <List.Item
+              id={item.id}
               className="list-item"
               key={item.id}
-              actions={[<a href={`/task-page/${item.id}`} key="list-item__load-more">more</a>]}
+              actions={[<a href={`/task-page/${item.id}`} key="list-item__load-more">See more</a>]}
             >
               <Checkbox value={item.id} style={{ margin: 10 }} />
               <List.Item.Meta
