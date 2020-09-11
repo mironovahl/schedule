@@ -4,7 +4,11 @@ import {
   Col,
   Select,
 } from 'antd';
+<<<<<<< HEAD
 import { ScheduleView, Timezone, TaskSettings } from '../../interfaces/settings-interfaces';
+=======
+import { ScheduleView, Timezone, ITaskSettings } from '../../interfaces/settings-interfaces';
+>>>>>>> develop
 import timezones from '../../config/timezones';
 import ColorSettings from './color-settings/color-settings';
 
@@ -13,8 +17,13 @@ type SettingsBarProps = {
   onViewChange: (value: ScheduleView) => void;
   timezone: Timezone;
   onTimezoneChange: (value: Timezone) => void;
+<<<<<<< HEAD
   tasksSettings: TaskSettings;
   onTasksSettingsChange: (value: TaskSettings) => void;
+=======
+  tasksSettings: ITaskSettings;
+  onTasksSettingsChange: (value: ITaskSettings) => void;
+>>>>>>> develop
 };
 
 const SettingsBar: React.FC<SettingsBarProps> = ({
