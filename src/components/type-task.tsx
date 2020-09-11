@@ -1,5 +1,6 @@
 import React from 'react';
 import { Tag } from 'antd';
+// import SettingsContext from '../context/settings-context';
 
 const colorTagName: Record<string, string> = {
   deadline: 'red',
@@ -51,6 +52,7 @@ interface IProps {
 
 const RenderTag: React.FC<IProps> = (props: IProps) => {
   const { type } = props;
+  // const { taskSettings } = useContext(SettingsContext);
   return (
     <Tag color={colorTagName[type]}>{EventTypeToName[type]}</Tag>
   );

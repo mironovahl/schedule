@@ -13,8 +13,9 @@ import { ISettings } from '../../interfaces/settings-interfaces';
 
 const Schedule: React.FC = () => {
   const [settings, changeSettings] = useState<ISettings>(SettingsService.getAllSettings());
-  const changeContext = (newSettings: ISettings) => {
-    changeSettings(newSettings);
+  const changeContext = (newSettings: object) => {
+    SettingsService.setAllSettings({ ...settings, ...newSettings });
+    changeSettings({ ...settings, ...newSettings });
   };
 
   return (

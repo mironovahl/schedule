@@ -9,11 +9,11 @@ import {
   Popover,
 } from 'antd';
 import { ChromePicker, ColorResult } from 'react-color';
-import { ITaskSettings, ITaskColors } from '../../../interfaces/settings-interfaces';
+import { TaskSettings, ITaskColors } from '../../../interfaces/settings-interfaces';
 
 type ColorSettingsProps = {
-  defaultValue: ITaskSettings;
-  onChange: (value: ITaskSettings) => void;
+  defaultValue: TaskSettings;
+  onChange: (value: TaskSettings) => void;
 };
 
 const ColorSettings: React.FC<ColorSettingsProps> = ({
@@ -21,7 +21,7 @@ const ColorSettings: React.FC<ColorSettingsProps> = ({
   onChange,
 }: ColorSettingsProps) => {
   const [isColorSettingsVisible, changeColorSettingsVisible] = useState<boolean>(false);
-  const [currentSettings, changeCurrentSettings] = useState<ITaskSettings>({ ...defaultValue });
+  const [currentSettings, changeCurrentSettings] = useState<TaskSettings>({ ...defaultValue });
 
   const handleCancelColorSettings = (): void => {
     changeCurrentSettings(defaultValue);
@@ -38,23 +38,23 @@ const ColorSettings: React.FC<ColorSettingsProps> = ({
   };
 
   const getHandleColorChange = (
-    taskType: keyof ITaskSettings,
+    taskType: string,
   ) => ({ hex }: ColorResult) => {
     const newColorSettings: ITaskColors = { ...currentSettings[taskType], color: hex };
-    const newCurrentSettings: ITaskSettings = { ...currentSettings, [taskType]: newColorSettings };
+    const newCurrentSettings: TaskSettings = { ...currentSettings, [taskType]: newColorSettings };
     changeCurrentSettings(newCurrentSettings);
   };
 
   const getHandleFontColorChange = (
-    taskType: keyof ITaskSettings,
+    taskType: keyof TaskSettings,
   ) => ({ hex }: ColorResult) => {
     const newColorSettings: ITaskColors = { ...currentSettings[taskType], fontColor: hex };
-    const newCurrentSettings: ITaskSettings = { ...currentSettings, [taskType]: newColorSettings };
+    const newCurrentSettings: TaskSettings = { ...currentSettings, [taskType]: newColorSettings };
     changeCurrentSettings(newCurrentSettings);
   };
 
   const renderItem = (key: string) => {
-    const taskType: keyof ITaskSettings = key as keyof ITaskSettings;
+    const taskType: string = key;
     const { color }: ITaskColors = currentSettings[taskType];
     const { fontColor }: ITaskColors = currentSettings[taskType];
     const tagStyle = { cursor: 'pointer' };
