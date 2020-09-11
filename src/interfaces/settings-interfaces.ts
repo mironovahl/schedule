@@ -15,31 +15,10 @@ export interface ITaskColors {
   fontColor: string;
 }
 
-export interface ITaskSettings {
-  deadline: ITaskColors;
-  test: ITaskColors;
-  task: ITaskColors;
-  jstask: ITaskColors;
-  htmltask: ITaskColors;
-  selfeducation: ITaskColors;
-  externaltask: ITaskColors;
-  codewars: ITaskColors;
-  codejam: ITaskColors;
-  newtask: ITaskColors;
-  lecture: ITaskColors;
-  'lecture_online': ITaskColors;
-  'lecture_offline': ITaskColors;
-  'lecture_mixed': ITaskColors;
-  'lecture_self_study': ITaskColors;
-  info: ITaskColors;
-  warmup: ITaskColors;
-  meetup: ITaskColors;
-  workshop: ITaskColors;
-  interview: ITaskColors;
-}
+export type TaskSettings = Record<string, ITaskColors>;
 
 export interface ISettings {
   scheduleView: ScheduleView;
   timezone: Timezone;
-  taskSettings: ITaskSettings;
+  taskSettings: TaskSettings;
 }

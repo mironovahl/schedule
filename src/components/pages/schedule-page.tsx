@@ -6,7 +6,6 @@ import PageLayout from '../page-layout';
 import Table from '../table';
 import Calendar from '../calendar';
 import { IEvent } from '../../interfaces/backend-interfaces';
-import SettingsService from '../../services/settings-service';
 import SettingsBar from '../settings-bar';
 import * as SettingsInterfaces from '../../interfaces/settings-interfaces';
 import SettingsContext from '../../context/settings-context';
@@ -23,18 +22,15 @@ const SchedulePage: React.FC = () => {
   } = useContext(SettingsContext);
 
   const handleChangeView = (value: SettingsInterfaces.ScheduleView): void => {
-    SettingsService.setScheduleView(value);
-    changeContext({ scheduleView: value, timezone, taskSettings });
+    changeContext({ scheduleView: value });
   };
 
   const handleChangeTimezone = (value: SettingsInterfaces.Timezone): void => {
-    SettingsService.setTimezone(value);
-    changeContext({ scheduleView, timezone: value, taskSettings });
+    changeContext({ timezone: value });
   };
 
-  const changeTaskSettings = (value: SettingsInterfaces.ITaskSettings): void => {
-    SettingsService.setTaskSettings(value);
-    changeContext({ scheduleView, timezone, taskSettings: value });
+  const changeTaskSettings = (value: SettingsInterfaces.TaskSettings): void => {
+    changeContext({ taskSettings: value });
   };
 
   useEffect(() => {
