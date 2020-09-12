@@ -49,16 +49,16 @@ const Calendar: React.FC<CalendarProps> = ({ dataSource }: CalendarProps) => {
   const dates: moment.Moment[] = [...dataSource.map(({ date }) => date), currentDate];
 
   const getDayData = (date: moment.Moment): IEvent[] => dataSource
-    .filter((event) => moment(event.date).isSame(date, 'day'));
+    .filter((event) => moment(event.date)
+      .isSame(date, 'day'));
 
   const getMonthData = (date: moment.Moment): IEvent[] => dataSource
-    .filter((event) => moment(event.date).isSame(date, 'month'));
+    .filter((event) => moment(event.date)
+      .isSame(date, 'month'));
 
   const dateMonthRender = (date: moment.Moment): React.ReactNode => {
     const data = eventsSortByDate(getMonthData(date));
-    return data.length
-      ? <CalendarMonth data={data} />
-      : null;
+    return data.length ? <CalendarMonth data={data} /> : null;
   };
 
   const [value, changeValue] = useState<moment.Moment>(currentDate);
@@ -120,20 +120,7 @@ const Calendar: React.FC<CalendarProps> = ({ dataSource }: CalendarProps) => {
         <Col xs={24} sm={24} md={13} lg={15} xl={17} xxl={19}>
           <Row gutter={rowGutterSettings}>
             <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
-              <Row justify="end">
-                {/* <Col>
-                  <Select defaultValue="1" style={{ width: '100%' }}>
-                    <Select.Option value="1">Day</Select.Option>
-                    <Select.Option value="3">3 Days</Select.Option>
-                    <Select.Option value="7">Week</Select.Option>
-                  </Select>
-                </Col> */}
-                <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
-                  <Divider>
-                    {selectedValue && selectedValue.format('MMMM Do YYYY')}
-                  </Divider>
-                </Col>
-              </Row>
+              <Divider>{selectedValue && selectedValue.format('MMMM Do YYYY')}</Divider>
             </Col>
             <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
               <CalendarDate data={eventsSortByDate(getDayData(value))} />

@@ -23,12 +23,11 @@ const CalendarEventDescription: React.FC<CalendarEventDescriptionProps> = ({
       sm: 1,
       xs: 1,
     }}
-    // layout="vertical"
   >
     <Descriptions.Item label="Type">
       <RenderTag type={event.type} />
     </Descriptions.Item>
-    <Descriptions.Item label="Description" span={2}>
+    <Descriptions.Item label="Description">
       {event.description}
     </Descriptions.Item>
     <Descriptions.Item label="Date">{moment(event.date).format('MMMM Do YYYY')}</Descriptions.Item>
