@@ -1,4 +1,5 @@
 import defaultSettings from '../config/default-settings';
+import { IColumnsVisibility } from '../interfaces/table-interfaces';
 import * as SettingsInterfaces from '../interfaces/settings-interfaces';
 
 const setTimezone = (timezone: SettingsInterfaces.Timezone): void => {
@@ -17,7 +18,7 @@ const setHiddenRows = (hiddenRows: string[]): void => {
   localStorage.setItem('hiddenRows', JSON.stringify(hiddenRows));
 };
 
-const setHiddenCols = (hiddenCols: string[]): void => {
+const setHiddenCols = (hiddenCols: IColumnsVisibility): void => {
   localStorage.setItem('hiddenCols', JSON.stringify(hiddenCols));
 };
 
@@ -43,7 +44,7 @@ const getHiddenRows = (): string[] => {
   return JSON.parse(hiddenRows);
 };
 
-const getHiddenCols = (): string[] => {
+const getHiddenCols = (): IColumnsVisibility => {
   const hiddenCols: string = localStorage.getItem('hiddenCols') || JSON.stringify(defaultSettings.hiddenCols);
   return JSON.parse(hiddenCols);
 };
@@ -54,7 +55,7 @@ export default class SettingsService {
     const timezone: SettingsInterfaces.Timezone = getTimezone();
     const taskSettings: SettingsInterfaces.TaskSettings = getTasksSettings();
     const hiddenRows: string[] = getHiddenRows();
-    const hiddenCols: string[] = getHiddenCols();
+    const hiddenCols: IColumnsVisibility = getHiddenCols();
 
     return {
       scheduleView,

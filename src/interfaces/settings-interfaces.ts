@@ -1,3 +1,5 @@
+import { IColumnsVisibility } from './table-interfaces';
+
 export type Timezone = 'Europe/London'
   | 'Europe/Warsaw'
   | 'Europe/Kiev'
@@ -23,5 +25,5 @@ export interface ISettings {
   timezone: Timezone;
   taskSettings: TaskSettings;
   hiddenRows: string[];
-  hiddenCols: string[];
+  hiddenCols: IColumnsVisibility;
 }

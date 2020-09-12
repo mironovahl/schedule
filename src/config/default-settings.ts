@@ -106,7 +106,17 @@ const defaultSettings: ISettings = {
     },
   },
   hiddenRows: [],
-  hiddenCols: [],
+  hiddenCols: {
+    date: true,
+    time: true,
+    type: true,
+    name: true,
+    description: true,
+    url: true,
+    place: true,
+    comment: true,
+    details: true,
+  },
 };
 
 export default defaultSettings;
