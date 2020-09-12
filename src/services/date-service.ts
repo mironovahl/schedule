@@ -7,7 +7,6 @@ const getFullDate = (date: moment.Moment) => {
   const { timezone } = useContext(SettingsContext);
   return date.tz(timezone).format('MMMM Do YYYY');
 };
-
 const getDate = (date: moment.Moment) => {
   const { timezone } = useContext(SettingsContext);
   return date.tz(timezone).format('DD-MM-YYYY');
