@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import moment from 'moment';
 import {
-  Table as AntDTable, Menu, Checkbox, Dropdown, Button, Tooltip,
+  Table as AntDTable, Menu, Checkbox, Dropdown, Button, Tooltip, Empty,
 } from 'antd';
 import RenderTag from '../type-task';
+
+import { getDate, getTime, eventsSortByDate } from '../../services/date-service';
 
 import { ITableColumns, IColumnsVisibility } from '../../interfaces/table-interfaces';
 import { IEvent } from '../../interfaces/backend-interfaces';
@@ -15,6 +16,8 @@ type TableProps = {
 };
 
 const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
+  if (!dataSource) return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />;
+
   const [columnsVisible, setColumnsVisible] = useState<IColumnsVisibility>({
     date: true,
     time: true,
@@ -35,7 +38,7 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
       dataIndex: 'date',
       key: 'date',
       className: (columnsVisible.date) ? '' : 'hidden',
-      render: (value: moment.Moment) => <>{moment(value).format('DD-MM-YYYY')}</>,
+      render: (date) => <>{getDate(date)}</>,
     },
     {
       title: 'Time',
@@ -43,7 +46,7 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
       dataIndex: 'date',
       key: 'time',
       className: (columnsVisible.time) ? '' : 'hidden',
-      render: (value: moment.Moment) => <>{moment(value).format('H:mm')}</>,
+      render: (date) => <>{getTime(date)}</>,
     },
     {
       title: 'Type',
@@ -154,7 +157,8 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
       </Dropdown>
 
       <AntDTable
-        dataSource={dataSource}
+        // dataSource={dataSource}
+        dataSource={eventsSortByDate(dataSource)}
         columns={columns}
         pagination={false}
         size="small"
