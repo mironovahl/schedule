@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import {
   Table as AntDTable, Menu, Checkbox, Dropdown, Button, Tooltip, Empty,
 } from 'antd';
 import RenderTag from '../type-task';
+import SettingsContext from '../../context/settings-context';
 
 import { getDate, getTime, eventsSortByDate } from '../../services/date-service';
 
@@ -31,6 +32,20 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
   });
   const [menuVisible, setMenuVisible] = useState<boolean>(false);
 
+  const { taskSettings } = useContext(SettingsContext);
+  const typeFilter: { text: string; value: string; }[] = [];
+  dataSource.forEach((item) => {
+    typeFilter.push({
+      text: taskSettings[item.type].name,
+      value: item.type,
+    });
+  });
+  typeFilter.sort((a, b) => {
+    if (a.value > b.value) return 1;
+    if (a.value < b.value) return -1;
+    return 0;
+  });
+
   const columns: ITableColumns[] = [
     {
       title: 'Date',
@@ -55,6 +70,8 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
       key: 'type',
       className: (columnsVisible.type) ? '' : 'hidden',
       render: (value: string) => <RenderTag type={value} />,
+      filters: typeFilter,
+      onFilter: (value, record) => record.type.indexOf(value) === 0,
     },
     {
       title: 'Name',
@@ -157,7 +174,6 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
       </Dropdown>
 
       <AntDTable
-        // dataSource={dataSource}
         dataSource={eventsSortByDate(dataSource)}
         columns={columns}
         pagination={false}
