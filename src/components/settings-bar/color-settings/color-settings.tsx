@@ -9,11 +9,12 @@ import {
   Popover,
 } from 'antd';
 import { ChromePicker, ColorResult } from 'react-color';
-import { ITaskSettings, ITaskColors } from '../../../interfaces/settings-interfaces';
+import { TaskSettings, ITaskColors } from '../../../interfaces/settings-interfaces';
+import defaultSettings from '../../../config/default-settings';
 
 type ColorSettingsProps = {
-  defaultValue: ITaskSettings;
-  onChange: (value: ITaskSettings) => void;
+  defaultValue: TaskSettings;
+  onChange: (value: TaskSettings) => void;
 };
 
 const ColorSettings: React.FC<ColorSettingsProps> = ({
@@ -21,7 +22,7 @@ const ColorSettings: React.FC<ColorSettingsProps> = ({
   onChange,
 }: ColorSettingsProps) => {
   const [isColorSettingsVisible, changeColorSettingsVisible] = useState<boolean>(false);
-  const [currentSettings, changeCurrentSettings] = useState<ITaskSettings>({ ...defaultValue });
+  const [currentSettings, changeCurrentSettings] = useState<TaskSettings>({ ...defaultValue });
 
   const handleCancelColorSettings = (): void => {
     changeCurrentSettings(defaultValue);
@@ -38,37 +39,48 @@ const ColorSettings: React.FC<ColorSettingsProps> = ({
   };
 
   const getHandleColorChange = (
-    taskType: keyof ITaskSettings,
+    taskType: string,
   ) => ({ hex }: ColorResult) => {
     const newColorSettings: ITaskColors = { ...currentSettings[taskType], color: hex };
-    const newCurrentSettings: ITaskSettings = { ...currentSettings, [taskType]: newColorSettings };
+    const newCurrentSettings: TaskSettings = { ...currentSettings, [taskType]: newColorSettings };
     changeCurrentSettings(newCurrentSettings);
   };
 
   const getHandleFontColorChange = (
-    taskType: keyof ITaskSettings,
+    taskType: keyof TaskSettings,
   ) => ({ hex }: ColorResult) => {
     const newColorSettings: ITaskColors = { ...currentSettings[taskType], fontColor: hex };
-    const newCurrentSettings: ITaskSettings = { ...currentSettings, [taskType]: newColorSettings };
+    const newCurrentSettings: TaskSettings = { ...currentSettings, [taskType]: newColorSettings };
     changeCurrentSettings(newCurrentSettings);
   };
 
   const renderItem = (key: string) => {
-    const taskType: keyof ITaskSettings = key as keyof ITaskSettings;
+    const taskType: string = key;
     const { color }: ITaskColors = currentSettings[taskType];
     const { fontColor }: ITaskColors = currentSettings[taskType];
     const tagStyle = { cursor: 'pointer' };
 
     return (
       <List.Item>
-        <Row justify="space-between" style={{ width: '100%' }}>
-          <Col flex="33%">{taskType}</Col>
-          <Col flex="33%">
+        <Row
+          justify="space-between"
+          style={{ width: '100%' }}
+          gutter={[0, {
+            xs: 10,
+            sm: 10,
+            md: 10,
+            lg: 0,
+            xl: 0,
+            xxl: 0,
+          }]}
+        >
+          <Col xs={24} sm={24} md={24} lg={8} xl={8} xxl={8}>{taskType}</Col>
+          <Col xs={12} sm={12} md={12} lg={8} xl={8} xxl={8}>
             <Popover trigger="click" content={<ChromePicker disableAlpha color={color} onChange={getHandleColorChange(taskType)} />}>
               <Tag color={color} style={tagStyle}>color</Tag>
             </Popover>
           </Col>
-          <Col flex="33%">
+          <Col xs={12} sm={12} md={12} lg={8} xl={8} xxl={8}>
             <Popover trigger="click" content={<ChromePicker disableAlpha color={fontColor} onChange={getHandleFontColorChange(taskType)} />}>
               <b style={{ color: fontColor, ...tagStyle }}>font color</b>
             </Popover>
@@ -82,6 +94,7 @@ const ColorSettings: React.FC<ColorSettingsProps> = ({
     maxHeight: '60vh',
     overflowY: 'scroll',
     overflowX: 'hidden',
+    marginTop: '25px',
   };
 
   return (
@@ -93,6 +106,15 @@ const ColorSettings: React.FC<ColorSettingsProps> = ({
         onCancel={handleCancelColorSettings}
         onOk={handleOkClick}
       >
+        <Button
+          onClick={() => {
+            onChange(defaultSettings.taskSettings);
+            changeCurrentSettings(defaultSettings.taskSettings);
+          }}
+          type="default"
+        >
+          Reset Colors
+        </Button>
         <div style={modalStyle}>
           <List
             size="small"

@@ -1,80 +1,76 @@
 import defaultSettings from '../config/default-settings';
+import { IColumnsVisibility } from '../interfaces/table-interfaces';
 import * as SettingsInterfaces from '../interfaces/settings-interfaces';
 
+const setTimezone = (timezone: SettingsInterfaces.Timezone): void => {
+  localStorage.setItem('timezone', timezone);
+};
+
+const setScheduleView = (scheduleView: SettingsInterfaces.ScheduleView): void => {
+  localStorage.setItem('scheduleView', scheduleView);
+};
+
+const setTaskSettings = (taskSettings: SettingsInterfaces.TaskSettings): void => {
+  localStorage.setItem('taskSettings', JSON.stringify(taskSettings));
+};
+
+const setHiddenRows = (hiddenRows: string[]): void => {
+  localStorage.setItem('hiddenRows', JSON.stringify(hiddenRows));
+};
+
+const setHiddenCols = (hiddenCols: IColumnsVisibility): void => {
+  localStorage.setItem('hiddenCols', JSON.stringify(hiddenCols));
+};
+
+const getTimezone = (): SettingsInterfaces.Timezone => {
+  if (localStorage.getItem('timezone') === null) {
+    const timezone = Intl.DateTimeFormat()
+      .resolvedOptions().timeZone as SettingsInterfaces.Timezone;
+    setTimezone(timezone);
+  }
+  return localStorage.getItem('timezone') as SettingsInterfaces.Timezone || defaultSettings.timezone;
+};
+
+const getScheduleView = (): SettingsInterfaces.ScheduleView => localStorage
+  .getItem('scheduleView') as SettingsInterfaces.ScheduleView || defaultSettings.scheduleView;
+
+const getTasksSettings = (): SettingsInterfaces.TaskSettings => {
+  const taskSettings: string = localStorage.getItem('taskSettings') || JSON.stringify(defaultSettings.taskSettings);
+  return JSON.parse(taskSettings);
+};
+
+const getHiddenRows = (): string[] => {
+  const hiddenRows: string = localStorage.getItem('hiddenRows') || JSON.stringify(defaultSettings.hiddenRows);
+  return JSON.parse(hiddenRows);
+};
+
+const getHiddenCols = (): IColumnsVisibility => {
+  const hiddenCols: string = localStorage.getItem('hiddenCols') || JSON.stringify(defaultSettings.hiddenCols);
+  return JSON.parse(hiddenCols);
+};
+
 export default class SettingsService {
-  static setTimezone(timezone: SettingsInterfaces.Timezone): void {
-    localStorage.setItem('timezone', timezone);
-  }
-
-  static getTimezone(): SettingsInterfaces.Timezone {
-    if (localStorage.getItem('timezone') === null) {
-      const timezone = Intl.DateTimeFormat()
-        .resolvedOptions().timeZone as SettingsInterfaces.Timezone;
-      SettingsService.setTimezone(timezone);
-    }
-    return localStorage.getItem('timezone') as SettingsInterfaces.Timezone || defaultSettings.timezone;
-  }
-
-  static setScheduleView(scheduleView: SettingsInterfaces.ScheduleView): void {
-    localStorage.setItem('scheduleView', scheduleView);
-  }
-
-  static getScheduleView(): SettingsInterfaces.ScheduleView {
-    return localStorage.getItem('scheduleView') as SettingsInterfaces.ScheduleView || defaultSettings.scheduleView;
-  }
-
-  static getTasksSettings(): SettingsInterfaces.ITaskSettings {
-    const taskSettings: string = localStorage.getItem('taskSettings') || JSON.stringify(defaultSettings.taskSettings);
-    return JSON.parse(taskSettings);
-  }
-
-  static setTaskSettings(taskSettings: SettingsInterfaces.ITaskSettings): void {
-    localStorage.setItem('taskSettings', JSON.stringify(taskSettings));
-  }
-
-  static setTaskColor(
-    taskType: keyof SettingsInterfaces.ITaskSettings,
-    taskColor: string,
-  ): void {
-    const taskSettings: SettingsInterfaces.ITaskSettings = SettingsService.getTasksSettings();
-
-    taskSettings[taskType].color = taskColor;
-    localStorage.setItem('taskSettings', JSON.stringify(taskSettings));
-  }
-
-  static getTaskColor(taskType: keyof SettingsInterfaces.ITaskSettings): string {
-    const taskSettings: string | null = localStorage.getItem('taskSettings');
-    return taskSettings !== null
-      ? JSON.parse(taskSettings)[taskType].color
-      : defaultSettings.taskSettings[taskType].color;
-  }
-
-  static setTaskFontColor(
-    taskType: keyof SettingsInterfaces.ITaskSettings,
-    fontColor: string,
-  ): void {
-    const taskSettings: SettingsInterfaces.ITaskSettings = SettingsService.getTasksSettings();
-
-    taskSettings[taskType].fontColor = fontColor;
-    localStorage.setItem('taskSettings', JSON.stringify(taskSettings));
-  }
-
-  static getTaskFontColor(taskType: keyof SettingsInterfaces.ITaskSettings): string {
-    const taskSettings: string | null = localStorage.getItem('taskSettings');
-    return taskSettings !== null
-      ? JSON.parse(taskSettings)[taskType].fontColor
-      : defaultSettings.taskSettings[taskType].fontColor;
-  }
-
   static getAllSettings(): SettingsInterfaces.ISettings {
-    const scheduleView: SettingsInterfaces.ScheduleView = SettingsService.getScheduleView();
-    const timezone: SettingsInterfaces.Timezone = SettingsService.getTimezone();
-    const taskSettings: SettingsInterfaces.ITaskSettings = SettingsService.getTasksSettings();
+    const scheduleView: SettingsInterfaces.ScheduleView = getScheduleView();
+    const timezone: SettingsInterfaces.Timezone = getTimezone();
+    const taskSettings: SettingsInterfaces.TaskSettings = getTasksSettings();
+    const hiddenRows: string[] = getHiddenRows();
+    const hiddenCols: IColumnsVisibility = getHiddenCols();
 
     return {
       scheduleView,
       timezone,
       taskSettings,
+      hiddenRows,
+      hiddenCols,
     };
+  }
+
+  static setAllSettings(settings: SettingsInterfaces.ISettings): void {
+    setTimezone(settings.timezone);
+    setScheduleView(settings.scheduleView);
+    setTaskSettings(settings.taskSettings);
+    setHiddenRows(settings.hiddenRows);
+    setHiddenCols(settings.hiddenCols);
   }
 }
