@@ -11,6 +11,7 @@ export interface IEventBackend {
 }
 
 export interface IEvent {
+  [key: string]: any
   id: string;
   name: string;
   description: string;
