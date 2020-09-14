@@ -1,53 +1,37 @@
-import React, { useState, useEffect } from 'react';
-import { Table } from 'antd';
+import React, { useState, useEffect, useContext } from 'react';
 
+import { Divider } from 'antd';
 import BackendService from '../../services/backend-service';
 import PageLayout from '../page-layout';
-import { ITableColumns } from '../../interfaces/table-interfaces';
+import Table from '../table';
+import Calendar from '../calendar';
 import { IEvent } from '../../interfaces/backend-interfaces';
-
-const columns: ITableColumns[] = [
-  {
-    title: 'Date',
-    dataIndex: 'date',
-    key: 'date',
-  },
-  {
-    title: 'Type',
-    dataIndex: 'type',
-    key: 'type',
-  },
-  {
-    title: 'Name',
-    dataIndex: 'name',
-    key: 'name',
-  },
-  {
-    title: 'Description',
-    dataIndex: 'description',
-    key: 'description',
-  },
-  {
-    title: 'URL',
-    dataIndex: 'url',
-    key: 'url',
-  },
-  {
-    title: 'Place',
-    dataIndex: 'place',
-    key: 'place',
-  },
-  {
-    title: 'Comment',
-    dataIndex: 'comment',
-    key: 'comment',
-  },
-];
+import SettingsBar from '../settings-bar';
+import * as SettingsInterfaces from '../../interfaces/settings-interfaces';
+import SettingsContext from '../../context/settings-context';
 
 const SchedulePage: React.FC = () => {
   const backendService = new BackendService();
   const [tableData, setTableData] = useState<IEvent[]>();
   const [loading, setLoading] = useState<boolean>(true);
+  const {
+    scheduleView,
+    timezone,
+    taskSettings,
+    changeContext,
+  } = useContext(SettingsContext);
+
+  const handleChangeView = (value: SettingsInterfaces.ScheduleView): void => {
+    changeContext({ scheduleView: value });
+  };
+
+  const handleChangeTimezone = (value: SettingsInterfaces.Timezone): void => {
+    changeContext({ timezone: value });
+  };
+
+  const changeTaskSettings = (value: SettingsInterfaces.TaskSettings): void => {
+    changeContext({ taskSettings: value });
+  };
 
   useEffect(() => {
     setLoading(true);
@@ -59,9 +43,24 @@ const SchedulePage: React.FC = () => {
       .catch(() => setLoading(false));
   }, []);
 
+  const viewMapping = {
+    table: <Table dataSource={tableData} />,
+    list: <div>тут будет список</div>,
+    calendar: <Calendar dataSource={tableData} />,
+  };
+
   return (
     <PageLayout loading={loading} title="Schedule">
-      <Table dataSource={tableData} columns={columns} pagination={false} />
+      <SettingsBar
+        view={scheduleView}
+        onViewChange={handleChangeView}
+        timezone={timezone}
+        onTimezoneChange={handleChangeTimezone}
+        tasksSettings={taskSettings}
+        onTasksSettingsChange={changeTaskSettings}
+      />
+      <Divider />
+      {viewMapping[scheduleView]}
     </PageLayout>
   );
 };
