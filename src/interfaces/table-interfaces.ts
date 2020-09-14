@@ -6,8 +6,11 @@ export interface ITableColumns {
   className: string
   ellipsis?: any
   fixed?: any
-  filters?: any
-  onFilter?: (value: any, record?: any) => boolean
+  // filters?: any
+  // filterDropdown?: any
+  // filterIcon?: (filtered: any) => JSX.Element
+  // onFilter?: (value: any, record?: any) => boolean
+  // defaultFilteredValue?: string[]
   render?: (value: any, record?: any) => JSX.Element
 }
 
