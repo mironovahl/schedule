@@ -5,10 +5,11 @@ import {
   Row,
   Col,
   Divider,
+  Tag,
 } from 'antd';
 import * as moment from 'moment';
+import * as momentTz from 'moment-timezone';
 import CalendarDate from './calendar-date';
-import CalendarMonth from './calendar-month';
 import { IEvent } from '../../interfaces/backend-interfaces';
 import SettingsContext from '../../context/settings-context';
 
@@ -43,23 +44,17 @@ const Calendar: React.FC<CalendarProps> = ({ dataSource }: CalendarProps) => {
   if (!dataSource.length) return <CalendarNoData />;
 
   const { timezone, taskSettings } = useContext(SettingsContext);
-  console.log(timezone, taskSettings, taskSettings['123']);
+  const dataSourceWithTimezone = dataSource
+    .map((event: IEvent) => ({ ...event, date: momentTz(event.date).tz(timezone) }));
 
-  const currentDate: moment.Moment = moment();
-  const dates: moment.Moment[] = [...dataSource.map(({ date }) => date), currentDate];
+  const currentDate: moment.Moment = momentTz.tz(timezone);
+  const dates: moment.Moment[] = [...dataSourceWithTimezone.map(({ date }) => date), currentDate];
+  const [currentType, changeCurrentType] = useState<string>('month');
 
-  const getDayData = (date: moment.Moment): IEvent[] => dataSource
-    .filter((event) => moment(event.date)
-      .isSame(date, 'day'));
-
-  const getMonthData = (date: moment.Moment): IEvent[] => dataSource
-    .filter((event) => moment(event.date)
-      .isSame(date, 'month'));
-
-  const dateMonthRender = (date: moment.Moment): React.ReactNode => {
-    const data = eventsSortByDate(getMonthData(date));
-    return data.length ? <CalendarMonth data={data} /> : null;
-  };
+  const getDayData = (date: moment.Moment): IEvent[] => dataSourceWithTimezone
+    .filter((event) => moment(event.date).isSame(date, 'day'));
+  const getMonthData = (date: moment.Moment): IEvent[] => dataSourceWithTimezone
+    .filter((event) => moment(event.date).isSame(date, 'month'));
 
   const [value, changeValue] = useState<moment.Moment>(currentDate);
   const [selectedValue, changeSelectedValue] = useState<moment.Moment>(moment(new Date()));
@@ -69,8 +64,60 @@ const Calendar: React.FC<CalendarProps> = ({ dataSource }: CalendarProps) => {
     changeSelectedValue(newValue);
   };
 
-  const onPanelChange = (newValue: moment.Moment): void => {
+  const onPanelChange = (newValue: moment.Moment, type: string): void => {
     changeValue(newValue);
+    changeCurrentType(type);
+  };
+
+  const calendarCellRender = (date: moment.Moment): React.ReactNode => {
+    const eventsTypes: string[] = getDayData(date).map(({ type }) => type);
+    const backgroundColor: string = eventsTypes.length
+      ? taskSettings[eventsTypes[0]].color
+      : '';
+    const border: string = date.isSame(value, 'day') ? '1px solid #1890ff' : 'none';
+
+    const cellStyle = {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      width: '100%',
+    };
+
+    const tagStyle = {
+      minWidth: '65%',
+      border,
+      height: '100%',
+    };
+
+    return (
+      <div style={cellStyle}>
+        {backgroundColor !== ''
+          ? (
+            <Tag
+              color={backgroundColor}
+              style={{
+                ...tagStyle, margin: '0px',
+              }}
+            >
+              {date.date()}
+            </Tag>
+          )
+          : (
+            <div
+              style={{
+                ...tagStyle,
+                borderRadius: '2px',
+                maxHeight: '22px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              {date.date()}
+            </div>
+          )}
+      </div>
+    );
   };
 
   type gutterSettings = {
@@ -112,18 +159,25 @@ const Calendar: React.FC<CalendarProps> = ({ dataSource }: CalendarProps) => {
               value={value}
               onSelect={onSelect}
               onPanelChange={onPanelChange}
-              monthCellRender={dateMonthRender}
               defaultValue={currentDate}
+              dateFullCellRender={calendarCellRender}
             />
           </div>
         </Col>
         <Col xs={24} sm={24} md={13} lg={15} xl={17} xxl={19}>
           <Row gutter={rowGutterSettings}>
             <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
-              <Divider>{selectedValue && selectedValue.format('MMMM Do YYYY')}</Divider>
+              <Divider>
+                {currentType === 'month'
+                  ? (selectedValue && selectedValue.format('MMMM Do YYYY'))
+                  : (selectedValue && selectedValue.format('MMMM YYYY'))}
+              </Divider>
             </Col>
             <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
-              <CalendarDate data={eventsSortByDate(getDayData(value))} />
+              <CalendarDate data={currentType === 'month'
+                ? eventsSortByDate(getDayData(value))
+                : eventsSortByDate(getMonthData(value))}
+              />
             </Col>
           </Row>
         </Col>

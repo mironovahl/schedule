@@ -1,5 +1,5 @@
 import React from 'react';
-import { List, Collapse } from 'antd';
+import { List, Collapse, Empty } from 'antd';
 import CalendarEventDescription from '../calendar-event-description';
 import { IEvent } from '../../../interfaces/backend-interfaces';
 
@@ -20,7 +20,7 @@ const CalendarDate: React.FC<CalendarDateProps> = ({ data }: CalendarDateProps) 
   );
   return (
     <div className="calendar__date">
-      {data.length ? <List size="small" dataSource={data} renderItem={renderItem} /> : null}
+      {data.length ? <List size="small" dataSource={data} renderItem={renderItem} /> : <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />}
     </div>
   );
 };
