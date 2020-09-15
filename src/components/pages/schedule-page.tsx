@@ -9,6 +9,7 @@ import { IEvent } from '../../interfaces/backend-interfaces';
 import SettingsBar from '../settings-bar';
 import * as SettingsInterfaces from '../../interfaces/settings-interfaces';
 import SettingsContext from '../../context/settings-context';
+import ListPage from './list-page';
 
 const SchedulePage: React.FC = () => {
   const backendService = new BackendService();
@@ -45,7 +46,7 @@ const SchedulePage: React.FC = () => {
 
   const viewMapping = {
     table: <Table dataSource={tableData} />,
-    list: <div>тут будет список</div>,
+    list: <ListPage dataSource={tableData} />,
     calendar: <Calendar dataSource={tableData} />,
   };
 
