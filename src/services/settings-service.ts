@@ -1,4 +1,5 @@
 import defaultSettings from '../config/default-settings';
+import { IColumnsVisibility } from '../interfaces/table-interfaces';
 import * as SettingsInterfaces from '../interfaces/settings-interfaces';
 
 const setTimezone = (timezone: SettingsInterfaces.Timezone): void => {
@@ -11,6 +12,14 @@ const setScheduleView = (scheduleView: SettingsInterfaces.ScheduleView): void =>
 
 const setTaskSettings = (taskSettings: SettingsInterfaces.TaskSettings): void => {
   localStorage.setItem('taskSettings', JSON.stringify(taskSettings));
+};
+
+const setHiddenRows = (hiddenRows: string[]): void => {
+  localStorage.setItem('hiddenRows', JSON.stringify(hiddenRows));
+};
+
+const setHiddenCols = (hiddenCols: IColumnsVisibility): void => {
+  localStorage.setItem('hiddenCols', JSON.stringify(hiddenCols));
 };
 
 const getTimezone = (): SettingsInterfaces.Timezone => {
@@ -30,16 +39,30 @@ const getTasksSettings = (): SettingsInterfaces.TaskSettings => {
   return JSON.parse(taskSettings);
 };
 
+const getHiddenRows = (): string[] => {
+  const hiddenRows: string = localStorage.getItem('hiddenRows') || JSON.stringify(defaultSettings.hiddenRows);
+  return JSON.parse(hiddenRows);
+};
+
+const getHiddenCols = (): IColumnsVisibility => {
+  const hiddenCols: string = localStorage.getItem('hiddenCols') || JSON.stringify(defaultSettings.hiddenCols);
+  return JSON.parse(hiddenCols);
+};
+
 export default class SettingsService {
   static getAllSettings(): SettingsInterfaces.ISettings {
     const scheduleView: SettingsInterfaces.ScheduleView = getScheduleView();
     const timezone: SettingsInterfaces.Timezone = getTimezone();
     const taskSettings: SettingsInterfaces.TaskSettings = getTasksSettings();
+    const hiddenRows: string[] = getHiddenRows();
+    const hiddenCols: IColumnsVisibility = getHiddenCols();
 
     return {
       scheduleView,
       timezone,
       taskSettings,
+      hiddenRows,
+      hiddenCols,
     };
   }
 
@@ -47,5 +70,7 @@ export default class SettingsService {
     setTimezone(settings.timezone);
     setScheduleView(settings.scheduleView);
     setTaskSettings(settings.taskSettings);
+    setHiddenRows(settings.hiddenRows);
+    setHiddenCols(settings.hiddenCols);
   }
 }

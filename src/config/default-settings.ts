@@ -105,6 +105,18 @@ const defaultSettings: ISettings = {
       name: 'interview',
     },
   },
+  hiddenRows: [],
+  hiddenCols: {
+    date: true,
+    time: true,
+    type: true,
+    name: true,
+    description: true,
+    url: true,
+    place: true,
+    comment: true,
+    details: true,
+  },
 };
 
 export default defaultSettings;
