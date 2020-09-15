@@ -117,6 +117,7 @@ const defaultSettings: ISettings = {
     comment: true,
     details: true,
   },
+  user: 'student',
 };
 
 export default defaultSettings;
