@@ -38,7 +38,10 @@ const CalendarEventDescription: React.FC<CalendarEventDescriptionProps> = ({
       </a>
     </Descriptions.Item>
     <Descriptions.Item label="Place">{event.place}</Descriptions.Item>
-    <Descriptions.Item label="Comment" span={2}>
+    <Descriptions.Item
+      label="Comment"
+      span={2}
+    >
       {event.comment}
     </Descriptions.Item>
     <Descriptions.Item label="More info">
