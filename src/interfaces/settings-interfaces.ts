@@ -26,4 +26,5 @@ export interface ISettings {
   taskSettings: TaskSettings;
   hiddenRows: string[];
   hiddenCols: IColumnsVisibility;
+  user: string;
 }
