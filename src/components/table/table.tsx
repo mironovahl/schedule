@@ -3,10 +3,11 @@ import React, {
   // useContext,
 } from 'react';
 import {
-  Table as AntDTable, Menu, Checkbox, Dropdown, Button, Tooltip, Empty, Space, Input,
+  Table as AntDTable, Menu, Checkbox, Dropdown, Button, Tooltip, Empty,
 } from 'antd';
-import { FilterOutlined } from '@ant-design/icons';
+// import { FilterOutlined } from '@ant-design/icons';
 import RenderTag from '../type-task';
+import getTypeFilterProps from './getTypeFilterProps';
 // import SettingsContext from '../../context/settings-context';
 
 import { getDate, getTime, eventsSortByDate } from '../../services/date-service';
@@ -20,7 +21,6 @@ type TableProps = {
   dataSource: IEvent[] | undefined;
 };
 
-// eslint-disable-next-line sonarjs/cognitive-complexity
 const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
   if (!dataSource) return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />;
 
@@ -36,55 +36,6 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
     details: true,
   });
   const [menuVisible, setMenuVisible] = useState<boolean>(false);
-
-  const handleSearch = (confirm: () => void) => {
-    confirm();
-    // save to settings
-  };
-
-  const handleReset = (clearFilters: () => void) => {
-    clearFilters();
-    // save to settings
-  };
-
-  const getTypeFilterProps = (dataIndex: string) => ({
-    filterDropdown: ({
-      setSelectedKeys, selectedKeys, confirm, clearFilters,
-    }: any) => (
-      <div style={{ padding: 8 }}>
-        <Input
-          placeholder={`Filter by ${dataIndex}`}
-          value={selectedKeys[0]}
-          onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-          onPressEnter={() => handleSearch(confirm)}
-          style={{ width: 188, marginBottom: 8, display: 'block' }}
-        />
-        <Space>
-          <Button
-            type="primary"
-            onClick={() => handleSearch(confirm)}
-            size="small"
-            style={{ width: 90 }}
-          >
-            Search
-          </Button>
-          <Button onClick={() => handleReset(clearFilters)} size="small" style={{ width: 90 }}>
-            Reset
-          </Button>
-        </Space>
-      </div>
-    ),
-    // eslint- disable - next - line max-len
-    filterIcon: (filtered: any) => <FilterOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
-    onFilter: (value: any, record: { type: string | any[]; }) => record.type.indexOf(value) === 0,
-    // onFilterDropdownVisibleChange: (visible: any) => {
-    //   if (visible) {
-    //     setTimeout(() => searchInput.select(), 100);
-    //   }
-    // },
-    // defaultFilteredValue: ['task', 'js task'], // get from settings
-
-  });
 
   const columns: ITableColumns[] = [
     {
