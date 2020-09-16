@@ -77,9 +77,10 @@ export default class BackendService {
     await this.deleteData(`/event/${id}`);
   }
 
-  transformEventsToFrontend = (event: IEventBackend):IEvent => {
-    const { dateTime } = event;
-    const date = moment(dateTime);
+  transformEventsToFrontend = (event: IEventBackend): IEvent => {
+    const { dateTime: [start, end] } = event;
+    const startDate = moment(start);
+    const endDate = moment(end);
     return (
       {
         id: event.id,
@@ -87,16 +88,20 @@ export default class BackendService {
         description: event.description,
         url: event.descriptionUrl,
         type: event.type,
-        date,
+        startDate,
+        endDate,
         place: event.place,
         comment: event.comment,
+        photo: event.photo,
+        video: event.video,
       }
     );
   }
 
-  transformEventsToBackend = (event: IEvent):IEventBackend => {
-    const { date } = event;
-    const dateStr = date.toISOString();
+  transformEventsToBackend = (event: IEvent): IEventBackend => {
+    const { startDate, endDate } = event;
+    const startDateStr = startDate.toISOString();
+    const endDateStr = endDate.toISOString();
     const timeZone = '0';
     return (
       {
@@ -106,9 +111,11 @@ export default class BackendService {
         descriptionUrl: event.url,
         type: event.type,
         timeZone,
-        dateTime: dateStr,
+        dateTime: [startDateStr, endDateStr],
         place: event.place,
         comment: event.comment,
+        photo: event.photo || '',
+        video: event.video || '',
       }
     );
   }
