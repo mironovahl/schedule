@@ -9,6 +9,8 @@ import { IEvent } from '../../interfaces/backend-interfaces';
 import SettingsBar from '../settings-bar';
 import * as SettingsInterfaces from '../../interfaces/settings-interfaces';
 import SettingsContext from '../../context/settings-context';
+import MenuBar from '../menu';
+import ListPage from './list-page';
 
 const SchedulePage: React.FC = () => {
   const backendService = new BackendService();
@@ -35,7 +37,8 @@ const SchedulePage: React.FC = () => {
 
   useEffect(() => {
     setLoading(true);
-    backendService.getAllEvents()
+    backendService
+      .getAllEvents()
       .then((data) => {
         setLoading(false);
         setTableData([...data]);
@@ -45,21 +48,20 @@ const SchedulePage: React.FC = () => {
 
   const viewMapping = {
     table: <Table dataSource={tableData} />,
-    list: <div>тут будет список</div>,
+    list: <ListPage dataSource={tableData} />,
     calendar: <Calendar dataSource={tableData} />,
   };
 
   return (
     <PageLayout loading={loading} title="Schedule">
       <SettingsBar
-        view={scheduleView}
-        onViewChange={handleChangeView}
         timezone={timezone}
         onTimezoneChange={handleChangeTimezone}
         tasksSettings={taskSettings}
         onTasksSettingsChange={changeTaskSettings}
       />
       <Divider />
+      <MenuBar view={scheduleView} onViewChange={handleChangeView} />
       {viewMapping[scheduleView]}
     </PageLayout>
   );
