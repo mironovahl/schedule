@@ -41,7 +41,7 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
     {
       title: 'Date',
       width: 90,
-      dataIndex: 'date',
+      dataIndex: 'startDate',
       key: 'date',
       className: (columnsVisible.date) ? '' : 'hidden',
       render: (date) => <>{getDate(date)}</>,
@@ -49,7 +49,7 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
     {
       title: 'Time',
       width: 70,
-      dataIndex: 'date',
+      dataIndex: 'startDate',
       key: 'time',
       className: (columnsVisible.time) ? '' : 'hidden',
       render: (date) => <>{getTime(date)}</>,
