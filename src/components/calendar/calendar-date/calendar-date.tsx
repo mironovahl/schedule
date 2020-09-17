@@ -13,7 +13,7 @@ const CalendarDate: React.FC<CalendarDateProps> = ({ data }: CalendarDateProps) 
   const renderItem = (event: IEvent): React.ReactNode => (
 
     <Collapse accordion>
-      <Panel header={event.name} key="1">
+      <Panel header={event.name} key={event.id}>
         <CalendarEventDescription event={event} />
       </Panel>
     </Collapse>
