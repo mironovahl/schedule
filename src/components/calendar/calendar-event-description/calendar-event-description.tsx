@@ -30,8 +30,8 @@ const CalendarEventDescription: React.FC<CalendarEventDescriptionProps> = ({
     <Descriptions.Item label="Description">
       {event.description}
     </Descriptions.Item>
-    <Descriptions.Item label="Date">{moment(event.date).format('MMMM Do YYYY')}</Descriptions.Item>
-    <Descriptions.Item label="Time">{moment(event.date).format('h:mm')}</Descriptions.Item>
+    <Descriptions.Item label="Date">{moment(event.startDate).format('MMMM Do YYYY')}</Descriptions.Item>
+    <Descriptions.Item label="Time">{moment(event.startDate).format('h:mm')}</Descriptions.Item>
     <Descriptions.Item label="Url">
       <a href={event.url} target="_blank" rel="noreferrer">
         {event.url}
