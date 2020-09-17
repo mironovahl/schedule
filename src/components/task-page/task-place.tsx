@@ -11,8 +11,6 @@ interface IProps {
   type: string;
 }
 
-const isMentor: boolean = true;
-
 const searchGeo = async (place: string) => {
   try {
     const url = `https://geocode-maps.yandex.ru/1.x/?format=json&apikey=${API_KEY}&geocode=${place}`;
@@ -43,7 +41,7 @@ const TaskPlace: React.FC<IProps> = (props: IProps) => {
         ? (
           <>
             <Paragraph
-              editable={isMentor ? { onChange: (e) => changeValue(e, 'description') } : false}
+              editable
             >
               {place}
             </Paragraph>
