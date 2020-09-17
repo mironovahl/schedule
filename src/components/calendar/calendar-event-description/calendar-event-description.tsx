@@ -1,8 +1,8 @@
 import React from 'react';
 import { Descriptions } from 'antd';
-import * as moment from 'moment';
 import { IEvent } from '../../../interfaces/backend-interfaces';
 import RenderTag from '../../type-task';
+import * as DateService from '../../../services/date-service';
 
 type CalendarEventDescriptionProps = {
   event: IEvent;
@@ -30,8 +30,8 @@ const CalendarEventDescription: React.FC<CalendarEventDescriptionProps> = ({
     <Descriptions.Item label="Description">
       {event.description}
     </Descriptions.Item>
-    <Descriptions.Item label="Date">{moment(event.startDate).format('MMMM Do YYYY')}</Descriptions.Item>
-    <Descriptions.Item label="Time">{moment(event.startDate).format('h:mm')}</Descriptions.Item>
+    <Descriptions.Item label="Date">{DateService.getFullDate(event.startDate)}</Descriptions.Item>
+    <Descriptions.Item label="Time">{DateService.getTime(event.startDate)}</Descriptions.Item>
     <Descriptions.Item label="Url">
       <a href={event.url} target="_blank" rel="noreferrer">
         {event.url}

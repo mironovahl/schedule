@@ -12,6 +12,7 @@ import * as momentTz from 'moment-timezone';
 import CalendarDate from './calendar-date';
 import { IEvent } from '../../interfaces/backend-interfaces';
 import SettingsContext from '../../context/settings-context';
+import * as DateService from '../../services/date-service';
 
 import './calendar.scss';
 
@@ -75,7 +76,7 @@ const Calendar: React.FC<CalendarProps> = ({ dataSource }: CalendarProps) => {
   };
 
   const calendarCellRender = (date: moment.Moment): React.ReactNode => {
-    const eventsTypes: string[] = getDayData(date).map(({ type }) => type);
+    const eventsTypes: string[] = eventsSortByDate(getDayData(date)).map(({ type }) => type);
     const backgroundColor: string = eventsTypes.length
       ? taskSettings[eventsTypes[0]].color
       : '';
@@ -174,7 +175,7 @@ const Calendar: React.FC<CalendarProps> = ({ dataSource }: CalendarProps) => {
             <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
               <Divider>
                 {currentType === 'month'
-                  ? (selectedValue && selectedValue.format('MMMM Do YYYY'))
+                  ? (selectedValue && DateService.getFullDate(selectedValue))
                   : (selectedValue && selectedValue.format('MMMM YYYY'))}
               </Divider>
             </Col>
