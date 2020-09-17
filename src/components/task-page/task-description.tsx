@@ -51,33 +51,54 @@ const TaskDescription: React.FC<IProps> = (props: IProps) => {
             <DatePicker defaultValue={startDay} format="DD-MM-YYYY" />
           </div>
         </div>
+        {
+          data.description !== ''
+            ? (
+              <div>
+                <h3>Описание</h3>
+                <Paragraph
+                  editable={isMentor ? { onChange: (e) => changeValue(e, 'description') } : false}
+                >
+                  {data?.description}
+                </Paragraph>
 
-        <h3>Описание</h3>
-        <Paragraph
-          editable={isMentor ? { onChange: (e) => changeValue(e, 'description') } : false}
-        >
-          {data?.description}
-        </Paragraph>
+              </div>
+            )
+            : null
+          }
         <div>
-          <div>
-            <h3>Место проведения</h3>
-            <TaskPlace place={data.place} />
-          </div>
-          <div>
-            <h3>Ссылка</h3>
-            <Paragraph
-              editable={isMentor ? { onChange: (e) => changeValue(e, 'url') } : false}
-            >
-              <a href={data?.url}>{data?.url}</a>
-            </Paragraph>
-            <h3>Комментарий</h3>
-            <Paragraph
-              editable={isMentor ? { onChange: (e) => changeValue(e, 'comment') } : false}
-            >
-              {data?.comment}
-            </Paragraph>
-          </div>
+          <h3>Место проведения</h3>
+          <TaskPlace place={data.place} type={data.type} />
         </div>
+        {
+          data.url !== ''
+            ? (
+              <div>
+                <h3>Ссылка</h3>
+                <Paragraph
+                  editable={isMentor ? { onChange: (e) => changeValue(e, 'url') } : false}
+                >
+                  <a href={data?.url}>{data?.url}</a>
+                </Paragraph>
+              </div>
+            )
+            : null
+          }
+
+        {
+          data.comment !== ''
+            ? (
+              <div>
+                <h3>Комментарий</h3>
+                <Paragraph
+                  editable={isMentor ? { onChange: (e) => changeValue(e, 'comment') } : false}
+                >
+                  {data?.comment}
+                </Paragraph>
+              </div>
+            )
+            : null
+        }
       </div>
     </>
   );
