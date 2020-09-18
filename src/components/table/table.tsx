@@ -1,14 +1,19 @@
 import React, {
   useState,
-  // useContext,
+  useContext,
 } from 'react';
 import {
-  Table as AntDTable, Menu, Checkbox, Dropdown, Button, Tooltip, Empty,
+  Table as AntDTable,
+  Menu,
+  Checkbox,
+  Dropdown,
+  Button,
+  Tooltip,
+  Empty,
 } from 'antd';
-// import { FilterOutlined } from '@ant-design/icons';
+
 import RenderTag from '../type-task';
-import getTypeFilterProps from './getTypeFilterProps';
-// import SettingsContext from '../../context/settings-context';
+import SettingsContext from '../../context/settings-context';
 
 import { getDate, getTime, eventsSortByDate } from '../../services/date-service';
 
@@ -20,6 +25,16 @@ import './table.scss';
 type TableProps = {
   dataSource: IEvent[] | undefined;
 };
+
+function isDuplicate(arr: { text: string; value: string; }[], value: string): boolean {
+  let isDup = false;
+  arr.forEach((item) => {
+    if (item.text === value) {
+      isDup = true;
+    }
+  });
+  return isDup;
+}
 
 const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
   if (!dataSource) return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />;
@@ -36,6 +51,22 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
     details: true,
   });
   const [menuVisible, setMenuVisible] = useState<boolean>(false);
+
+  const { taskSettings } = useContext(SettingsContext);
+  const typeFilters: { text: string; value: string; }[] = [];
+  dataSource.forEach((item) => {
+    if (!isDuplicate(typeFilters, taskSettings[item.type].name)) {
+      typeFilters.push({
+        text: taskSettings[item.type].name,
+        value: item.type,
+      });
+    }
+  });
+  typeFilters.sort((a, b) => {
+    if (a.value > b.value) return 1;
+    if (a.value < b.value) return -1;
+    return 0;
+  });
 
   const columns: ITableColumns[] = [
     {
@@ -60,8 +91,9 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
       dataIndex: 'type',
       key: 'type',
       className: (columnsVisible.type) ? '' : 'hidden',
+      filters: typeFilters,
+      onFilter: (value, record) => record.type.indexOf(value) === 0,
       render: (value: string) => <RenderTag type={value} />,
-      ...getTypeFilterProps('type'),
     },
     {
       title: 'Name',
@@ -104,7 +136,6 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
       width: 85,
       key: 'details',
       className: (columnsVisible.details) ? '' : 'hidden',
-      // fixed: 'right',
       render: (record: IEvent) => <a href={`/task-page/${record.id}`}>See more</a>,
     },
     {
