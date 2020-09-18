@@ -1,17 +1,64 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState } from 'react';
 import moment from 'moment';
 import {
-  Table as AntDTable, Menu, Checkbox, Dropdown, Button, Tooltip,
+  Table as AntDTable,
+  Menu,
+  Checkbox,
+  Dropdown,
+  Button,
+  Tooltip,
+  Input,
+  Popconfirm,
+  Form,
 } from 'antd';
 import RenderTag from '../type-task';
 
-import { ITableColumns, IColumnsVisibility } from '../../interfaces/table-interfaces';
+import {
+  ITableColumns,
+  IColumnsVisibility,
+  EditableCellProps,
+} from '../../interfaces/table-interfaces';
 import { IEvent } from '../../interfaces/backend-interfaces';
 
 import './table.scss';
 
 type TableProps = {
   dataSource: IEvent[] | undefined;
+};
+
+const EditableCell: React.FC<EditableCellProps> = ({
+  editing,
+  dataIndex,
+  title,
+  children,
+  ...restProps
+} : EditableCellProps) => {
+  const inputNode = <Input />;
+
+  return (
+    // eslint-disable-next-line react/jsx-props-no-spreading
+    <td {...restProps}>
+      {editing ? (
+        <Form.Item
+          name={dataIndex}
+          style={{ margin: 0 }}
+          rules={[
+            {
+              required: true,
+              message: `Please Input ${title}!`,
+            },
+          ]}
+        >
+          {inputNode}
+        </Form.Item>
+      ) : (
+        children
+      )}
+    </td>
+  );
 };
 
 const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
@@ -34,7 +81,7 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
       width: 90,
       dataIndex: 'date',
       key: 'date',
-      className: (columnsVisible.date) ? '' : 'hidden',
+      className: columnsVisible.date ? '' : 'hidden',
       render: (value: moment.Moment) => <>{moment(value).format('DD-MM-YYYY')}</>,
     },
     {
@@ -42,7 +89,7 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
       width: 70,
       dataIndex: 'date',
       key: 'time',
-      className: (columnsVisible.time) ? '' : 'hidden',
+      className: columnsVisible.time ? '' : 'hidden',
       render: (value: moment.Moment) => <>{moment(value).format('H:mm')}</>,
     },
     {
@@ -50,7 +97,7 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
       width: 100,
       dataIndex: 'type',
       key: 'type',
-      className: (columnsVisible.type) ? '' : 'hidden',
+      className: columnsVisible.type ? '' : 'hidden',
       render: (value: string) => <RenderTag type={value} />,
     },
     {
@@ -61,8 +108,12 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
       ellipsis: {
         showTitle: false,
       },
-      className: (columnsVisible.name) ? '' : 'hidden',
-      render: (value: string, record: IEvent) => <a href={record.url} target="_blank" rel="noreferrer">{value}</a>,
+      className: columnsVisible.name ? '' : 'hidden',
+      render: (value: string, record: IEvent) => (
+        <a href={record.url} target="_blank" rel="noreferrer">
+          {value}
+        </a>
+      ),
     },
     {
       title: 'Place',
@@ -72,7 +123,7 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
       ellipsis: {
         showTitle: false,
       },
-      className: (columnsVisible.place) ? '' : 'hidden',
+      className: columnsVisible.place ? '' : 'hidden',
     },
     {
       title: 'Description',
@@ -87,13 +138,13 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
           {description}
         </Tooltip>
       ),
-      className: (columnsVisible.description) ? '' : 'hidden',
+      className: columnsVisible.description ? '' : 'hidden',
     },
     {
       title: 'Details Url',
       width: 85,
       key: 'details',
-      className: (columnsVisible.details) ? '' : 'hidden',
+      className: columnsVisible.details ? '' : 'hidden',
       // fixed: 'right',
       render: (record: IEvent) => <a href={`/task-page/${record.id}`}>See more</a>,
     },
@@ -110,7 +161,7 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
           {comment}
         </Tooltip>
       ),
-      className: (columnsVisible.comment) ? '' : 'hidden',
+      className: columnsVisible.comment ? '' : 'hidden',
     },
   ];
 
@@ -130,11 +181,7 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
       <Menu.ItemGroup>
         {columns.map((column) => (
           <Menu.Item key={column.key}>
-            <Checkbox
-              id={column.key}
-              defaultChecked
-              onChange={onCheckboxChange}
-            >
+            <Checkbox id={column.key} defaultChecked onChange={onCheckboxChange}>
               {column.title}
             </Checkbox>
           </Menu.Item>
@@ -145,12 +192,8 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
 
   return (
     <>
-      <Dropdown
-        overlay={menu}
-        onVisibleChange={handleVisibleChange}
-        visible={menuVisible}
-      >
-        <Button style={{ marginBottom: 15 }}>Show/Hide columns</Button>
+      <Dropdown overlay={menu} onVisibleChange={handleVisibleChange} visible={menuVisible}>
+        <Button style={{ marginBottom: 15 }}>Show/Hide columns </Button>
       </Dropdown>
 
       <AntDTable
