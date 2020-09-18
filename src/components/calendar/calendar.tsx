@@ -12,6 +12,7 @@ import * as momentTz from 'moment-timezone';
 import CalendarDate from './calendar-date';
 import { IEvent } from '../../interfaces/backend-interfaces';
 import SettingsContext from '../../context/settings-context';
+import * as DateService from '../../services/date-service';
 
 import './calendar.scss';
 
@@ -45,16 +46,21 @@ const Calendar: React.FC<CalendarProps> = ({ dataSource }: CalendarProps) => {
 
   const { timezone, taskSettings } = useContext(SettingsContext);
   const dataSourceWithTimezone = dataSource
-    .map((event: IEvent) => ({ ...event, date: momentTz(event.date).tz(timezone) }));
+    .map((event: IEvent) => ({
+      ...event,
+      startDate: momentTz(event.startDate).tz(timezone),
+      endDate: momentTz(event.endDate).tz(timezone),
+    }));
 
   const currentDate: moment.Moment = momentTz.tz(timezone);
-  const dates: moment.Moment[] = [...dataSourceWithTimezone.map(({ date }) => date), currentDate];
+  const dates: moment.Moment[] = [...dataSourceWithTimezone
+    .map(({ startDate }) => startDate), currentDate];
   const [currentType, changeCurrentType] = useState<string>('month');
 
   const getDayData = (date: moment.Moment): IEvent[] => dataSourceWithTimezone
-    .filter((event) => moment(event.date).isSame(date, 'day'));
+    .filter((event) => moment(event.startDate).isSame(date, 'day'));
   const getMonthData = (date: moment.Moment): IEvent[] => dataSourceWithTimezone
-    .filter((event) => moment(event.date).isSame(date, 'month'));
+    .filter((event) => moment(event.startDate).isSame(date, 'month'));
 
   const [value, changeValue] = useState<moment.Moment>(currentDate);
   const [selectedValue, changeSelectedValue] = useState<moment.Moment>(moment(new Date()));
@@ -70,7 +76,7 @@ const Calendar: React.FC<CalendarProps> = ({ dataSource }: CalendarProps) => {
   };
 
   const calendarCellRender = (date: moment.Moment): React.ReactNode => {
-    const eventsTypes: string[] = getDayData(date).map(({ type }) => type);
+    const eventsTypes: string[] = eventsSortByDate(getDayData(date)).map(({ type }) => type);
     const backgroundColor: string = eventsTypes.length
       ? taskSettings[eventsTypes[0]].color
       : '';
@@ -169,7 +175,7 @@ const Calendar: React.FC<CalendarProps> = ({ dataSource }: CalendarProps) => {
             <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
               <Divider>
                 {currentType === 'month'
-                  ? (selectedValue && selectedValue.format('MMMM Do YYYY'))
+                  ? (selectedValue && DateService.getFullDate(selectedValue))
                   : (selectedValue && selectedValue.format('MMMM YYYY'))}
               </Divider>
             </Col>
