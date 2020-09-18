@@ -1,9 +1,21 @@
-import React, { useState } from 'react';
-import moment from 'moment';
+import React, {
+  useState,
+  useContext,
+} from 'react';
 import {
-  Table as AntDTable, Menu, Checkbox, Dropdown, Button, Tooltip,
+  Table as AntDTable,
+  Menu,
+  Checkbox,
+  Dropdown,
+  Button,
+  Tooltip,
+  Empty,
 } from 'antd';
+
 import RenderTag from '../type-task';
+import SettingsContext from '../../context/settings-context';
+
+import { getDate, getTime, eventsSortByDate } from '../../services/date-service';
 
 import { ITableColumns, IColumnsVisibility } from '../../interfaces/table-interfaces';
 import { IEvent } from '../../interfaces/backend-interfaces';
@@ -14,7 +26,19 @@ type TableProps = {
   dataSource: IEvent[] | undefined;
 };
 
+function isDuplicate(arr: { text: string; value: string; }[], value: string): boolean {
+  let isDup = false;
+  arr.forEach((item) => {
+    if (item.text === value) {
+      isDup = true;
+    }
+  });
+  return isDup;
+}
+
 const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
+  if (!dataSource) return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />;
+
   const [columnsVisible, setColumnsVisible] = useState<IColumnsVisibility>({
     date: true,
     time: true,
@@ -28,22 +52,38 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
   });
   const [menuVisible, setMenuVisible] = useState<boolean>(false);
 
+  const { taskSettings } = useContext(SettingsContext);
+  const typeFilters: { text: string; value: string; }[] = [];
+  dataSource.forEach((item) => {
+    if (!isDuplicate(typeFilters, taskSettings[item.type].name)) {
+      typeFilters.push({
+        text: taskSettings[item.type].name,
+        value: item.type,
+      });
+    }
+  });
+  typeFilters.sort((a, b) => {
+    if (a.value > b.value) return 1;
+    if (a.value < b.value) return -1;
+    return 0;
+  });
+
   const columns: ITableColumns[] = [
     {
       title: 'Date',
       width: 90,
-      dataIndex: 'date',
+      dataIndex: 'startDate',
       key: 'date',
       className: (columnsVisible.date) ? '' : 'hidden',
-      render: (value: moment.Moment) => <>{moment(value).format('DD-MM-YYYY')}</>,
+      render: (date) => <>{getDate(date)}</>,
     },
     {
       title: 'Time',
       width: 70,
-      dataIndex: 'date',
+      dataIndex: 'startDate',
       key: 'time',
       className: (columnsVisible.time) ? '' : 'hidden',
-      render: (value: moment.Moment) => <>{moment(value).format('H:mm')}</>,
+      render: (date) => <>{getTime(date)}</>,
     },
     {
       title: 'Type',
@@ -51,6 +91,8 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
       dataIndex: 'type',
       key: 'type',
       className: (columnsVisible.type) ? '' : 'hidden',
+      filters: typeFilters,
+      onFilter: (value, record) => record.type.indexOf(value) === 0,
       render: (value: string) => <RenderTag type={value} />,
     },
     {
@@ -94,7 +136,6 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
       width: 85,
       key: 'details',
       className: (columnsVisible.details) ? '' : 'hidden',
-      // fixed: 'right',
       render: (record: IEvent) => <a href={`/task-page/${record.id}`}>See more</a>,
     },
     {
@@ -154,7 +195,7 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
       </Dropdown>
 
       <AntDTable
-        dataSource={dataSource}
+        dataSource={eventsSortByDate(dataSource)}
         columns={columns}
         pagination={false}
         size="small"
