@@ -19,8 +19,8 @@ const getTime = (date: moment.Moment) => {
 
 const eventsSortByDate = (events: IEvent[]): IEvent[] => events
   .sort((a: IEvent, b: IEvent): number => {
-    const dateA = moment(a.date);
-    const dateB = moment(b.date);
+    const dateA = moment(a.startDate);
+    const dateB = moment(b.startDate);
 
     if (dateA.isBefore(dateB)) return -1;
     if (dateA.isSame(dateB)) return 0;

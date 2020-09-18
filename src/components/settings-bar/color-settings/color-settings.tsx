@@ -7,6 +7,7 @@ import {
   List,
   Tag,
   Popover,
+  Tooltip,
 } from 'antd';
 import { ChromePicker, ColorResult } from 'react-color';
 import { TaskSettings, ITaskColors } from '../../../interfaces/settings-interfaces';
@@ -74,15 +75,21 @@ const ColorSettings: React.FC<ColorSettingsProps> = ({
             xxl: 0,
           }]}
         >
-          <Col xs={24} sm={24} md={24} lg={8} xl={8} xxl={8}>{taskType}</Col>
+          <Col xs={24} sm={24} md={24} lg={8} xl={8} xxl={8} style={{ color: fontColor }}>
+            {currentSettings[taskType].name}
+          </Col>
           <Col xs={12} sm={12} md={12} lg={8} xl={8} xxl={8}>
             <Popover trigger="click" content={<ChromePicker disableAlpha color={color} onChange={getHandleColorChange(taskType)} />}>
-              <Tag color={color} style={tagStyle}>color</Tag>
+              <Tooltip title="change background color">
+                <Tag color={color} style={tagStyle}>color</Tag>
+              </Tooltip>
             </Popover>
           </Col>
           <Col xs={12} sm={12} md={12} lg={8} xl={8} xxl={8}>
             <Popover trigger="click" content={<ChromePicker disableAlpha color={fontColor} onChange={getHandleFontColorChange(taskType)} />}>
-              <b style={{ color: fontColor, ...tagStyle }}>font color</b>
+              <Tooltip title="change font color">
+                <b style={{ color: fontColor, ...tagStyle }}>font color</b>
+              </Tooltip>
             </Popover>
           </Col>
         </Row>
