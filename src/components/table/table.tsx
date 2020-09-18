@@ -1,18 +1,23 @@
+// import React, { useState, useContext } from 'react';
 import React, { useState } from 'react';
 import moment from 'moment';
 import {
   Table as AntDTable, Menu, Checkbox, Dropdown, Button, Tooltip,
 } from 'antd';
+// import { getTime } from '../../services/date-service';
 import RenderTag from '../type-task';
 
 import { ITableColumns, IColumnsVisibility } from '../../interfaces/table-interfaces';
 import { IEvent } from '../../interfaces/backend-interfaces';
 
+// import SettingsContext from '../../context/settings-context';
 import './table.scss';
 
 type TableProps = {
   dataSource: IEvent[] | undefined;
 };
+
+// const { user } = useContext(SettingsContext);
 
 const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
   const [columnsVisible, setColumnsVisible] = useState<IColumnsVisibility>({
@@ -25,17 +30,25 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
     place: true,
     comment: true,
     details: true,
+    done: true,
   });
   const [menuVisible, setMenuVisible] = useState<boolean>(false);
 
   const columns: ITableColumns[] = [
+    {
+      title: 'Done',
+      width: 60,
+      key: 'done',
+      render: () => (<Checkbox />),
+      className: (columnsVisible.done) ? '' : 'hidden',
+    },
     {
       title: 'Date',
       width: 90,
       dataIndex: 'date',
       key: 'date',
       className: (columnsVisible.date) ? '' : 'hidden',
-      render: (value: moment.Moment) => <>{moment(value).format('DD-MM-YYYY')}</>,
+      render: (value: moment.Moment) => <>{ moment(value).format('DD-MM-YYYY')}</>,
     },
     {
       title: 'Time',
@@ -43,6 +56,7 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
       dataIndex: 'date',
       key: 'time',
       className: (columnsVisible.time) ? '' : 'hidden',
+      // render: (value: moment.Moment) => <>{ getTime(value)}</>,
       render: (value: moment.Moment) => <>{moment(value).format('H:mm')}</>,
     },
     {

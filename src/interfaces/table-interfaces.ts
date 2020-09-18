@@ -20,4 +20,5 @@ export interface IColumnsVisibility {
   place: boolean,
   comment: boolean,
   details: boolean,
+  done: boolean,
 }
