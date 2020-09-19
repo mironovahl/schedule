@@ -12,6 +12,7 @@ import {
   Input,
   Popconfirm,
   Form,
+  Tag,
   Empty,
 } from 'antd';
 
@@ -19,7 +20,9 @@ import RenderTag from '../type-task';
 import SettingsContext from '../../context/settings-context';
 import BackendService from '../../services/backend-service';
 
-import { getDate, getTime, eventsSortByDate } from '../../services/date-service';
+import {
+  getDate, getTime, eventsSortByDate, getDeadline,
+} from '../../services/date-service';
 
 import {
   ITableColumns,
@@ -180,7 +183,13 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
       dataIndex: 'startDate',
       key: 'date',
       className: columnsVisible.date ? '' : 'hidden',
-      render: (date) => <>{getDate(date)}</>,
+
+      render: (date, record) => (
+        <>
+          {getDate(date)}
+          <Tag color="red">{getDeadline(record.endDate)}</Tag>
+        </>
+      ),
       editable: false,
     },
     {
