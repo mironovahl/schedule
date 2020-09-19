@@ -13,16 +13,17 @@ export interface ITableColumns {
 }
 
 export interface IColumnsVisibility {
-  [key: string]: any;
-  date: boolean;
-  time: boolean;
-  type: boolean;
-  name: boolean;
-  description: boolean;
-  url: boolean;
-  place: boolean;
-  comment: boolean;
-  details: boolean;
+  [key: string]: any
+  date: boolean,
+  time: boolean,
+  type: boolean,
+  name: boolean,
+  description: boolean,
+  url: boolean,
+  place: boolean,
+  comment: boolean,
+  details: boolean,
+  done: boolean,
 }
 
 export interface EditableCellProps {

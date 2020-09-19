@@ -27,4 +27,5 @@ export interface ISettings {
   hiddenRows: string[];
   hiddenCols: IColumnsVisibility;
   user: string;
+  completedTask: string[];
 }
