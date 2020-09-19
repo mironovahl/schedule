@@ -113,6 +113,8 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
   const [data, setData] = useState(dataSource);
   const [editingKey, setEditingKey] = useState<string>('');
 
+  const { user } = useContext(SettingsContext);
+
   const isEditing = (record: IEvent) => record.key === editingKey;
 
   const edit = (record: IEvent) => {
@@ -127,7 +129,6 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
   const save = async (key: React.Key) => {
     try {
       const row = (await form.validateFields()) as IEvent;
-      console.log(row);
       const newData = [...data];
       const index = newData.findIndex((item) => key === item.key);
       if (index > -1) {
@@ -136,15 +137,12 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
           ...item,
           ...row,
         });
-        console.log(newData);
-        console.log(newData[index]);
         setData(newData);
         backendService.updateEvent(newData[index]);
 
         setEditingKey('');
       } else {
         newData.push(row);
-        // backendService.updateEvent(item);
         setData(newData);
         setEditingKey('');
       }
@@ -191,7 +189,7 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
       ellipsis: {
         showTitle: true,
       },
-      className: columnsVisible.name ? '' : 'hidden',
+      className: columnsVisible.comment ? '' : 'hidden',
       render: (value: string, record: IEvent) => (
         <a href={record.url} target="_blank" rel="noreferrer">
           {value}
@@ -208,7 +206,7 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
         showTitle: false,
       },
       className: columnsVisible.place ? '' : 'hidden',
-      editable: false,
+      editable: true,
     },
     {
       title: 'Description',
@@ -251,6 +249,7 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
       editable: true,
     },
     {
+      className: user === 'mentor' ? '' : 'hidden',
       title: 'Operation',
       width: 85,
       dataIndex: 'operation',
