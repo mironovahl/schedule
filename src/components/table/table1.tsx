@@ -4,7 +4,9 @@
 import React, { useState } from 'react';
 import moment from 'moment';
 
-import { Table, Input, Popconfirm, Form } from 'antd';
+import {
+  Table, Input, Popconfirm, Form,
+} from 'antd';
 
 // import { IEvent } from '../../interfaces/backend-interfaces';
 

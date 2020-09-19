@@ -1,7 +1,7 @@
-// import Table from './table';
+import Table from './table';
 
-// export default Table;
+export default Table;
 
-import EditableTable from './table1';
+// import EditableTable from './table1';
 
-export default EditableTable;
+// export default EditableTable;
