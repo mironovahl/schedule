@@ -24,6 +24,7 @@ export interface IColumnsVisibility {
   comment: boolean,
   details: boolean,
   done: boolean,
+}
 
 export interface EditableCellProps {
   editing: boolean;
