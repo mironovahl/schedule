@@ -51,6 +51,9 @@ export default class BackendService {
   putData = async (url: string, data: object) => {
     const res: Response = await fetch(`${this.apiBase}${url}`, {
       method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
       body: JSON.stringify(data),
     });
 
