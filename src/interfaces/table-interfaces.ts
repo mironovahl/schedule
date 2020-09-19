@@ -13,23 +13,17 @@ export interface ITableColumns {
 }
 
 export interface IColumnsVisibility {
-  [key: string]: any;
-  date: boolean;
-  time: boolean;
-  type: boolean;
-  name: boolean;
-  description: boolean;
-  url: boolean;
-  place: boolean;
-  comment: boolean;
-  details: boolean;
-}
-
-export interface Item {
-  key: string;
-  name: string;
-  age: number;
-  address: string;
+  [key: string]: any
+  date: boolean,
+  time: boolean,
+  type: boolean,
+  name: boolean,
+  description: boolean,
+  url: boolean,
+  place: boolean,
+  comment: boolean,
+  details: boolean,
+  done: boolean,
 }
 
 export interface EditableCellProps {
@@ -37,7 +31,6 @@ export interface EditableCellProps {
   dataIndex: string;
   title: any;
   inputType: 'number' | 'text';
-  // record: Item;
   index?: number;
   children: React.ReactNode;
 }

@@ -81,6 +81,7 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
   if (!dataSource) return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />;
   const backendService = new BackendService();
   const [columnsVisible, setColumnsVisible] = useState<IColumnsVisibility>({
+    done: true,
     date: true,
     time: true,
     type: true,
@@ -93,7 +94,8 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
   });
   const [menuVisible, setMenuVisible] = useState<boolean>(false);
 
-  const { taskSettings } = useContext(SettingsContext);
+  const { taskSettings, completedTask, changeContext } = useContext(SettingsContext);
+
   const typeFilters: { text: string; value: string }[] = [];
   dataSource.forEach((item) => {
     if (!isDuplicate(typeFilters, taskSettings[item.type].name)) {
@@ -154,6 +156,24 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
   };
 
   const columns: ITableColumns[] = [
+    {
+      title: 'Done',
+      width: 40,
+      key: 'done',
+      className: columnsVisible.done ? '' : 'hidden',
+      render: (record) => (
+        <Checkbox
+          onChange={(e) => {
+            if (e.target.checked) {
+              changeContext({ completedTask: [...completedTask, record.id] });
+            } else {
+              changeContext({ completedTask: completedTask.filter((id) => id !== record.id) });
+            }
+          }}
+          checked={completedTask.includes(record.id)}
+        />
+      ),
+    },
     {
       title: 'Date',
       width: 90,
