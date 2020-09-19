@@ -1,12 +1,14 @@
 import React, { useState, useContext } from 'react';
 import {
-  Table as AntDTable, Menu, Checkbox, Dropdown, Button, Tooltip, Empty,
+  Table as AntDTable, Menu, Checkbox, Dropdown, Button, Tooltip, Empty, Tag,
 } from 'antd';
 
 import RenderTag from '../type-task';
 import SettingsContext from '../../context/settings-context';
 
-import { getDate, getTime, eventsSortByDate } from '../../services/date-service';
+import {
+  getDate, getTime, eventsSortByDate, getDeadline,
+} from '../../services/date-service';
 
 import { ITableColumns, IColumnsVisibility } from '../../interfaces/table-interfaces';
 import { IEvent } from '../../interfaces/backend-interfaces';
@@ -87,7 +89,12 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
       dataIndex: 'startDate',
       key: 'date',
       className: columnsVisible.date ? '' : 'hidden',
-      render: (date) => (<>{getDate(date)}</>),
+      render: (date, record) => (
+        <>
+          {getDate(date)}
+          <Tag color="red">{getDeadline(record.endDate)}</Tag>
+        </>
+      ),
     },
     {
       title: 'Time',
