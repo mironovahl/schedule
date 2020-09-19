@@ -84,6 +84,7 @@ export default class BackendService {
     return (
       {
         id: event.id,
+        key: event.id,
         name: event.name,
         description: event.description,
         url: event.descriptionUrl,
