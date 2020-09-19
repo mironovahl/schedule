@@ -1,9 +1,10 @@
 import React, { Dispatch, SetStateAction } from 'react';
-import { Typography, DatePicker } from 'antd';
+import { Typography, DatePicker, Image } from 'antd';
 import { IEvent } from '../../interfaces/backend-interfaces';
 import './task-description.scss';
 import RenderTag from '../type-task';
 import TaskPlace from './task-place';
+import AddSection from './task-addSection';
 
 const { Paragraph, Title } = Typography;
 
@@ -14,6 +15,7 @@ interface IProps {
 
 const TaskDescription: React.FC<IProps> = (props: IProps) => {
   const { data, setData } = props;
+  console.log(data);
 
   const isMentor: boolean = true;
 
@@ -53,7 +55,7 @@ const TaskDescription: React.FC<IProps> = (props: IProps) => {
         </div>
         {
           data.description !== ''
-            ? (
+            && (
               <div>
                 <h3>Описание</h3>
                 <Paragraph
@@ -64,15 +66,14 @@ const TaskDescription: React.FC<IProps> = (props: IProps) => {
 
               </div>
             )
-            : null
-          }
+        }
         <div>
           <h3>Место проведения</h3>
           <TaskPlace place={data.place} type={data.type} />
         </div>
         {
           data.url !== ''
-            ? (
+            && (
               <div>
                 <h3>Ссылка</h3>
                 <Paragraph
@@ -82,12 +83,11 @@ const TaskDescription: React.FC<IProps> = (props: IProps) => {
                 </Paragraph>
               </div>
             )
-            : null
-          }
+        }
 
         {
           data.comment !== ''
-            ? (
+            && (
               <div>
                 <h3>Комментарий</h3>
                 <Paragraph
@@ -97,8 +97,22 @@ const TaskDescription: React.FC<IProps> = (props: IProps) => {
                 </Paragraph>
               </div>
             )
-            : null
         }
+        {
+          data.photo
+            && (
+              <div>
+                <Image
+                  width={500}
+                  src={data.photo}
+                />
+              </div>
+            )
+        }
+
+        <div>
+          <AddSection data={data} />
+        </div>
       </div>
     </>
   );
