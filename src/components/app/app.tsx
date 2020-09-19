@@ -1,28 +1,55 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   BrowserRouter as Router, Route, Switch,
 } from 'react-router-dom';
 
 import './app.scss';
-import { MainPage, SchedulePage, Page404 } from '../pages';
+import SettingsContext from '../../context/settings-context';
+import SettingsService from '../../services/settings-service';
+import {
+  MainPage,
+  SchedulePage,
+  Page404,
+  ListPage,
+  TaskPage,
+} from '../pages';
+import { ISettings } from '../../interfaces/settings-interfaces';
 
-const Schedule: React.FC = () => (
-  <Router>
-    <Switch>
-      <Route
-        path="/"
-        component={MainPage}
-        exact
-      />
-      <Route
-        path="/schedule"
-        component={SchedulePage}
-      />
-      <Route
-        component={Page404}
-      />
-    </Switch>
-  </Router>
-);
+const Schedule: React.FC = () => {
+  const [settings, changeSettings] = useState<ISettings>(SettingsService.getAllSettings());
+  const changeContext = (newSettings: object) => {
+    SettingsService.setAllSettings({ ...settings, ...newSettings });
+    changeSettings({ ...settings, ...newSettings });
+  };
+
+  return (
+    <SettingsContext.Provider value={{ ...settings, changeContext }}>
+      <Router>
+        <Switch>
+          <Route
+            path="/"
+            component={MainPage}
+            exact
+          />
+          <Route
+            path="/schedule"
+            component={SchedulePage}
+          />
+          <Route
+            path="/list"
+            component={ListPage}
+          />
+          <Route
+            path="/task-page/:id"
+            component={TaskPage}
+          />
+          <Route
+            component={Page404}
+          />
+        </Switch>
+      </Router>
+    </SettingsContext.Provider>
+  );
+};
 
 export default Schedule;

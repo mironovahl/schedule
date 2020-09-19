@@ -1,0 +1,11 @@
+.calendar {
+  &__settings {
+    display: flex;
+    justify-content: flex-end;
+    min-width: 100px;
+  }
+
+  &__selected-date {
+    text-align: center;
+  }
+}
