@@ -1,11 +1,31 @@
-import React, { useState } from 'react';
-import moment from 'moment';
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/anchor-is-valid */
+import React, { useState, useContext } from 'react';
 import {
-  Table as AntDTable, Menu, Checkbox, Dropdown, Button, Tooltip,
+  Table as AntDTable,
+  Menu,
+  Checkbox,
+  Dropdown,
+  Button,
+  Tooltip,
+  Input,
+  Popconfirm,
+  Form,
+  Empty,
 } from 'antd';
-import RenderTag from '../type-task';
 
-import { ITableColumns, IColumnsVisibility } from '../../interfaces/table-interfaces';
+import RenderTag from '../type-task';
+import SettingsContext from '../../context/settings-context';
+import BackendService from '../../services/backend-service';
+
+import { getDate, getTime, eventsSortByDate } from '../../services/date-service';
+
+import {
+  ITableColumns,
+  IColumnsVisibility,
+  EditableCellProps,
+} from '../../interfaces/table-interfaces';
 import { IEvent } from '../../interfaces/backend-interfaces';
 
 import './table.scss';
@@ -14,8 +34,54 @@ type TableProps = {
   dataSource: IEvent[] | undefined;
 };
 
+const EditableCell: React.FC<EditableCellProps> = ({
+  editing,
+  dataIndex,
+  title,
+  children,
+  ...restProps
+}: EditableCellProps) => {
+  const inputNode = <Input />;
+
+  return (
+    // eslint-disable-next-line react/jsx-props-no-spreading
+    <td {...restProps}>
+      {editing ? (
+        <Form.Item
+          name={dataIndex}
+          style={{ margin: 0 }}
+          rules={[
+            {
+              required: true,
+              message: `Please Input ${title}!`,
+            },
+          ]}
+        >
+          {inputNode}
+        </Form.Item>
+      ) : (
+        children
+      )}
+    </td>
+  );
+};
+
+function isDuplicate(arr: { text: string; value: string }[], value: string): boolean {
+  let isDup = false;
+  arr.forEach((item) => {
+    if (item.text === value) {
+      isDup = true;
+    }
+  });
+  return isDup;
+}
+
+// eslint-disable-next-line sonarjs/cognitive-complexity
 const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
+  if (!dataSource) return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />;
+  const backendService = new BackendService();
   const [columnsVisible, setColumnsVisible] = useState<IColumnsVisibility>({
+    done: true,
     date: true,
     time: true,
     type: true,
@@ -28,30 +94,114 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
   });
   const [menuVisible, setMenuVisible] = useState<boolean>(false);
 
+  const { taskSettings, completedTask, changeContext } = useContext(SettingsContext);
+
+  const typeFilters: { text: string; value: string }[] = [];
+  dataSource.forEach((item) => {
+    if (!isDuplicate(typeFilters, taskSettings[item.type].name)) {
+      typeFilters.push({
+        text: taskSettings[item.type].name,
+        value: item.type,
+      });
+    }
+  });
+  typeFilters.sort((a, b) => {
+    if (a.value > b.value) return 1;
+    if (a.value < b.value) return -1;
+    return 0;
+  });
+
+  const [form] = Form.useForm();
+  const [data, setData] = useState(dataSource);
+  const [editingKey, setEditingKey] = useState<string>('');
+
+  const isEditing = (record: IEvent) => record.key === editingKey;
+
+  const edit = (record: IEvent) => {
+    form.setFieldsValue({ ...record });
+    setEditingKey(record.key);
+  };
+
+  const cancel = () => {
+    setEditingKey('');
+  };
+
+  const save = async (key: React.Key) => {
+    try {
+      const row = (await form.validateFields()) as IEvent;
+      console.log(row);
+      const newData = [...data];
+      const index = newData.findIndex((item) => key === item.key);
+      if (index > -1) {
+        const item = newData[index];
+        newData.splice(index, 1, {
+          ...item,
+          ...row,
+        });
+        console.log(newData);
+        console.log(newData[index]);
+        setData(newData);
+        backendService.updateEvent(newData[index]);
+
+        setEditingKey('');
+      } else {
+        newData.push(row);
+        // backendService.updateEvent(item);
+        setData(newData);
+        setEditingKey('');
+      }
+    } catch (errInfo) {
+      console.log('Validate Failed:', errInfo);
+    }
+  };
+
   const columns: ITableColumns[] = [
+    {
+      title: 'Done',
+      width: 40,
+      key: 'done',
+      className: columnsVisible.done ? '' : 'hidden',
+      render: (record) => (
+        <Checkbox
+          onChange={(e) => {
+            if (e.target.checked) {
+              changeContext({ completedTask: [...completedTask, record.id] });
+            } else {
+              changeContext({ completedTask: completedTask.filter((id) => id !== record.id) });
+            }
+          }}
+          checked={completedTask.includes(record.id)}
+        />
+      ),
+    },
     {
       title: 'Date',
       width: 90,
-      dataIndex: 'date',
+      dataIndex: 'startDate',
       key: 'date',
-      className: (columnsVisible.date) ? '' : 'hidden',
-      render: (value: moment.Moment) => <>{moment(value).format('DD-MM-YYYY')}</>,
+      className: columnsVisible.date ? '' : 'hidden',
+      render: (date) => <>{getDate(date)}</>,
+      editable: false,
     },
     {
       title: 'Time',
       width: 70,
-      dataIndex: 'date',
+      dataIndex: 'startDate',
       key: 'time',
-      className: (columnsVisible.time) ? '' : 'hidden',
-      render: (value: moment.Moment) => <>{moment(value).format('H:mm')}</>,
+      className: columnsVisible.time ? '' : 'hidden',
+      render: (date) => <>{getTime(date)}</>,
+      editable: false,
     },
     {
       title: 'Type',
       width: 100,
       dataIndex: 'type',
       key: 'type',
-      className: (columnsVisible.type) ? '' : 'hidden',
+      className: columnsVisible.type ? '' : 'hidden',
+      filters: typeFilters,
+      onFilter: (value, record) => record.type.indexOf(value) === 0,
       render: (value: string) => <RenderTag type={value} />,
+      editable: false,
     },
     {
       title: 'Name',
@@ -59,10 +209,15 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
       dataIndex: 'name',
       key: 'name',
       ellipsis: {
-        showTitle: false,
+        showTitle: true,
       },
-      className: (columnsVisible.name) ? '' : 'hidden',
-      render: (value: string, record: IEvent) => <a href={record.url} target="_blank" rel="noreferrer">{value}</a>,
+      className: columnsVisible.name ? '' : 'hidden',
+      render: (value: string, record: IEvent) => (
+        <a href={record.url} target="_blank" rel="noreferrer">
+          {value}
+        </a>
+      ),
+      editable: false,
     },
     {
       title: 'Place',
@@ -72,7 +227,8 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
       ellipsis: {
         showTitle: false,
       },
-      className: (columnsVisible.place) ? '' : 'hidden',
+      className: columnsVisible.place ? '' : 'hidden',
+      editable: false,
     },
     {
       title: 'Description',
@@ -87,15 +243,16 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
           {description}
         </Tooltip>
       ),
-      className: (columnsVisible.description) ? '' : 'hidden',
+      className: columnsVisible.description ? '' : 'hidden',
+      editable: true,
     },
     {
       title: 'Details Url',
       width: 85,
       key: 'details',
-      className: (columnsVisible.details) ? '' : 'hidden',
-      // fixed: 'right',
+      className: columnsVisible.details ? '' : 'hidden',
       render: (record: IEvent) => <a href={`/task-page/${record.id}`}>See more</a>,
+      editable: false,
     },
     {
       title: 'Comment',
@@ -110,7 +267,29 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
           {comment}
         </Tooltip>
       ),
-      className: (columnsVisible.comment) ? '' : 'hidden',
+      className: columnsVisible.comment ? '' : 'hidden',
+      editable: true,
+    },
+    {
+      title: 'Operation',
+      width: 85,
+      dataIndex: 'operation',
+      key: 'operation',
+      render: (_: any, record: IEvent) => {
+        const editable = isEditing(record);
+        return editable ? (
+          <span>
+            <a onClick={() => save(record.key)} style={{ marginRight: 8 }}>
+              Save
+            </a>
+            <Popconfirm title="Sure to cancel?" onConfirm={cancel}>
+              <a>Cancel</a>
+            </Popconfirm>
+          </span>
+        ) : (
+          <a onClick={() => edit(record)}>Edit</a>
+        );
+      },
     },
   ];
 
@@ -125,16 +304,28 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
     setMenuVisible(flag);
   };
 
+  const mergedColumns = columns.map((col) => {
+    if (!col.editable) {
+      return col;
+    }
+    return {
+      ...col,
+      onCell: (record: IEvent) => ({
+        record,
+        inputtype: 'text',
+        dataIndex: col.dataIndex,
+        title: col.title,
+        editing: isEditing(record),
+      }),
+    };
+  });
+
   const menu: JSX.Element = (
     <Menu>
       <Menu.ItemGroup>
         {columns.map((column) => (
           <Menu.Item key={column.key}>
-            <Checkbox
-              id={column.key}
-              defaultChecked
-              onChange={onCheckboxChange}
-            >
+            <Checkbox id={column.key} defaultChecked onChange={onCheckboxChange}>
               {column.title}
             </Checkbox>
           </Menu.Item>
@@ -145,21 +336,26 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
 
   return (
     <>
-      <Dropdown
-        overlay={menu}
-        onVisibleChange={handleVisibleChange}
-        visible={menuVisible}
-      >
-        <Button style={{ marginBottom: 15 }}>Show/Hide columns</Button>
+      <Dropdown overlay={menu} onVisibleChange={handleVisibleChange} visible={menuVisible}>
+        <Button style={{ marginBottom: 15 }}>Show/Hide columns </Button>
       </Dropdown>
-
-      <AntDTable
-        dataSource={dataSource}
-        columns={columns}
-        pagination={false}
-        size="small"
-        scroll={{ x: 'max-content' }}
-      />
+      <Form form={form} component={false}>
+        <AntDTable
+          dataSource={eventsSortByDate(data)}
+          components={{
+            body: {
+              cell: EditableCell,
+            },
+          }}
+          columns={mergedColumns}
+          rowClassName="editable-row"
+          pagination={{
+            onChange: cancel,
+          }}
+          size="small"
+          scroll={{ x: 'max-content' }}
+        />
+      </Form>
     </>
   );
 };

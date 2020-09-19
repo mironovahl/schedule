@@ -26,6 +26,10 @@ const setUser = (user: string): void => {
   localStorage.setItem('user', user);
 };
 
+const setCompletedTask = (completedTask: string[]): void => {
+  localStorage.setItem('completedTask', JSON.stringify(completedTask));
+};
+
 const getTimezone = (): SettingsInterfaces.Timezone => {
   if (localStorage.getItem('timezone') === null) {
     const timezone = Intl.DateTimeFormat()
@@ -55,6 +59,11 @@ const getHiddenCols = (): IColumnsVisibility => {
 
 const getUser = (): string => localStorage.getItem('user') || defaultSettings.user;
 
+const getCompletedTask = (): string[] => {
+  const completedTask: string = localStorage.getItem('completedTask') || JSON.stringify(defaultSettings.completedTask);
+  return JSON.parse(completedTask);
+};
+
 export default class SettingsService {
   static getAllSettings(): SettingsInterfaces.ISettings {
     const scheduleView: SettingsInterfaces.ScheduleView = getScheduleView();
@@ -63,6 +72,7 @@ export default class SettingsService {
     const hiddenRows: string[] = getHiddenRows();
     const hiddenCols: IColumnsVisibility = getHiddenCols();
     const user: string = getUser();
+    const completedTask: string[] = getCompletedTask();
 
     return {
       scheduleView,
@@ -71,6 +81,7 @@ export default class SettingsService {
       hiddenRows,
       hiddenCols,
       user,
+      completedTask,
     };
   }
 
@@ -81,5 +92,6 @@ export default class SettingsService {
     setHiddenRows(settings.hiddenRows);
     setHiddenCols(settings.hiddenCols);
     setUser(settings.user);
+    setCompletedTask(settings.completedTask);
   }
 }
