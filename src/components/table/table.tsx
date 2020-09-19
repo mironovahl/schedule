@@ -17,7 +17,7 @@ import {
 
 import RenderTag from '../type-task';
 import SettingsContext from '../../context/settings-context';
-// import BackendService from '../../services/backend-service';
+import BackendService from '../../services/backend-service';
 
 import { getDate, getTime, eventsSortByDate } from '../../services/date-service';
 
@@ -79,7 +79,7 @@ function isDuplicate(arr: { text: string; value: string }[], value: string): boo
 // eslint-disable-next-line sonarjs/cognitive-complexity
 const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
   if (!dataSource) return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />;
-  // const backendService = new BackendService();
+  const backendService = new BackendService();
   const [columnsVisible, setColumnsVisible] = useState<IColumnsVisibility>({
     date: true,
     time: true,
@@ -110,7 +110,7 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
   });
 
   const [form] = Form.useForm();
-  // const [data, setData] = useState(dataSource);
+  const [data, setData] = useState(dataSource);
   const [editingKey, setEditingKey] = useState<string>('');
 
   const isEditing = (record: IEvent) => record.key === editingKey;
@@ -127,9 +127,8 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
   const save = async (key: React.Key) => {
     try {
       const row = (await form.validateFields()) as IEvent;
-
-      const newData = [...dataSource];
-      // const newData = dataSource;
+      console.log(row);
+      const newData = [...data];
       const index = newData.findIndex((item) => key === item.key);
       if (index > -1) {
         const item = newData[index];
@@ -138,14 +137,15 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
           ...row,
         });
         console.log(newData);
-        console.log(dataSource);
-        // backendService.updateEvent(newData);
-        // setData(newData);
+        console.log(newData[index]);
+        setData(newData);
+        backendService.updateEvent(newData[index]);
+
         setEditingKey('');
       } else {
         newData.push(row);
-        // backendService.updateEvent(newData);
-        // setData(newData);
+        // backendService.updateEvent(item);
+        setData(newData);
         setEditingKey('');
       }
     } catch (errInfo) {
@@ -321,7 +321,7 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
       </Dropdown>
       <Form form={form} component={false}>
         <AntDTable
-          dataSource={eventsSortByDate(dataSource)}
+          dataSource={eventsSortByDate(data)}
           components={{
             body: {
               cell: EditableCell,
