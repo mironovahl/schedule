@@ -21,7 +21,10 @@ import SettingsContext from '../../context/settings-context';
 import BackendService from '../../services/backend-service';
 
 import {
-  getDate, getTime, eventsSortByDate, getDeadline,
+  getDate,
+  getTime,
+  eventsSortByDate,
+  getDeadline,
 } from '../../services/date-service';
 
 import {
@@ -84,7 +87,7 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
   if (!dataSource) return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />;
   const backendService = new BackendService();
   const [columnsVisible, setColumnsVisible] = useState<IColumnsVisibility>({
-    done: true,
+    // done: true,
     date: true,
     time: true,
     type: true,
@@ -159,16 +162,18 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
   const columns: ITableColumns[] = [
     {
       title: 'Done',
-      width: 40,
+      width: 50,
       key: 'done',
-      className: columnsVisible.done ? '' : 'hidden',
+      // className: columnsVisible.done ? '' : 'hidden',
       render: (record) => (
         <Checkbox
           onChange={(e) => {
             if (e.target.checked) {
               changeContext({ completedTask: [...completedTask, record.id] });
             } else {
-              changeContext({ completedTask: completedTask.filter((id) => id !== record.id) });
+              changeContext({
+                completedTask: completedTask.filter((id) => id !== record.id),
+              });
             }
           }}
           checked={completedTask.includes(record.id)}
@@ -300,6 +305,10 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
     },
   ];
 
+  const columnsMenu: ITableColumns[] = columns.filter(
+    (column) => column.key !== 'operation' && column.key !== 'done',
+  );
+
   const onCheckboxChange = (e: any) => {
     setColumnsVisible({
       ...columnsVisible,
@@ -330,7 +339,7 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
   const menu: JSX.Element = (
     <Menu>
       <Menu.ItemGroup>
-        {columns.map((column) => (
+        {columnsMenu.map((column) => (
           <Menu.Item key={column.key}>
             <Checkbox id={column.key} defaultChecked onChange={onCheckboxChange}>
               {column.title}
@@ -343,7 +352,11 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
 
   return (
     <>
-      <Dropdown overlay={menu} onVisibleChange={handleVisibleChange} visible={menuVisible}>
+      <Dropdown
+        overlay={menu}
+        onVisibleChange={handleVisibleChange}
+        visible={menuVisible}
+      >
         <Button style={{ marginBottom: 15 }}>Show/Hide columns </Button>
       </Dropdown>
       <Form form={form} component={false}>
@@ -355,12 +368,16 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
             },
           }}
           columns={mergedColumns}
-          rowClassName="editable-row"
+          // rowClassName="editable-row"
           pagination={{
             onChange: cancel,
           }}
           size="small"
           scroll={{ x: 'max-content' }}
+          rowClassName={(record) => {
+            if (completedTask.includes(record.id)) return 'done';
+            return '';
+          }}
         />
       </Form>
     </>

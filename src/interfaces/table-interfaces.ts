@@ -23,7 +23,7 @@ export interface IColumnsVisibility {
   place: boolean,
   comment: boolean,
   details: boolean,
-  done: boolean,
+  // done?: boolean,
 }
 
 export interface EditableCellProps {
