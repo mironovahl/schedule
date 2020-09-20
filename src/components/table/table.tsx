@@ -282,7 +282,6 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
       editable: true,
     },
     {
-      className: user === 'mentor' ? '' : 'hidden',
       title: 'Operation',
       width: 85,
       dataIndex: 'operation',
@@ -305,10 +304,6 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
     },
   ];
 
-  const columnsMenu: ITableColumns[] = columns.filter(
-    (column) => column.key !== 'operation' && column.key !== 'done',
-  );
-
   const onCheckboxChange = (e: any) => {
     setColumnsVisible({
       ...columnsVisible,
@@ -320,21 +315,37 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
     setMenuVisible(flag);
   };
 
-  const mergedColumns = columns.map((col) => {
-    if (!col.editable) {
-      return col;
-    }
-    return {
-      ...col,
-      onCell: (record: IEvent) => ({
-        record,
-        inputtype: 'text',
-        dataIndex: col.dataIndex,
-        title: col.title,
-        editing: isEditing(record),
-      }),
-    };
-  });
+  const columnsMenu: ITableColumns[] = columns.filter(
+    (column) => column.key !== 'operation',
+  );
+
+  let mergedColumnsForTable;
+  let mergedColumns;
+
+  const getMergedColumns = (switchColumns: any[]) => {
+    mergedColumns = switchColumns.map((col) => {
+      if (!col.editable) {
+        return col;
+      }
+      return {
+        ...col,
+        onCell: (record: IEvent) => ({
+          record,
+          inputtype: 'text',
+          dataIndex: col.dataIndex,
+          title: col.title,
+          editing: isEditing(record),
+        }),
+      };
+    });
+    return mergedColumns;
+  };
+
+  if (user !== 'mentor') {
+    mergedColumnsForTable = getMergedColumns(columnsMenu);
+  } else {
+    mergedColumnsForTable = getMergedColumns(columns);
+  }
 
   const menu: JSX.Element = (
     <Menu>
@@ -367,7 +378,7 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
               cell: EditableCell,
             },
           }}
-          columns={mergedColumns}
+          columns={mergedColumnsForTable}
           // rowClassName="editable-row"
           pagination={{
             onChange: cancel,
