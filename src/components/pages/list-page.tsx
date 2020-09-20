@@ -1,8 +1,11 @@
 import React, { useContext } from 'react';
 
-import { List, Checkbox, Button } from 'antd';
-
+import {
+  List, Checkbox, Button, Empty,
+} from 'antd';
+// import { saveToCSV, saveToTXT } from 'src/services/saving-service.ts';
 import moment from 'moment';
+import { eventsSortByDate } from '../../services/date-service';
 import RenderTag from '../type-task';
 import { IEvent } from '../../interfaces/backend-interfaces';
 import SettingsContext from '../../context/settings-context';
@@ -13,14 +16,17 @@ type ListProps = {
 };
 
 const ListPage: React.FC<ListProps> = ({ dataSource }: ListProps) => {
-  const { changeContext } = useContext(SettingsContext);
+  if (!dataSource) return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />;
+  const { completedTask, changeContext } = useContext(SettingsContext);
   const selected: any[] = [];
 
   const onChange = (e: { target: any; }) => {
     if (e.target.checked) {
       selected.push(e.target.id);
+      changeContext({ completedTask: [...completedTask, e.target.id] });
     } else {
       selected.splice(selected.indexOf(e.target.id), 1);
+      changeContext({ completedTask: completedTask.filter((id) => id !== e.target.id) });
     }
   };
 
@@ -42,16 +48,17 @@ const ListPage: React.FC<ListProps> = ({ dataSource }: ListProps) => {
         pageSize: 5,
       }}
       itemLayout="horizontal"
-      dataSource={dataSource}
+      dataSource={eventsSortByDate(dataSource)}
       renderItem={(item) => (
         <List.Item
           id={item.id}
-          className="list-item"
+          className={completedTask.includes(item.id) ? 'list-item done' : 'list-item'}
           key={item.id}
           actions={[<a href={`/task-page/${item.id}`} key="list-item__load-more">See more</a>]}
         >
           <Checkbox
             onChange={onChange}
+            checked={completedTask.includes(item.id)}
             id={item.id}
             style={{ margin: 10 }}
           />
@@ -72,8 +79,12 @@ const ListPage: React.FC<ListProps> = ({ dataSource }: ListProps) => {
             className="list-item__description"
           />
           <List.Item.Meta
-            title={moment(item.date).format('DD-MM-YYYY')}
-            description={moment(item.date).format('h:mm')}
+            title={moment(item.startDate).format('DD-MM-YYYY')}
+            description={moment(item.startDate).format('h:mm')}
+          />
+          <List.Item.Meta
+            title={moment(item.endDate).format('DD-MM-YYYY')}
+            description={moment(item.endDate).format('h:mm')}
           />
         </List.Item>
       )}
