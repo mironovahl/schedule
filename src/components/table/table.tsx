@@ -100,7 +100,9 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
   });
   const [menuVisible, setMenuVisible] = useState<boolean>(false);
 
-  const { taskSettings, completedTask, changeContext } = useContext(SettingsContext);
+  const {
+    taskSettings, completedTask, hiddenRows, changeContext,
+  } = useContext(SettingsContext);
 
   const typeFilters: { text: string; value: string }[] = [];
   dataSource.forEach((item) => {
@@ -358,6 +360,14 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
       isShiftActive = false;
     }
   };
+  const onHideClick = () => {
+    changeContext({ hiddenRows: [...hiddenRows, ...activeRows] });
+    changeActiveRows([]);
+  };
+  const onShowClick = () => {
+    changeActiveRows(hiddenRows);
+    changeContext({ hiddenRows: [] });
+  };
   useEffect(() => {
     window.addEventListener('keyup', handleShiftUp);
     window.addEventListener('keydown', handleShiftDown);
@@ -389,8 +399,12 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
       <Row justify="space-between">
         <Col>
           <Radio.Group>
-            <Radio.Button disabled={activeRows.length < 1}>Hide Rows</Radio.Button>
-            <Radio.Button disabled>Hidden Rows</Radio.Button>
+            <Radio.Button disabled={activeRows.length < 1} onClick={onHideClick}>
+              Hide Rows
+            </Radio.Button>
+            <Radio.Button disabled={hiddenRows.length < 1} onClick={onShowClick}>
+              Show Hidden Rows
+            </Radio.Button>
           </Radio.Group>
         </Col>
         <Col>
@@ -401,7 +415,7 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
       </Row>
       <Form form={form} component={false}>
         <AntDTable
-          dataSource={eventsSortByDate(data)}
+          dataSource={eventsSortByDate(data).filter(({ id }) => !hiddenRows.includes(id))}
           components={{
             body: {
               cell: EditableCell,
