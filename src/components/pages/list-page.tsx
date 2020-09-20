@@ -1,11 +1,18 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 
 import {
-  List, Checkbox, Button, Empty,
+  List,
+  Checkbox,
+  Empty,
+  Radio,
+  Col,
+  Row,
+  Button,
+  Tag,
 } from 'antd';
 // import { saveToCSV, saveToTXT } from 'src/services/saving-service.ts';
 import moment from 'moment';
-import { eventsSortByDate } from '../../services/date-service';
+import { eventsSortByDate, getDeadline } from '../../services/date-service';
 import RenderTag from '../type-task';
 import { IEvent } from '../../interfaces/backend-interfaces';
 import SettingsContext from '../../context/settings-context';
@@ -17,38 +24,56 @@ type ListProps = {
 
 const ListPage: React.FC<ListProps> = ({ dataSource }: ListProps) => {
   if (!dataSource) return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />;
-  const { completedTask, changeContext } = useContext(SettingsContext);
-  const selected: any[] = [];
+  const { completedTask, hiddenRows, changeContext } = useContext(SettingsContext);
+  const [activeRows, changeActiveRows] = useState<string[]>([]);
+  // const selected: any[] = [];
 
   const onChange = (e: { target: any; }) => {
     if (e.target.checked) {
-      selected.push(e.target.id);
-      changeContext({ completedTask: [...completedTask, e.target.id] });
+      changeActiveRows([...activeRows, e.target.id]);
     } else {
-      selected.splice(selected.indexOf(e.target.id), 1);
+      changeActiveRows(activeRows.filter((id) => id !== e.target.id));
       changeContext({ completedTask: completedTask.filter((id) => id !== e.target.id) });
     }
   };
 
-  const hideElement = () => {
-    const hidden = dataSource?.filter((i) => selected.includes(i.id))
-    .concat(selected.filter((i: IEvent) => dataSource.includes(i)));
-    changeContext({ hiddenRows: hidden });
+  const onDoneClick = () => {
+    changeContext({ completedTask: [...completedTask, ...activeRows] });
+  };
+
+  const onHideClick = () => {
+    changeContext({ hiddenRows: [...hiddenRows, ...activeRows] });
+    changeActiveRows([]);
+  };
+  const onShowClick = () => {
+    changeActiveRows(hiddenRows);
+    changeContext({ hiddenRows: [] });
   };
 
   return (
     <List
       header={(
-        <>
-          <Button type="primary" onClick={hideElement}>Hide</Button>
-          <Button type="primary" ghost>Hidden Rows</Button>
-        </>
+        <Row justify="space-between">
+          <Col>
+            <Radio.Group>
+              <Radio.Button disabled={activeRows.length < 1} onClick={onHideClick}>
+                Hide Rows
+              </Radio.Button>
+              <Radio.Button disabled={hiddenRows.length < 1} onClick={onShowClick}>
+                Show Hidden Rows
+              </Radio.Button>
+            </Radio.Group>
+          </Col>
+          <Col>
+            <Button disabled={activeRows.length < 1} onClick={onDoneClick}>Done</Button>
+          </Col>
+        </Row>
       )}
       pagination={{
         pageSize: 5,
       }}
       itemLayout="horizontal"
-      dataSource={eventsSortByDate(dataSource)}
+      dataSource={eventsSortByDate(dataSource).filter(({ id }) => !hiddenRows.includes(id))}
       renderItem={(item) => (
         <List.Item
           id={item.id}
@@ -58,7 +83,7 @@ const ListPage: React.FC<ListProps> = ({ dataSource }: ListProps) => {
         >
           <Checkbox
             onChange={onChange}
-            checked={completedTask.includes(item.id)}
+            checked={activeRows.includes(item.id)}
             id={item.id}
             style={{ margin: 10 }}
           />
@@ -76,15 +101,16 @@ const ListPage: React.FC<ListProps> = ({ dataSource }: ListProps) => {
                 Link
               </a>
             )}
-            className="list-item__description"
+            className={window.innerWidth >= 414 ? '' : 'hidden'}
           />
           <List.Item.Meta
             title={moment(item.startDate).format('DD-MM-YYYY')}
             description={moment(item.startDate).format('h:mm')}
           />
           <List.Item.Meta
-            title={moment(item.endDate).format('DD-MM-YYYY')}
-            description={moment(item.endDate).format('h:mm')}
+            title="DeadLine:"
+            description={<Tag color="red">{getDeadline(item.endDate)}</Tag>}
+            className={window.innerWidth >= 414 ? '' : 'hidden'}
           />
         </List.Item>
       )}

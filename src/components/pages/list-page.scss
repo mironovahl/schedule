@@ -9,11 +9,14 @@
     opacity: 0.6;
     box-shadow: 0 0px 15px rgb(0 0 0 / 19%);
   }
-  // &:has(> .ant-checkbox-checked) {
-  //   opacity: 0.6;
-  //   box-shadow: 0 0px 15px rgb(0 0 0 / 19%);
-  //   background-color: blueviolet;
-  // }
+}
+
+.done {
+  opacity: 0.5;
+}
+
+.hidden {
+  display: none !important;
 }
 
 .list-item .ant-checkbox-wrapper {
