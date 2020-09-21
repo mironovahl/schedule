@@ -5,6 +5,6 @@ module.exports = {
   singleQuote: true,
   bracketSpacing: true,
   jsxBracketSameLine: false,
-  printWidth: 100,
+  printWidth: 90,
   arrowParens: 'always',
 };

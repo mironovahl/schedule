@@ -3,7 +3,6 @@ import { Divider } from 'antd';
 import BackendService from '../../services/backend-service';
 import PageLayout from '../page-layout';
 import Table from '../table';
-// import EditableTable from '../table';
 import Calendar from '../calendar';
 import { IEvent } from '../../interfaces/backend-interfaces';
 import SettingsBar from '../settings-bar';
@@ -48,7 +47,6 @@ const SchedulePage: React.FC = () => {
 
   const viewMapping = {
     table: <Table dataSource={tableData} />,
-    // table: <EditableTable />,
     list: <ListPage dataSource={tableData} />,
     calendar: <Calendar dataSource={tableData} />,
   };
