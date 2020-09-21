@@ -98,6 +98,7 @@ export default class BackendService {
         comment: event.comment,
         photo: event.photo,
         video: event.video,
+        text: event.text,
       }
     );
   }
@@ -120,6 +121,7 @@ export default class BackendService {
         comment: event.comment,
         photo: event.photo || '',
         video: event.video || '',
+        text: event.text || '',
       }
     );
   }
