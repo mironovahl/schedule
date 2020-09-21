@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import {
   Table as AntDTable,
   Menu,
@@ -14,6 +14,9 @@ import {
   Form,
   Tag,
   Empty,
+  Row,
+  Col,
+  Radio,
 } from 'antd';
 
 import RenderTag from '../type-task';
@@ -87,7 +90,7 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
   if (!dataSource) return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />;
   const backendService = new BackendService();
   const [columnsVisible, setColumnsVisible] = useState<IColumnsVisibility>({
-    // done: true,
+    done: true,
     date: true,
     time: true,
     type: true,
@@ -100,7 +103,9 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
   });
   const [menuVisible, setMenuVisible] = useState<boolean>(false);
 
-  const { taskSettings, completedTask, changeContext } = useContext(SettingsContext);
+  const {
+    taskSettings, completedTask, hiddenRows, changeContext,
+  } = useContext(SettingsContext);
 
   const typeFilters: { text: string; value: string }[] = [];
   dataSource.forEach((item) => {
@@ -164,7 +169,7 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
       title: 'Done',
       width: 50,
       key: 'done',
-      // className: columnsVisible.done ? '' : 'hidden',
+      className: columnsVisible.done ? '' : 'hidden',
       render: (record) => (
         <Checkbox
           onChange={(e) => {
@@ -222,7 +227,7 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
       ellipsis: {
         showTitle: true,
       },
-      className: columnsVisible.comment ? '' : 'hidden',
+      className: columnsVisible.name ? '' : 'hidden',
       render: (value: string, record: IEvent) => (
         <a href={record.url} target="_blank" rel="noreferrer">
           {value}
@@ -361,34 +366,88 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
     </Menu>
   );
 
+  const [activeRows, changeActiveRows] = useState<string[]>([]);
+  let isShiftActive: boolean = false;
+  const handleShiftDown = (e: any): void => {
+    if (e.key === 'Shift') {
+      isShiftActive = true;
+    }
+  };
+  const handleShiftUp = (e: any): void => {
+    if (e.key === 'Shift') {
+      isShiftActive = false;
+    }
+  };
+  const onHideClick = () => {
+    changeContext({ hiddenRows: [...hiddenRows, ...activeRows] });
+    changeActiveRows([]);
+  };
+  const onShowClick = () => {
+    changeActiveRows(hiddenRows);
+    changeContext({ hiddenRows: [] });
+  };
+  useEffect(() => {
+    window.addEventListener('keyup', handleShiftUp);
+    window.addEventListener('keydown', handleShiftDown);
+  });
+  const getOnRowClick = (record: any): object => ({
+    onClick: () => {
+      if (isShiftActive) {
+        if (activeRows.includes(record.id)) {
+          changeActiveRows(activeRows.filter((id) => id !== record.id));
+        } else {
+          changeActiveRows([...activeRows, record.id]);
+        }
+        return;
+      }
+      changeActiveRows([record.id]);
+    },
+  });
+
+  const rowClassName = (record: any): string => {
+    const classnames = ['editable-row', 'table__row'];
+    if (activeRows.includes(record.id)) {
+      classnames.push('table__row-active');
+    }
+    return classnames.join(' ');
+  };
+
   return (
     <>
-      <Dropdown
-        overlay={menu}
-        onVisibleChange={handleVisibleChange}
-        visible={menuVisible}
-      >
-        <Button style={{ marginBottom: 15 }}>Show/Hide columns </Button>
-      </Dropdown>
+      <Row justify="space-between">
+        <Col>
+          <Radio.Group>
+            <Radio.Button disabled={activeRows.length < 1} onClick={onHideClick}>
+              Hide Rows
+            </Radio.Button>
+            <Radio.Button disabled={hiddenRows.length < 1} onClick={onShowClick}>
+              Show Hidden Rows
+            </Radio.Button>
+          </Radio.Group>
+        </Col>
+        <Col>
+          <Dropdown overlay={menu} onVisibleChange={handleVisibleChange} visible={menuVisible}>
+            <Button style={{ marginBottom: 15 }}>Show/Hide columns </Button>
+          </Dropdown>
+        </Col>
+      </Row>
       <Form form={form} component={false}>
         <AntDTable
-          dataSource={eventsSortByDate(data)}
+          dataSource={eventsSortByDate(data).filter(({ id }) => !hiddenRows.includes(id))}
           components={{
             body: {
               cell: EditableCell,
             },
           }}
           columns={mergedColumnsForTable}
-          // rowClassName="editable-row"
+          className="table"
+          rowClassName={rowClassName}
           pagination={{
             onChange: cancel,
           }}
           size="small"
           scroll={{ x: 'max-content' }}
-          rowClassName={(record) => {
-            if (completedTask.includes(record.id)) return 'done';
-            return '';
-          }}
+          onRow={(record) => getOnRowClick(record)}
         />
       </Form>
     </>
