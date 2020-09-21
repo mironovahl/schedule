@@ -1,10 +1,13 @@
 import React, {
-  Dispatch, SetStateAction, useEffect, useState,
+  Dispatch, SetStateAction, useEffect, useState, useContext,
 } from 'react';
-import { YMaps, Map, Placemark } from 'react-yandex-maps';
+import {
+  YMaps, Map, Placemark, ZoomControl,
+} from 'react-yandex-maps';
 import { Typography } from 'antd';
 import { IEvent } from '../../interfaces/backend-interfaces';
 import BackendService from '../../services/backend-service';
+import SettingsContext from '../../context/settings-context';
 
 const { Paragraph } = Typography;
 
@@ -27,8 +30,11 @@ const searchGeo = async (place: string) => {
 
 const TaskPlace: React.FC<IProps> = (props: IProps) => {
   const { data, setData } = props;
+  const { user } = useContext(SettingsContext);
   const backendService = new BackendService();
   const { type, place } = data;
+
+  const isMentor: boolean = user === 'mentor';
 
   const changeValue = (event: string, property: string): void => {
     setData((oldData: IEvent | null) => {
@@ -61,21 +67,24 @@ const TaskPlace: React.FC<IProps> = (props: IProps) => {
         ? (
           <>
             <Paragraph
-              editable={{ onChange: (e) => changeValue(e, 'place') }}
+              editable={isMentor ? { onChange: (e) => changeValue(e, 'place') } : false}
             >
               {place}
             </Paragraph>
             <div className="task-place">
               <YMaps>
-                <Map defaultState={{ center: placeGeo, zoom: 14 }}>
+                <Map defaultState={{ center: placeGeo, zoom: 9 }}>
                   <Placemark geometry={placeGeo} />
+                  <ZoomControl options={{ float: 'right' }} />
                 </Map>
               </YMaps>
             </div>
           </>
         )
         : (
-          <Paragraph editable={{ onChange: (e) => changeValue(e, 'place') }}>
+          <Paragraph
+            editable={isMentor ? { onChange: (e) => changeValue(e, 'place') } : false}
+          >
             {place}
           </Paragraph>
         )}

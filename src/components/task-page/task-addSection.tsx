@@ -16,7 +16,8 @@ interface IProps {
   setPhoto: React.Dispatch<React.SetStateAction<string>>;
   video: string;
   setVideo: React.Dispatch<React.SetStateAction<string>>;
-
+  text: string;
+  setText: React.Dispatch<React.SetStateAction<string>>;
 }
 
 interface TVisibleInputs {
@@ -29,6 +30,7 @@ interface TVisibleInputs {
 const menu = (
   isPhoto: string,
   isVideo: string,
+  isText:string,
   changeVisible: React.Dispatch<React.SetStateAction<TVisibleInputs>>,
 ) => {
   const addValue = (property:string) => changeVisible((prevState:TVisibleInputs) => (
@@ -41,14 +43,14 @@ const menu = (
     <Menu>
       {isPhoto ? null : <Menu.Item key="1" onClick={() => addValue('photo')}>Фото</Menu.Item>}
       {isVideo ? null : <Menu.Item key="2" onClick={() => addValue('video')}>Видео</Menu.Item>}
-      <Menu.Item key="3">Текст</Menu.Item>
+      {isText ? null : <Menu.Item key="2" onClick={() => addValue('text')}>Текст</Menu.Item>}
     </Menu>
   );
 };
 
 const AddSection: React.FC<IProps> = (props: IProps) => {
   const {
-    data, setData, photo, setPhoto, video, setVideo,
+    data, setData, photo, setPhoto, video, setVideo, text, setText,
   } = props;
 
   const [visibleInputs, setVisibleInputs] = useState<TVisibleInputs>({
@@ -83,7 +85,19 @@ const AddSection: React.FC<IProps> = (props: IProps) => {
             placeholder="Video link"
           />
         )}
-      <Dropdown overlay={menu(data.photo, data.video, setVisibleInputs)}>
+      {visibleInputs.text
+        && (
+          <AddItem
+            link={text}
+            setFunc={setText}
+            setData={setData}
+            visibleInputs={visibleInputs}
+            setVisibleInputs={setVisibleInputs}
+            property="text"
+            placeholder="text"
+          />
+        )}
+      <Dropdown overlay={menu(data.photo, data.video, data.text, setVisibleInputs)}>
         <Button type="primary" shape="circle" size="large">
           <PlusOutlined />
         </Button>
