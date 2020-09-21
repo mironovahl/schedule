@@ -1,13 +1,22 @@
-import React, { useState } from 'react';
+import React, {
+  Dispatch, SetStateAction, useState,
+} from 'react';
 import {
-  Button, Menu, Dropdown, Input,
+  Button, Menu, Dropdown,
 } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { IEvent } from '../../interfaces/backend-interfaces';
+import AddItem from './addSection-item';
 import './addSection.scss';
 
 interface IProps {
   data: IEvent;
+  setData: Dispatch<SetStateAction<IEvent | null>>;
+  photo: string;
+  setPhoto: React.Dispatch<React.SetStateAction<string>>;
+  video: string;
+  setVideo: React.Dispatch<React.SetStateAction<string>>;
+
 }
 
 interface TVisibleInputs {
@@ -38,7 +47,10 @@ const menu = (
 };
 
 const AddSection: React.FC<IProps> = (props: IProps) => {
-  const { data } = props;
+  const {
+    data, setData, photo, setPhoto, video, setVideo,
+  } = props;
+
   const [visibleInputs, setVisibleInputs] = useState<TVisibleInputs>({
     photo: false,
     video: false,
@@ -49,19 +61,27 @@ const AddSection: React.FC<IProps> = (props: IProps) => {
     <>
       {visibleInputs.photo
         && (
-          <div>
-            <p>Вставьте ссылку на изображение</p>
-            <Input placeholder="Image link" />
-            <Button>Добавить</Button>
-          </div>
+          <AddItem
+            link={photo}
+            setFunc={setPhoto}
+            setData={setData}
+            visibleInputs={visibleInputs}
+            setVisibleInputs={setVisibleInputs}
+            property="photo"
+            placeholder="Image link"
+          />
         )}
       {visibleInputs.video
         && (
-          <div>
-            <p>Вставьте ссылку на видео</p>
-            <Input placeholder="Video link" />
-            <Button>Добавить</Button>
-          </div>
+          <AddItem
+            link={video}
+            setFunc={setVideo}
+            setData={setData}
+            visibleInputs={visibleInputs}
+            setVisibleInputs={setVisibleInputs}
+            property="video"
+            placeholder="Video link"
+          />
         )}
       <Dropdown overlay={menu(data.photo, data.video, setVisibleInputs)}>
         <Button type="primary" shape="circle" size="large">

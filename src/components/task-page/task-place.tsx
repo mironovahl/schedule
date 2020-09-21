@@ -1,14 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React, {
+  Dispatch, SetStateAction, useEffect, useState,
+} from 'react';
 import { YMaps, Map, Placemark } from 'react-yandex-maps';
 import { Typography } from 'antd';
+import { IEvent } from '../../interfaces/backend-interfaces';
+import BackendService from '../../services/backend-service';
 
 const { Paragraph } = Typography;
 
 const API_KEY = '32357e55-ae68-4e2d-a73d-8dbe45633551';
 
 interface IProps {
-  place: string;
-  type: string;
+  data: IEvent;
+  setData: Dispatch<SetStateAction<IEvent | null>>;
 }
 
 const searchGeo = async (place: string) => {
@@ -22,7 +26,23 @@ const searchGeo = async (place: string) => {
 };
 
 const TaskPlace: React.FC<IProps> = (props: IProps) => {
-  const { place, type } = props;
+  const { data, setData } = props;
+  const backendService = new BackendService();
+  const { type, place } = data;
+
+  const changeValue = (event: string, property: string): void => {
+    setData((oldData: IEvent | null) => {
+      if (oldData) {
+        const newData = {
+          ...oldData,
+          [property]: event,
+        };
+        backendService.updateEvent(newData);
+        return newData;
+      }
+      return oldData;
+    });
+  };
 
   const [placeGeo, setPlaceGeo] = useState<Array<number>>([]);
   if (type === 'lecture_offline') {
@@ -41,7 +61,7 @@ const TaskPlace: React.FC<IProps> = (props: IProps) => {
         ? (
           <>
             <Paragraph
-              editable
+              editable={{ onChange: (e) => changeValue(e, 'place') }}
             >
               {place}
             </Paragraph>
@@ -55,7 +75,7 @@ const TaskPlace: React.FC<IProps> = (props: IProps) => {
           </>
         )
         : (
-          <Paragraph editable>
+          <Paragraph editable={{ onChange: (e) => changeValue(e, 'place') }}>
             {place}
           </Paragraph>
         )}

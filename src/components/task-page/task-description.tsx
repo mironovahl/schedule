@@ -1,33 +1,56 @@
-import React, { Dispatch, SetStateAction } from 'react';
-import { Typography, DatePicker, Image } from 'antd';
+import React, { useState, Dispatch, SetStateAction } from 'react';
+import {
+  Typography, DatePicker, Image, Button, Tooltip,
+} from 'antd';
+import { EditOutlined } from '@ant-design/icons';
+
 import { IEvent } from '../../interfaces/backend-interfaces';
 import './task-description.scss';
 import RenderTag from '../type-task';
 import TaskPlace from './task-place';
 import AddSection from './task-addSection';
+import BackendService from '../../services/backend-service';
+import AddItem from './addSection-item';
 
 const { Paragraph, Title } = Typography;
 
+interface TVisibleInputs {
+  [key:string]: boolean,
+  photo: boolean;
+  video: boolean;
+  text: boolean;
+}
 interface IProps {
   data: IEvent;
   setData: Dispatch<SetStateAction<IEvent | null>>;
 }
 
 const TaskDescription: React.FC<IProps> = (props: IProps) => {
+  const backendService = new BackendService();
   const { data, setData } = props;
+  const [photo, setPhoto] = useState<string>(data.photo);
+  const [video, setVideo] = useState<string>(data.video);
+
   console.log(data);
+
+  const [visibleInputs, setVisibleInputs] = useState<TVisibleInputs>({
+    photo: false,
+    video: false,
+    text: false,
+  });
 
   const isMentor: boolean = true;
 
-  const { date } = data;
-  const startDay = date;
+  const { startDate, endDate } = data;
   const changeValue = (event: string, property: string): void => {
     setData((oldData: IEvent | null) => {
       if (oldData) {
-        return {
+        const newData = {
           ...oldData,
           [property]: event,
         };
+        backendService.updateEvent(newData);
+        return newData;
       }
       return oldData;
     });
@@ -46,11 +69,11 @@ const TaskDescription: React.FC<IProps> = (props: IProps) => {
         <div className="taskDescription_date">
           <div className="taskDescription_date-day">
             <span>Начало</span>
-            <DatePicker defaultValue={startDay} format="DD-MM-YYYY" />
+            <DatePicker defaultValue={startDate} format="DD-MM-YYYY HH:mm" showTime />
           </div>
           <div className="taskDescription_date-day">
             <span>Конец</span>
-            <DatePicker defaultValue={startDay} format="DD-MM-YYYY" />
+            <DatePicker defaultValue={endDate} format="DD-MM-YYYY HH:mm" showTime />
           </div>
         </div>
         {
@@ -69,7 +92,7 @@ const TaskDescription: React.FC<IProps> = (props: IProps) => {
         }
         <div>
           <h3>Место проведения</h3>
-          <TaskPlace place={data.place} type={data.type} />
+          <TaskPlace data={data} setData={setData} />
         </div>
         {
           data.url !== ''
@@ -106,12 +129,80 @@ const TaskDescription: React.FC<IProps> = (props: IProps) => {
                   width={500}
                   src={data.photo}
                 />
+                <Tooltip title="Edit">
+                  <Button
+                    shape="circle"
+                    icon={(<EditOutlined />)}
+                    onClick={() => {
+                      setVisibleInputs({
+                        ...visibleInputs,
+                        photo: !visibleInputs.photo,
+                      });
+                    }}
+                  />
+                </Tooltip>
+                {visibleInputs.photo
+                  && (
+                    <AddItem
+                      link={photo}
+                      setFunc={setPhoto}
+                      setData={setData}
+                      visibleInputs={visibleInputs}
+                      setVisibleInputs={setVisibleInputs}
+                      property="photo"
+                      placeholder="Image link"
+                    />
+                  )}
               </div>
             )
         }
-
+        {
+          data.video
+            && (
+              <div>
+                <iframe
+                  src={data.video}
+                  frameBorder="0"
+                  allow="autoplay; encrypted-media"
+                  allowFullScreen
+                  title="video"
+                />
+                <Tooltip title="Edit">
+                  <Button
+                    shape="circle"
+                    icon={(<EditOutlined />)}
+                    onClick={() => {
+                      setVisibleInputs({
+                        ...visibleInputs,
+                        video: !visibleInputs.video,
+                      });
+                    }}
+                  />
+                </Tooltip>
+                {visibleInputs.video
+                  && (
+                    <AddItem
+                      link={video}
+                      setFunc={setVideo}
+                      setData={setData}
+                      visibleInputs={visibleInputs}
+                      setVisibleInputs={setVisibleInputs}
+                      property="video"
+                      placeholder="Video link"
+                    />
+                  )}
+              </div>
+            )
+        }
         <div>
-          <AddSection data={data} />
+          <AddSection
+            data={data}
+            setData={setData}
+            photo={photo}
+            setPhoto={setPhoto}
+            video={video}
+            setVideo={setVideo}
+          />
         </div>
       </div>
     </>
