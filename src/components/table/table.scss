@@ -1,13 +1,10 @@
-.hidden {
-  display: none;
-}
-
 .table__row {
   cursor: pointer;
   user-select: none;
+
   &:hover {
     td {
-      background: unset !important;  
+      background: unset !important;
     }
   }
 }
