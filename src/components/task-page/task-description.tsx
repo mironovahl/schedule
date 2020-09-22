@@ -1,30 +1,59 @@
-import React, { Dispatch, SetStateAction } from 'react';
-import { Typography, DatePicker } from 'antd';
+/* eslint-disable sonarjs/cognitive-complexity */
+import React, {
+  useState, Dispatch, SetStateAction, useContext,
+} from 'react';
+import {
+  Typography, DatePicker, Image, Button, Tooltip,
+} from 'antd';
+import { EditOutlined } from '@ant-design/icons';
 import { IEvent } from '../../interfaces/backend-interfaces';
 import './task-description.scss';
 import RenderTag from '../type-task';
+import TaskPlace from './task-place';
+import AddSection from './task-addSection';
+import BackendService from '../../services/backend-service';
+import AddItem from './addSection-item';
+import SettingsContext from '../../context/settings-context';
 
 const { Paragraph, Title } = Typography;
 
+interface TVisibleInputs {
+  [key:string]: boolean,
+  photo: boolean;
+  video: boolean;
+  text: boolean;
+}
 interface IProps {
   data: IEvent;
   setData: Dispatch<SetStateAction<IEvent | null>>;
 }
 
 const TaskDescription: React.FC<IProps> = (props: IProps) => {
+  const { user } = useContext(SettingsContext);
+  const backendService = new BackendService();
   const { data, setData } = props;
+  const [photo, setPhoto] = useState<string>(data.photo);
+  const [video, setVideo] = useState<string>(data.video);
+  const [text, setText] = useState<string>(data.video);
 
-  const isMentor: boolean = true;
+  const [visibleInputs, setVisibleInputs] = useState<TVisibleInputs>({
+    photo: false,
+    video: false,
+    text: false,
+  });
+  console.log(user);
+  const isMentor: boolean = user === 'mentor';
 
-  const { date } = data;
-  const startDay = date;
+  const { startDate, endDate } = data;
   const changeValue = (event: string, property: string): void => {
     setData((oldData: IEvent | null) => {
       if (oldData) {
-        return {
+        const newData = {
           ...oldData,
           [property]: event,
         };
+        backendService.updateEvent(newData);
+        return newData;
       }
       return oldData;
     });
@@ -43,26 +72,165 @@ const TaskDescription: React.FC<IProps> = (props: IProps) => {
         <div className="taskDescription_date">
           <div className="taskDescription_date-day">
             <span>Начало</span>
-            <DatePicker defaultValue={startDay} format="DD-MM-YYYY" />
+            <DatePicker defaultValue={startDate} format="DD-MM-YYYY HH:mm" showTime />
           </div>
           <div className="taskDescription_date-day">
             <span>Конец</span>
-            <DatePicker defaultValue={startDay} format="DD-MM-YYYY" />
+            <DatePicker defaultValue={endDate} format="DD-MM-YYYY HH:mm" showTime />
           </div>
         </div>
+        {data.description !== ''
+          && (
+            <div>
+              <h3>Описание</h3>
+              <Paragraph
+                editable={isMentor ? { onChange: (e) => changeValue(e, 'description') } : false}
+              >
+                {data?.description}
+              </Paragraph>
+            </div>
+          )}
+        <div>
+          <h3>Место проведения</h3>
+          <TaskPlace data={data} setData={setData} />
+        </div>
+        {data.url !== ''
+          && (
+            <div>
+              <h3>Ссылка</h3>
+              <Paragraph
+                editable={isMentor ? { onChange: (e) => changeValue(e, 'url') } : false}
+              >
+                <a href={data?.url}>{data?.url}</a>
+              </Paragraph>
+            </div>
+          )}
 
-        <h3>Описание</h3>
-        <Paragraph
-          editable={isMentor ? { onChange: (e) => changeValue(e, 'description') } : false}
-        >
-          {data?.description}
-        </Paragraph>
-        <h3>Комментарий</h3>
-        <Paragraph
-          editable={isMentor ? { onChange: (e) => changeValue(e, 'comment') } : false}
-        >
-          {data?.comment}
-        </Paragraph>
+        {data.comment !== ''
+          && (
+            <div>
+              <h3>Комментарий</h3>
+              <Paragraph
+                editable={isMentor ? { onChange: (e) => changeValue(e, 'comment') } : false}
+              >
+                {data?.comment}
+              </Paragraph>
+            </div>
+          )}
+        {data.photo
+          && (
+            <div>
+              <Image
+                width={500}
+                src={data.photo}
+              />
+              {isMentor
+                && (
+                  <Tooltip title="Edit">
+                    <Button
+                      shape="circle"
+                      icon={(<EditOutlined />)}
+                      onClick={() => {
+                        setVisibleInputs({
+                          ...visibleInputs,
+                          photo: !visibleInputs.photo,
+                        });
+                      }}
+                    />
+                  </Tooltip>
+                )}
+                {visibleInputs.photo
+                  && (
+                    <AddItem
+                      link={photo}
+                      setFunc={setPhoto}
+                      setData={setData}
+                      visibleInputs={visibleInputs}
+                      setVisibleInputs={setVisibleInputs}
+                      property="photo"
+                      placeholder="Image link"
+                    />
+                  )}
+            </div>
+          )}
+        {data.text
+        && (
+          <div>
+            <Paragraph
+              editable={isMentor ? { onChange: (e) => changeValue(e, 'text') } : false}
+            >
+              {data?.text}
+            </Paragraph>
+            {visibleInputs.text
+            && (
+              <AddItem
+                link={text}
+                setFunc={setText}
+                setData={setData}
+                visibleInputs={visibleInputs}
+                setVisibleInputs={setVisibleInputs}
+                property="text"
+                placeholder="Text"
+              />
+            )}
+          </div>
+        )}
+
+        {data.video
+          && (
+            <div>
+              <iframe
+                src={data.video}
+                frameBorder="0"
+                allow="autoplay; encrypted-media"
+                allowFullScreen
+                title="video"
+              />
+              {isMentor
+                && (
+                  <Tooltip title="Edit">
+                    <Button
+                      shape="circle"
+                      icon={(<EditOutlined />)}
+                      onClick={() => {
+                        setVisibleInputs({
+                          ...visibleInputs,
+                          video: !visibleInputs.video,
+                        });
+                      }}
+                    />
+                  </Tooltip>
+                )}
+              {visibleInputs.video
+                && (
+                  <AddItem
+                    link={video}
+                    setFunc={setVideo}
+                    setData={setData}
+                    visibleInputs={visibleInputs}
+                    setVisibleInputs={setVisibleInputs}
+                    property="video"
+                    placeholder="Video link"
+                  />
+                )}
+
+            </div>
+          )}
+        {isMentor
+          && (
+            <div>
+              <AddSection
+                data={data}
+                setData={setData}
+                photo={photo}
+                setPhoto={setPhoto}
+                video={video}
+                setVideo={setVideo}
+                text={text}
+                setText={setText}
+              />
+            </div>
+          )}
       </div>
     </>
   );
