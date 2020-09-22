@@ -4,16 +4,16 @@ import {
   List,
   Checkbox,
   Empty,
-  Radio,
   Col,
   Row,
   Button,
   Tag,
 } from 'antd';
-// import { saveToCSV, saveToTXT } from 'src/services/saving-service.ts';
+import { EyeInvisibleOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import { eventsSortByDate, getDeadline } from '../../services/date-service';
 import RenderTag from '../type-task';
+import DownloadTasksButton from '../download-tasks';
 import { IEvent } from '../../interfaces/backend-interfaces';
 import SettingsContext from '../../context/settings-context';
 import './list-page.scss';
@@ -51,74 +51,75 @@ const ListPage: React.FC<ListProps> = ({ dataSource }: ListProps) => {
   };
 
   return (
-    <List
-      header={(
-        <Row justify="space-between">
-          <Col>
-            <Radio.Group>
-              <Radio.Button disabled={activeRows.length < 1} onClick={onHideClick}>
-                Hide Rows
-              </Radio.Button>
-              <Radio.Button disabled={hiddenRows.length < 1} onClick={onShowClick}>
-                Show Hidden Rows
-              </Radio.Button>
-            </Radio.Group>
-          </Col>
-          <Col>
-            <Button disabled={activeRows.length < 1} onClick={onDoneClick}>Done</Button>
-          </Col>
-        </Row>
-      )}
-      pagination={{
-        pageSize: 5,
-      }}
-      itemLayout="horizontal"
-      dataSource={eventsSortByDate(dataSource).filter(({ id }) => !hiddenRows.includes(id))}
-      renderItem={(item) => (
-        <List.Item
-          id={item.id}
-          className={completedTask.includes(item.id) ? 'list-item done' : 'list-item'}
-          key={item.id}
-          actions={[<a href={`/task-page/${item.id}`} key="list-item__load-more">See more</a>]}
-        >
-          <Checkbox
-            onChange={onChange}
-            checked={activeRows.includes(item.id)}
+    <>
+      <Row justify="space-between">
+        <Col>
+          <Button style={{ margin: '0 10px 0 0' }} disabled={hiddenRows.length < 1} onClick={onShowClick}>
+            Show hidden rows
+          </Button>
+          <Button style={{ margin: '0 10px 0 0' }} type="dashed" disabled={activeRows.length < 1} onClick={onHideClick}>
+            <EyeInvisibleOutlined />
+            Hide rows
+          </Button>
+          <DownloadTasksButton data={dataSource} />
+        </Col>
+        <Col>
+          <Button disabled={activeRows.length < 1} onClick={onDoneClick}>Done</Button>
+        </Col>
+      </Row>
+
+      <List
+        pagination={{
+          pageSize: 5,
+        }}
+        itemLayout="horizontal"
+        dataSource={eventsSortByDate(dataSource).filter(({ id }) => !hiddenRows.includes(id))}
+        renderItem={(item) => (
+          <List.Item
             id={item.id}
-            style={{ margin: 10 }}
-          />
-          <List.Item.Meta
-            title={item.name}
-            description={<RenderTag type={item.type} />}
-          />
-          <List.Item.Meta
-            description={(
-              <a
-                href={item.url}
-                rel="noreferrer"
-                target="_blank"
-              >
-                Ссылка на задание
-              </a>
+            className={completedTask.includes(item.id) ? 'list-item done' : 'list-item'}
+            key={item.id}
+            actions={[<a href={`/task-page/${item.id}`} key="list-item__load-more">See more</a>]}
+          >
+            <Checkbox
+              onChange={onChange}
+              checked={activeRows.includes(item.id)}
+              id={item.id}
+              style={{ margin: 10 }}
+            />
+            <List.Item.Meta
+              title={item.name}
+              description={<RenderTag type={item.type} />}
+            />
+            <List.Item.Meta
+              description={(
+                <a
+                  href={item.url}
+                  rel="noreferrer"
+                  target="_blank"
+                >
+                  Ссылка на задание
+                </a>
             )}
-            className={window.innerWidth >= 414 ? '' : 'hidden'}
-          />
-          <List.Item.Meta
-            title="Выдача таска"
-            description={moment(item.startDate).format('DD-MM-YYYY, h:mm')}
-          />
-          <List.Item.Meta
-            description={<Tag color="red">{getDeadline(item.endDate)}</Tag>}
-            className={window.innerWidth >= 414 ? '' : 'hidden'}
-          />
-          <List.Item.Meta
-            title="Deadline"
-            description={moment(item.endDate).format('DD-MM-YYYY, h:mm')}
-            className={window.innerWidth >= 414 ? '' : 'hidden'}
-          />
-        </List.Item>
-      )}
-    />
+              className={window.innerWidth >= 414 ? '' : 'hidden'}
+            />
+            <List.Item.Meta
+              title="Выдача таска"
+              description={moment(item.startDate).format('DD-MM-YYYY, h:mm')}
+            />
+            <List.Item.Meta
+              description={<Tag color="red">{getDeadline(item.endDate)}</Tag>}
+              className={window.innerWidth >= 414 ? '' : 'hidden'}
+            />
+            <List.Item.Meta
+              title="Deadline"
+              description={moment(item.endDate).format('DD-MM-YYYY, h:mm')}
+              className={window.innerWidth >= 414 ? '' : 'hidden'}
+            />
+          </List.Item>
+        )}
+      />
+    </>
   );
 };
 
