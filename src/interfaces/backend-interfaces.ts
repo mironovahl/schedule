@@ -10,6 +10,7 @@ export interface IEventBackend {
   comment: string;
   photo: string;
   video: string;
+  text: string;
 }
 
 export interface IEvent {
@@ -26,4 +27,5 @@ export interface IEvent {
   comment: string;
   photo: string;
   video: string;
+  text: string;
 }

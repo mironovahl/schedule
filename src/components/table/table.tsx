@@ -24,7 +24,10 @@ import SettingsContext from '../../context/settings-context';
 import BackendService from '../../services/backend-service';
 
 import {
-  getDate, getTime, eventsSortByDate, getDeadline,
+  getDate,
+  getTime,
+  eventsSortByDate,
+  getDeadline,
 } from '../../services/date-service';
 
 import {
@@ -123,6 +126,8 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
   const [data, setData] = useState(dataSource);
   const [editingKey, setEditingKey] = useState<string>('');
 
+  const { user } = useContext(SettingsContext);
+
   const isEditing = (record: IEvent) => record.key === editingKey;
 
   const edit = (record: IEvent) => {
@@ -137,7 +142,6 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
   const save = async (key: React.Key) => {
     try {
       const row = (await form.validateFields()) as IEvent;
-      console.log(row);
       const newData = [...data];
       const index = newData.findIndex((item) => key === item.key);
       if (index > -1) {
@@ -146,15 +150,12 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
           ...item,
           ...row,
         });
-        console.log(newData);
-        console.log(newData[index]);
         setData(newData);
         backendService.updateEvent(newData[index]);
 
         setEditingKey('');
       } else {
         newData.push(row);
-        // backendService.updateEvent(item);
         setData(newData);
         setEditingKey('');
       }
@@ -166,7 +167,7 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
   const columns: ITableColumns[] = [
     {
       title: 'Done',
-      width: 40,
+      width: 50,
       key: 'done',
       className: columnsVisible.done ? '' : 'hidden',
       render: (record) => (
@@ -175,7 +176,9 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
             if (e.target.checked) {
               changeContext({ completedTask: [...completedTask, record.id] });
             } else {
-              changeContext({ completedTask: completedTask.filter((id) => id !== record.id) });
+              changeContext({
+                completedTask: completedTask.filter((id) => id !== record.id),
+              });
             }
           }}
           checked={completedTask.includes(record.id)}
@@ -188,7 +191,6 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
       dataIndex: 'startDate',
       key: 'date',
       className: columnsVisible.date ? '' : 'hidden',
-
       render: (date, record) => (
         <>
           {getDate(date)}
@@ -242,7 +244,7 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
         showTitle: false,
       },
       className: columnsVisible.place ? '' : 'hidden',
-      editable: false,
+      editable: true,
     },
     {
       title: 'Description',
@@ -318,26 +320,42 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
     setMenuVisible(flag);
   };
 
-  const mergedColumns = columns.map((col) => {
-    if (!col.editable) {
-      return col;
-    }
-    return {
-      ...col,
-      onCell: (record: IEvent) => ({
-        record,
-        inputtype: 'text',
-        dataIndex: col.dataIndex,
-        title: col.title,
-        editing: isEditing(record),
-      }),
-    };
-  });
+  const columnsMenu: ITableColumns[] = columns.filter(
+    (column) => column.key !== 'operation',
+  );
+
+  let mergedColumnsForTable;
+  let mergedColumns;
+
+  const getMergedColumns = (switchColumns: any[]) => {
+    mergedColumns = switchColumns.map((col) => {
+      if (!col.editable) {
+        return col;
+      }
+      return {
+        ...col,
+        onCell: (record: IEvent) => ({
+          record,
+          inputtype: 'text',
+          dataIndex: col.dataIndex,
+          title: col.title,
+          editing: isEditing(record),
+        }),
+      };
+    });
+    return mergedColumns;
+  };
+
+  if (user !== 'mentor') {
+    mergedColumnsForTable = getMergedColumns(columnsMenu);
+  } else {
+    mergedColumnsForTable = getMergedColumns(columns);
+  }
 
   const menu: JSX.Element = (
     <Menu>
       <Menu.ItemGroup>
-        {columns.map((column) => (
+        {columnsMenu.map((column) => (
           <Menu.Item key={column.key}>
             <Checkbox id={column.key} defaultChecked onChange={onCheckboxChange}>
               {column.title}
@@ -421,7 +439,7 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
               cell: EditableCell,
             },
           }}
-          columns={mergedColumns}
+          columns={mergedColumnsForTable}
           className="table"
           rowClassName={rowClassName}
           pagination={{
