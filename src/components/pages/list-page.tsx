@@ -98,18 +98,22 @@ const ListPage: React.FC<ListProps> = ({ dataSource }: ListProps) => {
                 rel="noreferrer"
                 target="_blank"
               >
-                Link
+                Ссылка на задание
               </a>
             )}
             className={window.innerWidth >= 414 ? '' : 'hidden'}
           />
           <List.Item.Meta
-            title={moment(item.startDate).format('DD-MM-YYYY')}
-            description={moment(item.startDate).format('h:mm')}
+            title="Выдача таска"
+            description={moment(item.startDate).format('DD-MM-YYYY, h:mm')}
           />
           <List.Item.Meta
-            title="DeadLine:"
             description={<Tag color="red">{getDeadline(item.endDate)}</Tag>}
+            className={window.innerWidth >= 414 ? '' : 'hidden'}
+          />
+          <List.Item.Meta
+            title="Deadline"
+            description={moment(item.endDate).format('DD-MM-YYYY, h:mm')}
             className={window.innerWidth >= 414 ? '' : 'hidden'}
           />
         </List.Item>
