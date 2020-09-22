@@ -3,7 +3,7 @@ export interface ITableColumns {
   width?: number;
   dataIndex?: string;
   key: string;
-  className?: string;
+  columnVisible: boolean;
   ellipsis?: any;
   fixed?: any;
   filters?: any;
@@ -23,7 +23,7 @@ export interface IColumnsVisibility {
   place: boolean,
   comment: boolean,
   details: boolean,
-  done?: boolean,
+  done: boolean,
 }
 
 export interface EditableCellProps {

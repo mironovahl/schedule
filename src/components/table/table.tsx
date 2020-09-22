@@ -170,7 +170,7 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
       title: 'Done',
       width: 50,
       key: 'done',
-      className: columnsVisible.done ? '' : 'hidden',
+      columnVisible: columnsVisible.done,
       render: (record) => (
         <Checkbox
           onChange={(e) => {
@@ -191,7 +191,7 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
       width: 90,
       dataIndex: 'startDate',
       key: 'date',
-      className: columnsVisible.date ? '' : 'hidden',
+      columnVisible: columnsVisible.date,
       render: (date, record) => (
         <>
           {getDate(date)}
@@ -205,7 +205,7 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
       width: 70,
       dataIndex: 'startDate',
       key: 'time',
-      className: columnsVisible.time ? '' : 'hidden',
+      columnVisible: columnsVisible.time,
       render: (date) => <>{getTime(date)}</>,
       editable: false,
     },
@@ -214,7 +214,7 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
       width: 100,
       dataIndex: 'type',
       key: 'type',
-      className: columnsVisible.type ? '' : 'hidden',
+      columnVisible: columnsVisible.type,
       filters: typeFilters,
       onFilter: (value, record) => record.type.indexOf(value) === 0,
       render: (value: string) => <RenderTag type={value} />,
@@ -225,10 +225,10 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
       width: 200,
       dataIndex: 'name',
       key: 'name',
+      columnVisible: columnsVisible.name,
       ellipsis: {
         showTitle: true,
       },
-      className: columnsVisible.name ? '' : 'hidden',
       render: (value: string, record: IEvent) => (
         <a href={record.url} target="_blank" rel="noreferrer">
           {value}
@@ -241,10 +241,10 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
       width: 200,
       dataIndex: 'place',
       key: 'place',
+      columnVisible: columnsVisible.place,
       ellipsis: {
         showTitle: false,
       },
-      className: columnsVisible.place ? '' : 'hidden',
       editable: true,
     },
     {
@@ -252,6 +252,7 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
       width: 200,
       dataIndex: 'description',
       key: 'description',
+      columnVisible: columnsVisible.description,
       ellipsis: {
         showTitle: false,
       },
@@ -260,14 +261,13 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
           {description}
         </Tooltip>
       ),
-      className: columnsVisible.description ? '' : 'hidden',
       editable: true,
     },
     {
       title: 'Details Url',
       width: 85,
       key: 'details',
-      className: columnsVisible.details ? '' : 'hidden',
+      columnVisible: columnsVisible.details,
       render: (record: IEvent) => <a href={`/task-page/${record.id}`}>See more</a>,
       editable: false,
     },
@@ -276,6 +276,7 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
       width: 200,
       dataIndex: 'comment',
       key: 'comment',
+      columnVisible: columnsVisible.comment,
       ellipsis: {
         showTitle: false,
       },
@@ -284,7 +285,6 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
           {comment}
         </Tooltip>
       ),
-      className: columnsVisible.comment ? '' : 'hidden',
       editable: true,
     },
     {
@@ -292,6 +292,7 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
       width: 85,
       dataIndex: 'operation',
       key: 'operation',
+      columnVisible: true,
       render: (_: any, record: IEvent) => {
         const editable = isEditing(record);
         return editable ? (
@@ -321,7 +322,7 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
     setMenuVisible(flag);
   };
 
-  const columnsMenu: ITableColumns[] = columns.filter(
+  const columnsStudent: ITableColumns[] = columns.filter(
     (column) => column.key !== 'operation',
   );
 
@@ -348,15 +349,17 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
   };
 
   if (user !== 'mentor') {
-    mergedColumnsForTable = getMergedColumns(columnsMenu);
+    mergedColumnsForTable = getMergedColumns(columnsStudent);
+    mergedColumnsForTable = mergedColumnsForTable.filter((column) => column.columnVisible === true);
   } else {
     mergedColumnsForTable = getMergedColumns(columns);
+    mergedColumnsForTable = mergedColumnsForTable.filter((column) => column.columnVisible === true);
   }
 
   const menu: JSX.Element = (
     <Menu>
       <Menu.ItemGroup>
-        {columnsMenu.map((column) => (
+        {columnsStudent.map((column) => (
           <Menu.Item key={column.key}>
             <Checkbox id={column.key} defaultChecked onChange={onCheckboxChange}>
               {column.title}
