@@ -9,6 +9,7 @@ import {
   Popover,
   Tooltip,
 } from 'antd';
+import { SettingOutlined } from '@ant-design/icons';
 import { ChromePicker, ColorResult } from 'react-color';
 import { TaskSettings, ITaskColors } from '../../../interfaces/settings-interfaces';
 import defaultSettings from '../../../config/default-settings';
@@ -106,7 +107,10 @@ const ColorSettings: React.FC<ColorSettingsProps> = ({
 
   return (
     <>
-      <Button onClick={showColorSettings}>Colors</Button>
+      <Button onClick={showColorSettings}>
+        <SettingOutlined />
+        Color settings
+      </Button>
       <Modal
         title="Color Settings"
         visible={isColorSettingsVisible}

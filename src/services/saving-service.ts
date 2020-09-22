@@ -1,14 +1,12 @@
 import fileDownload from 'js-file-download';
-import { useContext } from 'react';
+import SettingsService from './settings-service';
 import { IEvent } from '../interfaces/backend-interfaces';
-import SettingsContext from '../context/settings-context';
-
-const { hiddenCols, hiddenRows } = useContext(SettingsContext);
 
 const ObjectsToCsv = require('objects-to-csv');
 
 const filterEvents = (events: IEvent[]) => {
-  const filterRows = events.filter((item) => hiddenRows.includes(item.id));
+  const { hiddenRows, hiddenCols } = SettingsService.getAllSettings();
+  const filterRows = events.filter((item) => !hiddenRows.includes(item.id));
   const deletedCols: string[] = [];
   Object.keys(hiddenCols).forEach((key) => {
     if (!hiddenCols[key]) deletedCols.push(key);
@@ -20,7 +18,7 @@ const filterEvents = (events: IEvent[]) => {
 };
 
 const saveFile = (data: string, extension: string) => {
-  fileDownload(data, `data.${extension}`);
+  fileDownload(data, `schedule.${extension}`);
 };
 
 const saveToCSV = async (data: IEvent[]) => {
@@ -32,12 +30,13 @@ const saveToCSV = async (data: IEvent[]) => {
 const saveToTXT = async (data: IEvent[]) => {
   const filtered = filterEvents(data);
   const text = filtered.map((event) => (
-    `${event.type ? event.type : null}: ${event.name ? event.name : null}
-${event.date ? event.date.toLocaleString() : null}
-${event.url ? event.url : null}
-Место проведения: ${event.place ? event.place : null}
-Описание: ${event.description ? event.description : null}
-Комментарий: ${event.comment ? event.comment : null}
+    `${event.type ? event.type : ''}: ${event.name ? event.name : ''}
+Начало события: ${event.startDate ? event.startDate.format('MMMM Do YYYY') : ''}
+Конец события: ${event.endDate ? event.endDate.format('MMMM Do YYYY') : ''}
+${event.url ? event.url : ''}
+Место проведения: ${event.place ? event.place : ''}
+Описание: ${event.description ? event.description : ''}
+Комментарий: ${event.comment ? event.comment : ''}
 
 `));
   const txt = text.join('');
