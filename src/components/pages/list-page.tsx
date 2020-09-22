@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 
 import { List, Checkbox, Button } from 'antd';
+import { EyeInvisibleOutlined } from '@ant-design/icons';
 
 import moment from 'moment';
 import RenderTag from '../type-task';
@@ -34,8 +35,11 @@ const ListPage: React.FC<ListProps> = ({ dataSource }: ListProps) => {
     <List
       header={(
         <>
-          <Button type="primary" onClick={hideElement}>Hide</Button>
-          <Button type="primary" ghost>Hidden Rows</Button>
+          <Button type="primary" style={{ margin: '0 10px 0 0' }} ghost>Show hidden Rows</Button>
+          <Button type="dashed" onClick={hideElement}>
+            <EyeInvisibleOutlined />
+            Hide rows
+          </Button>
         </>
       )}
       pagination={{

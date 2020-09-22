@@ -3,6 +3,7 @@ import moment from 'moment';
 import {
   Table as AntDTable, Menu, Checkbox, Dropdown, Button, Tooltip,
 } from 'antd';
+import { DownOutlined } from '@ant-design/icons';
 import RenderTag from '../type-task';
 
 import { ITableColumns, IColumnsVisibility } from '../../interfaces/table-interfaces';
@@ -150,7 +151,10 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
         onVisibleChange={handleVisibleChange}
         visible={menuVisible}
       >
-        <Button style={{ marginBottom: 15 }}>Show/Hide columns</Button>
+        <Button style={{ marginBottom: 15 }}>
+          Show/Hide columns
+          <DownOutlined />
+        </Button>
       </Dropdown>
 
       <AntDTable
