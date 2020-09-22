@@ -2,12 +2,22 @@
   display: none;
 }
 
+.done {
+  opacity: 0.5;
+}
+
+.passed {
+  // display: none;
+  opacity: 0.6;
+}
+
 .table__row {
   cursor: pointer;
   user-select: none;
+
   &:hover {
     td {
-      background: unset !important;  
+      background: unset !important;
     }
   }
 }
