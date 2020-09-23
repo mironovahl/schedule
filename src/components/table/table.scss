@@ -1,3 +1,16 @@
+.hidden {
+  display: none;
+}
+
+.passed {
+  opacity: 0.6;
+}
+
+.done {
+  opacity: 0.5;
+}
+
+
 .table__row {
   cursor: pointer;
   user-select: none;

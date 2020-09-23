@@ -29,6 +29,7 @@ import {
   getTime,
   eventsSortByDate,
   getDeadline,
+  isDeadlinePassed,
 } from '../../services/date-service';
 
 import {
@@ -412,6 +413,12 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
     const classnames = ['editable-row', 'table__row'];
     if (activeRows.includes(record.id)) {
       classnames.push('table__row-active');
+    }
+    if (completedTask.includes(record.id)) {
+      classnames.push('done');
+    }
+    if (isDeadlinePassed(record.endDate)) {
+      classnames.push('passed');
     }
     return classnames.join(' ');
   };
