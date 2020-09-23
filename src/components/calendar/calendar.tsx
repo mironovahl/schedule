@@ -6,6 +6,8 @@ import {
   Col,
   Divider,
   Tag,
+  List,
+  Badge,
 } from 'antd';
 import * as moment from 'moment';
 import * as momentTz from 'moment-timezone';
@@ -27,16 +29,6 @@ const getBeginDate = (dates: moment.Moment[]): moment.Moment => dates
 const getEndDate = (dates: moment.Moment[]): moment.Moment => dates
   .reduce((acc, date) => (acc.isAfter(date) ? acc : date))
   .endOf('month');
-
-const eventsSortByDate = (events: IEvent[]): IEvent[] => events
-  .sort((a: IEvent, b: IEvent): number => {
-    const dateA = moment(a.date);
-    const dateB = moment(b.date);
-
-    if (dateA.isBefore(dateB)) return -1;
-    if (dateA.isSame(dateB)) return 0;
-    return 1;
-  });
 
 const CalendarNoData: React.FC = () => <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />;
 
@@ -76,7 +68,8 @@ const Calendar: React.FC<CalendarProps> = ({ dataSource }: CalendarProps) => {
   };
 
   const calendarCellRender = (date: moment.Moment): React.ReactNode => {
-    const eventsTypes: string[] = eventsSortByDate(getDayData(date)).map(({ type }) => type);
+    const eventsTypes: string[] = DateService
+      .eventsSortByDate(getDayData(date)).map(({ type }) => type);
     const backgroundColor: string = eventsTypes.length
       ? taskSettings[eventsTypes[0]].color
       : '';
@@ -172,6 +165,21 @@ const Calendar: React.FC<CalendarProps> = ({ dataSource }: CalendarProps) => {
               dateFullCellRender={calendarCellRender}
             />
           </div>
+          <div className="calendar__legend">
+            <List
+              dataSource={DateService.eventsSortByDate(getMonthData(value))}
+              split={false}
+              size="small"
+              renderItem={({ type }: IEvent) => (
+                <List.Item>
+                  <Badge
+                    color={taskSettings[type].color}
+                    text={taskSettings[type].name}
+                  />
+                </List.Item>
+              )}
+            />
+          </div>
         </Col>
         <Col xs={24} sm={24} md={13} lg={15} xl={17} xxl={19}>
           <Row gutter={rowGutterSettings}>
@@ -184,8 +192,8 @@ const Calendar: React.FC<CalendarProps> = ({ dataSource }: CalendarProps) => {
             </Col>
             <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
               <CalendarDate data={currentType === 'month'
-                ? eventsSortByDate(getDayData(value))
-                : eventsSortByDate(getMonthData(value))}
+                ? DateService.eventsSortByDate(getDayData(value))
+                : DateService.eventsSortByDate(getMonthData(value))}
               />
             </Col>
           </Row>

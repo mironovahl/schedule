@@ -4,8 +4,12 @@
     justify-content: flex-end;
     min-width: 100px;
   }
-
   &__selected-date {
     text-align: center;
+  }
+  &__legend {
+    @media screen and (max-width: 768px) {
+      display: none;
+    }
   }
 }
