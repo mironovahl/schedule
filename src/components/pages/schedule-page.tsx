@@ -4,7 +4,7 @@ import BackendService from '../../services/backend-service';
 import PageLayout from '../page-layout';
 import Table from '../table';
 import Calendar from '../calendar';
-import { IEvent } from '../../interfaces/backend-interfaces';
+import { IEvent, IOrganizer } from '../../interfaces/backend-interfaces';
 import SettingsBar from '../settings-bar';
 import * as SettingsInterfaces from '../../interfaces/settings-interfaces';
 import SettingsContext from '../../context/settings-context';
@@ -14,6 +14,7 @@ import ListPage from './list-page';
 const SchedulePage: React.FC = () => {
   const backendService = new BackendService();
   const [tableData, setTableData] = useState<IEvent[]>();
+  const [organizersData, setOrganizersData] = useState<IOrganizer[]>();
   const [loading, setLoading] = useState<boolean>(true);
   const {
     scheduleView,
@@ -36,18 +37,19 @@ const SchedulePage: React.FC = () => {
 
   useEffect(() => {
     setLoading(true);
-    backendService
-      .getAllEvents()
-      .then((data) => {
-        setLoading(false);
-        setTableData([...data]);
-        console.log(data);
-      })
+    Promise.all([
+      backendService.getAllEvents(),
+      backendService.getAllOrganizers(),
+    ]).then(([events, organizers]) => {
+      setLoading(false);
+      setTableData([...events]);
+      setOrganizersData(organizers);
+    })
       .catch(() => setLoading(false));
   }, []);
 
   const viewMapping = {
-    table: <Table dataSource={tableData} />,
+    table: <Table dataSource={tableData} organizers={organizersData} />,
     list: <ListPage dataSource={tableData} />,
     calendar: <Calendar dataSource={tableData} />,
   };

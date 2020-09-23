@@ -41,12 +41,13 @@ import {
   IColumnsVisibility,
   EditableCellProps,
 } from '../../interfaces/table-interfaces';
-import { IEvent } from '../../interfaces/backend-interfaces';
+import { IEvent, IOrganizer } from '../../interfaces/backend-interfaces';
 
 import './table.scss';
 
 type TableProps = {
   dataSource: IEvent[] | undefined;
+  organizers: IOrganizer[] | undefined;
 };
 
 const EditableCell: React.FC<EditableCellProps> = ({
@@ -99,8 +100,9 @@ function isDuplicate(arr: { text: string; value: string }[], value: string): boo
 }
 
 // eslint-disable-next-line sonarjs/cognitive-complexity
-const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
+const Table: React.FC<TableProps> = ({ dataSource, organizers }: TableProps) => {
   if (!dataSource) return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />;
+  if (!organizers) return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />;
   const backendService = new BackendService();
   const [columnsVisible, setColumnsVisible] = useState<IColumnsVisibility>({
     done: true,
@@ -258,15 +260,14 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
       editable: true,
     },
     {
-      title: 'organizerID',
+      title: 'Организатор',
       dataIndex: 'organizerID',
       key: 'organizerID',
       columnVisible: columnsVisible.description,
-      render: (record) => (
+      render: (organizerID: string) => (
         <>
           {
-            backendService.getOrganizer(record.organizerID)
-              .then((organizer) => organizer.name)
+            organizers.find((item) => item.id === organizerID)!.name
           }
         </>
       ),
