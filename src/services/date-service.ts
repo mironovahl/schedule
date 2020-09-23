@@ -19,6 +19,8 @@ const getTime = (date: moment.Moment) => {
 
 const getDeadline = (date: moment.Moment) => moment(date, 'YYYYMMDD').fromNow();
 
+const isDeadlinePassed = (date: moment.Moment) => moment().isAfter(date);
+
 const eventsSortByDate = (events: IEvent[]): IEvent[] => events
   .sort((a: IEvent, b: IEvent): number => {
     const dateA = moment(a.startDate);
@@ -30,5 +32,5 @@ const eventsSortByDate = (events: IEvent[]): IEvent[] => events
   });
 
 export {
-  getFullDate, getDate, getTime, eventsSortByDate, getDeadline,
+  getFullDate, getDate, getTime, eventsSortByDate, getDeadline, isDeadlinePassed,
 };

@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/anchor-is-valid */
@@ -16,10 +17,14 @@ import {
   Empty,
   Row,
   Col,
-  Radio,
+  DatePicker,
 } from 'antd';
+import { DownOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
+
+import moment from 'moment';
 
 import RenderTag from '../type-task';
+import DownloadTasksButton from '../download-tasks';
 import SettingsContext from '../../context/settings-context';
 import BackendService from '../../services/backend-service';
 
@@ -28,6 +33,7 @@ import {
   getTime,
   eventsSortByDate,
   getDeadline,
+  isDeadlinePassed,
 } from '../../services/date-service';
 
 import {
@@ -48,14 +54,21 @@ const EditableCell: React.FC<EditableCellProps> = ({
   dataIndex,
   title,
   children,
+  record,
   ...restProps
 }: EditableCellProps) => {
   const inputNode = <Input />;
+  const dateFormat = 'DD-MM-YYYY';
 
   return (
     // eslint-disable-next-line react/jsx-props-no-spreading
     <td {...restProps}>
-      {editing ? (
+      {title === 'Date' && editing ? (
+        <DatePicker
+          defaultValue={moment(getDate(record.startDate), dateFormat)}
+          format={dateFormat}
+        />
+      ) : editing ? (
         <Form.Item
           name={dataIndex}
           style={{ margin: 0 }}
@@ -105,7 +118,9 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
 
   const {
     taskSettings, completedTask, hiddenRows, changeContext,
-  } = useContext(SettingsContext);
+  } = useContext(
+    SettingsContext,
+  );
 
   const typeFilters: { text: string; value: string }[] = [];
   dataSource.forEach((item) => {
@@ -166,26 +181,6 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
 
   const columns: ITableColumns[] = [
     {
-      title: 'Done',
-      width: 50,
-      key: 'done',
-      columnVisible: columnsVisible.done,
-      render: (record) => (
-        <Checkbox
-          onChange={(e) => {
-            if (e.target.checked) {
-              changeContext({ completedTask: [...completedTask, record.id] });
-            } else {
-              changeContext({
-                completedTask: completedTask.filter((id) => id !== record.id),
-              });
-            }
-          }}
-          checked={completedTask.includes(record.id)}
-        />
-      ),
-    },
-    {
       title: 'Date',
       width: 90,
       dataIndex: 'startDate',
@@ -197,7 +192,7 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
           <Tag color="red">{getDeadline(record.endDate)}</Tag>
         </>
       ),
-      editable: false,
+      editable: true,
     },
     {
       title: 'Time',
@@ -287,6 +282,26 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
       editable: true,
     },
     {
+      title: 'Done',
+      width: 50,
+      key: 'done',
+      columnVisible: columnsVisible.done,
+      render: (record) => (
+        <Checkbox
+          onChange={(e) => {
+            if (e.target.checked) {
+              changeContext({ completedTask: [...completedTask, record.id] });
+            } else {
+              changeContext({
+                completedTask: completedTask.filter((id) => id !== record.id),
+              });
+            }
+          }}
+          checked={completedTask.includes(record.id)}
+        />
+      ),
+    },
+    {
       title: 'Operation',
       width: 85,
       dataIndex: 'operation',
@@ -325,6 +340,10 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
     (column) => column.key !== 'operation',
   );
 
+  const columnsMentor: ITableColumns[] = columns.filter(
+    (column) => column.key !== 'done',
+  );
+
   let mergedColumnsForTable;
   let mergedColumns;
 
@@ -349,10 +368,14 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
 
   if (user !== 'mentor') {
     mergedColumnsForTable = getMergedColumns(columnsStudent);
-    mergedColumnsForTable = mergedColumnsForTable.filter((column) => column.columnVisible === true);
+    mergedColumnsForTable = mergedColumnsForTable.filter(
+      (column) => column.columnVisible === true,
+    );
   } else {
-    mergedColumnsForTable = getMergedColumns(columns);
-    mergedColumnsForTable = mergedColumnsForTable.filter((column) => column.columnVisible === true);
+    mergedColumnsForTable = getMergedColumns(columnsMentor);
+    mergedColumnsForTable = mergedColumnsForTable.filter(
+      (column) => column.columnVisible === true,
+    );
   }
 
   const menu: JSX.Element = (
@@ -412,6 +435,12 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
     if (activeRows.includes(record.id)) {
       classnames.push('table__row-active');
     }
+    if (completedTask.includes(record.id)) {
+      classnames.push('done');
+    }
+    if (isDeadlinePassed(record.endDate)) {
+      classnames.push('passed');
+    }
     return classnames.join(' ');
   };
 
@@ -419,18 +448,21 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
     <>
       <Row justify="space-between">
         <Col>
-          <Radio.Group>
-            <Radio.Button disabled={activeRows.length < 1} onClick={onHideClick}>
-              Hide Rows
-            </Radio.Button>
-            <Radio.Button disabled={hiddenRows.length < 1} onClick={onShowClick}>
-              Show Hidden Rows
-            </Radio.Button>
-          </Radio.Group>
+          <Button style={{ margin: '0 10px 0 0' }} disabled={hiddenRows.length < 1} onClick={onShowClick}>
+            Show hidden rows
+          </Button>
+          <Button style={{ margin: '0 10px 0 0' }} type="dashed" disabled={activeRows.length < 1} onClick={onHideClick}>
+            <EyeInvisibleOutlined />
+            Hide rows
+          </Button>
+          <DownloadTasksButton data={dataSource} />
         </Col>
         <Col>
           <Dropdown overlay={menu} onVisibleChange={handleVisibleChange} visible={menuVisible}>
-            <Button style={{ marginBottom: 15 }}>Show/Hide columns </Button>
+            <Button style={{ marginBottom: 15 }}>
+              Show/Hide columns
+              <DownOutlined />
+            </Button>
           </Dropdown>
         </Col>
       </Row>
