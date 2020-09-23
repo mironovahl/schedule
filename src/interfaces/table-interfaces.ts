@@ -33,4 +33,5 @@ export interface EditableCellProps {
   inputType: 'number' | 'text';
   index?: number;
   children: React.ReactNode;
+  record: any;
 }

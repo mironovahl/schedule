@@ -102,7 +102,9 @@ const Calendar: React.FC<CalendarProps> = ({ dataSource }: CalendarProps) => {
             <Tag
               color={backgroundColor}
               style={{
-                ...tagStyle, margin: '0px',
+                ...tagStyle,
+
+                margin: '0px',
               }}
             >
               {date.date()}
@@ -112,6 +114,7 @@ const Calendar: React.FC<CalendarProps> = ({ dataSource }: CalendarProps) => {
             <div
               style={{
                 ...tagStyle,
+
                 borderRadius: '2px',
                 maxHeight: '22px',
                 display: 'flex',
