@@ -21,7 +21,8 @@ const SettingsBar: React.FC<SettingsBarProps> = ({
   <div className="settings-bar">
     <Row align="middle" justify="space-between">
       <Col>
-        <Select defaultValue={timezone} onChange={onTimezoneChange} style={{ minWidth: '170px' }}>
+        <span>Timezone: </span>
+        <Select defaultValue={timezone} onChange={onTimezoneChange} style={{ minWidth: '180px' }}>
           {timezones.map((t) => (
             <Select.Option value={t} key={t}>
               {t}

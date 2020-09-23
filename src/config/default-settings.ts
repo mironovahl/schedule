@@ -107,6 +107,7 @@ const defaultSettings: ISettings = {
   },
   hiddenRows: [],
   hiddenCols: {
+    done: true,
     date: true,
     time: true,
     type: true,
@@ -118,6 +119,7 @@ const defaultSettings: ISettings = {
     details: true,
   },
   user: 'student',
+  completedTask: [],
 };
 
 export default defaultSettings;

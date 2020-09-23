@@ -1,3 +1,13 @@
+export interface IFeedback {
+  'rate': number;
+  'comment': string;
+}
+
+export interface IFeedbacks {
+  isFeedbackEnable: boolean;
+  taskFeedbacks: IFeedback[];
+}
+
 export interface IEventBackend {
   id: string;
   name: string;
@@ -10,10 +20,14 @@ export interface IEventBackend {
   comment: string;
   photo: string;
   video: string;
+  text: string;
+  organizerID: string;
+  feedbacks: IFeedbacks;
 }
 
 export interface IEvent {
-  [key: string]: any
+  [key: string]: any;
+  key: string;
   id: string;
   name: string;
   description: string;
@@ -25,4 +39,13 @@ export interface IEvent {
   comment: string;
   photo: string;
   video: string;
+  text: string;
+  organizerID: string;
+  feedbacks: IFeedbacks;
+}
+
+export interface IOrganizer {
+  id: string;
+  name: string;
+  github: string;
 }
