@@ -258,6 +258,20 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
       editable: true,
     },
     {
+      title: 'organizerID',
+      dataIndex: 'organizerID',
+      key: 'organizerID',
+      columnVisible: columnsVisible.description,
+      render: (record) => (
+        <>
+          {
+            backendService.getOrganizer(record.organizerID)
+              .then((organizer) => organizer.name)
+          }
+        </>
+      ),
+    },
+    {
       title: 'Details Url',
       width: 85,
       key: 'details',

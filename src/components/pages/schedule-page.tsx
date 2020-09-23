@@ -41,6 +41,7 @@ const SchedulePage: React.FC = () => {
       .then((data) => {
         setLoading(false);
         setTableData([...data]);
+        console.log(data);
       })
       .catch(() => setLoading(false));
   }, []);
