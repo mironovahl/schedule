@@ -6,8 +6,13 @@ import {
   Rate,
 } from 'antd';
 
+interface IProps {
+  rate: number;
+  feedback: string;
+}
+
 const Feedback = () => {
-  const onFinish = (values) => {
+  const onFinish = (values: IProps) => {
     console.log('Received values of form: ', values);
   };
 
