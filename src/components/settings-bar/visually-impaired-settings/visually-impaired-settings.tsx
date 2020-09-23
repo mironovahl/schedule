@@ -1,17 +1,24 @@
 import React, { useState } from 'react';
-import { Button, Modal } from 'antd';
+import {
+  Button, Modal, Space, Radio,
+} from 'antd';
 import { EyeOutlined } from '@ant-design/icons';
 
 const VisuallyImpairedSettings = () => {
   const [isSettingsVisible, setSettingsVisible] = useState<boolean>(false);
+  const [fontSize, setFontSize] = useState<string>('10px');
   const showSettings = () => {
-    // const html = document.querySelector('html');
-    // html!.style.fontSize = '15px';
     setSettingsVisible(true);
   };
 
   const handleCancelClick = () => {
     setSettingsVisible(false);
+  };
+
+  const handleFontSizeChange = (e: any): void => {
+    const html = document.querySelector('html');
+    html!.style.fontSize = e.target.value;
+    setFontSize(e.target.value);
   };
 
   return (
@@ -27,7 +34,21 @@ const VisuallyImpairedSettings = () => {
         footer={null}
         onCancel={handleCancelClick}
       >
-        settings
+        <Space direction="vertical">
+          <Space>Font size:</Space>
+          <Space>
+            <Radio.Group
+              value={fontSize}
+              onChange={handleFontSizeChange}
+              buttonStyle="solid"
+            >
+              <Radio.Button value="10px">Default</Radio.Button>
+              <Radio.Button value="12px">Medium</Radio.Button>
+              <Radio.Button value="15px">Large</Radio.Button>
+            </Radio.Group>
+          </Space>
+        </Space>
+
       </Modal>
     </>
   );

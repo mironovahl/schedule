@@ -1,6 +1,39 @@
 //Base
 @import './base/normalize';
 
-// html {
-//     font-size: 10px;
+html {
+  font-size: 10px;
+}
+
+.ant-table {
+  font-size: 1.4rem !important;
+}
+
+.ant-tag {
+  font-size: 1.2rem !important;
+  line-height: 2rem !important;
+}
+
+// .ant-btn {
+//   font-size: 1.4rem !important;
+// }
+
+// .ant-menu {
+//   font-size: 1.4rem !important;
+// }
+
+// .ant-select {
+//   font-size: 1.4rem !important;
+// }
+
+// modal
+// .ant-modal-title,
+// .ant-modal-body {
+//   font-size: 1.4rem !important;
+// }
+
+// calendar
+// .ant-picker-calendar,
+// .ant-radio-button-wrapper {
+//   font-size: 1.4rem !important;
 // }

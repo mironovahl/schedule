@@ -182,7 +182,7 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
   const columns: ITableColumns[] = [
     {
       title: 'Date',
-      width: 90,
+      width: 150,
       dataIndex: 'startDate',
       key: 'date',
       columnVisible: columnsVisible.date,
@@ -205,7 +205,7 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
     },
     {
       title: 'Type',
-      width: 100,
+      width: 170,
       dataIndex: 'type',
       key: 'type',
       columnVisible: columnsVisible.type,
@@ -259,7 +259,7 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
     },
     {
       title: 'Details Url',
-      width: 85,
+      width: 150,
       key: 'details',
       columnVisible: columnsVisible.details,
       render: (record: IEvent) => <a href={`/task-page/${record.id}`}>See more</a>,
@@ -283,7 +283,7 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
     },
     {
       title: 'Done',
-      width: 50,
+      width: 70,
       key: 'done',
       columnVisible: columnsVisible.done,
       render: (record) => (
