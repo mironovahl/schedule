@@ -121,6 +121,7 @@ export default class BackendService {
         video: event.video,
         text: event.text,
         feedbacks: event.feedbacks,
+        organizerID: event.organizerID,
       }
     );
   }
@@ -150,6 +151,7 @@ export default class BackendService {
         video: event.video || '',
         text: event.text || '',
         feedbacks: event.feedbacks || defaultFeedback,
+        organizerID: event.organizerID,
       }
     );
   }

@@ -21,6 +21,7 @@ export interface IEventBackend {
   photo: string;
   video: string;
   text: string;
+  organizerID: string;
   feedbacks: IFeedbacks;
 }
 
@@ -39,6 +40,7 @@ export interface IEvent {
   photo: string;
   video: string;
   text: string;
+  organizerID: string;
   feedbacks: IFeedbacks;
 }
 
