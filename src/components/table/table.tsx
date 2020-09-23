@@ -17,13 +17,14 @@ import {
   Empty,
   Row,
   Col,
-  Radio,
   DatePicker,
 } from 'antd';
+import { DownOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
 
 import moment from 'moment';
 
 import RenderTag from '../type-task';
+import DownloadTasksButton from '../download-tasks';
 import SettingsContext from '../../context/settings-context';
 import BackendService from '../../services/backend-service';
 
@@ -57,10 +58,6 @@ const EditableCell: React.FC<EditableCellProps> = ({
 }: EditableCellProps) => {
   const inputNode = <Input />;
   const dateFormat = 'DD-MM-YYYY';
-
-  // setDate = (date) => {
-
-  // }
 
   return (
     // eslint-disable-next-line react/jsx-props-no-spreading
@@ -118,7 +115,9 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
   });
   const [menuVisible, setMenuVisible] = useState<boolean>(false);
 
-  const { taskSettings, completedTask, hiddenRows, changeContext } = useContext(
+  const {
+    taskSettings, completedTask, hiddenRows, changeContext,
+  } = useContext(
     SettingsContext,
   );
 
@@ -442,22 +441,21 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
     <>
       <Row justify="space-between">
         <Col>
-          <Radio.Group>
-            <Radio.Button disabled={activeRows.length < 1} onClick={onHideClick}>
-              Hide Rows
-            </Radio.Button>
-            <Radio.Button disabled={hiddenRows.length < 1} onClick={onShowClick}>
-              Show Hidden Rows
-            </Radio.Button>
-          </Radio.Group>
+          <Button style={{ margin: '0 10px 0 0' }} disabled={hiddenRows.length < 1} onClick={onShowClick}>
+            Show hidden rows
+          </Button>
+          <Button style={{ margin: '0 10px 0 0' }} type="dashed" disabled={activeRows.length < 1} onClick={onHideClick}>
+            <EyeInvisibleOutlined />
+            Hide rows
+          </Button>
+          <DownloadTasksButton data={dataSource} />
         </Col>
         <Col>
-          <Dropdown
-            overlay={menu}
-            onVisibleChange={handleVisibleChange}
-            visible={menuVisible}
-          >
-            <Button style={{ marginBottom: 15 }}>Show/Hide columns </Button>
+          <Dropdown overlay={menu} onVisibleChange={handleVisibleChange} visible={menuVisible}>
+            <Button style={{ marginBottom: 15 }}>
+              Show/Hide columns
+              <DownOutlined />
+            </Button>
           </Dropdown>
         </Col>
       </Row>

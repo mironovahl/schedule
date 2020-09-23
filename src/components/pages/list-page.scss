@@ -7,7 +7,16 @@
 
   &.selected {
     opacity: 0.6;
+    box-shadow: 0 0px 15px rgb(0 0 0 / 19%);
   }
+}
+
+.done {
+  opacity: 0.5;
+}
+
+.hidden {
+  display: none !important;
 }
 
 .list-item .ant-checkbox-wrapper {
@@ -16,4 +25,10 @@
 
 .list-item__load-more {
   width: 100%;
+}
+
+.list-item.active {
+  box-shadow: 0 0px 15px rgb(0 0 0 / 19%);
+  transform: scale(1, 1);
+  transform: translateY(30px);
 }
