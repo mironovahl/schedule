@@ -43,14 +43,17 @@ body {
 
 // modal
 .ant-modal-title,
-.ant-modal-body {
+.ant-modal-body,
+.ant-modal-body .ant-list {
   font-size: 1.4rem !important;
 }
 
 // others
 // .ant-btn,
 .ant-select,
-.ant-radio-button-wrapper {
+.ant-radio-button-wrapper,
+.ant-dropdown-menu-item,
+.ant-checkbox-wrapper {
   font-size: 1.4rem !important;
 }
 .ant-menu {
