@@ -5,9 +5,9 @@ html {
   font-size: 10px;
 }
 
-// body {
-//   font-size: 1.4rem !important;
-// }
+body {
+  font-size: 1.4rem !important;
+}
 
 .ant-table {
   font-size: 1.4rem !important;
@@ -41,18 +41,18 @@ html {
   font-size: 1.4rem !important;
 }
 
+// modal
+.ant-modal-title,
+.ant-modal-body {
+  font-size: 1.4rem !important;
+}
+
 // others
 // .ant-btn,
-// .ant-select,
-// .ant-radio-button-wrapper {
-//   font-size: 1.4rem !important;
-// }
-// .ant-menu {
-//   font-size: 1.4rem !important;
-// }
-
-// modal
-// .ant-modal-title,
-// .ant-modal-body {
-//   font-size: 1.4rem !important;
-// }
+.ant-select,
+.ant-radio-button-wrapper {
+  font-size: 1.4rem !important;
+}
+.ant-menu {
+  font-size: 1.4rem !important;
+}
