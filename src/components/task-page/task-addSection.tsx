@@ -43,7 +43,7 @@ const menu = (
     <Menu>
       {isPhoto ? null : <Menu.Item key="1" onClick={() => addValue('photo')}>Фото</Menu.Item>}
       {isVideo ? null : <Menu.Item key="2" onClick={() => addValue('video')}>Видео</Menu.Item>}
-      {isText ? null : <Menu.Item key="2" onClick={() => addValue('text')}>Текст</Menu.Item>}
+      {isText ? null : <Menu.Item key="3" onClick={() => addValue('text')}>Текст</Menu.Item>}
     </Menu>
   );
 };

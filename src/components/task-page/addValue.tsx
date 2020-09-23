@@ -26,7 +26,6 @@ const addValue = (props: IProps): void => {
 
   setData((oldData: IEvent | null) => {
     if (oldData) {
-      console.log(link);
       setVisibleInputs({
         ...visibleInputs,
         [property]: ![property],

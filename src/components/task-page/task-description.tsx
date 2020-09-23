@@ -14,6 +14,8 @@ import AddSection from './task-addSection';
 import BackendService from '../../services/backend-service';
 import AddItem from './addSection-item';
 import SettingsContext from '../../context/settings-context';
+import AddFeedback from './addFeedback';
+import Feedback from './task-feedback';
 
 const { Paragraph, Title } = Typography;
 
@@ -34,18 +36,19 @@ const TaskDescription: React.FC<IProps> = (props: IProps) => {
   const { data, setData } = props;
   const [photo, setPhoto] = useState<string>(data.photo);
   const [video, setVideo] = useState<string>(data.video);
-  const [text, setText] = useState<string>(data.video);
+  const [text, setText] = useState<string>(data.text);
+  const [isFeedback, setIsFeedback] = useState<boolean>(false);
 
   const [visibleInputs, setVisibleInputs] = useState<TVisibleInputs>({
     photo: false,
     video: false,
     text: false,
   });
-  console.log(user);
   const isMentor: boolean = user === 'mentor';
 
   const { startDate, endDate } = data;
-  const changeValue = (event: string, property: string): void => {
+
+  const changeValue = (event: string|moment.Moment, property: string): void => {
     setData((oldData: IEvent | null) => {
       if (oldData) {
         const newData = {
@@ -57,6 +60,12 @@ const TaskDescription: React.FC<IProps> = (props: IProps) => {
       }
       return oldData;
     });
+  };
+
+  const onChangeDate = (value: moment.Moment | null, dateString: string, property: string) => {
+    if (value) {
+      changeValue(value, property);
+    }
   };
 
   return (
@@ -71,12 +80,37 @@ const TaskDescription: React.FC<IProps> = (props: IProps) => {
         <RenderTag type={data.type} />
         <div className="taskDescription_date">
           <div className="taskDescription_date-day">
-            <span>Начало</span>
-            <DatePicker defaultValue={startDate} format="DD-MM-YYYY HH:mm" showTime />
+            <span className="date_title">Начало</span>
+            {isMentor
+              ? (
+                <DatePicker
+                  style={{ width: '162px' }}
+                  onChange={(value, dateString) => onChangeDate(value, dateString, 'startDate')}
+                  defaultValue={startDate}
+                  format="DD-MM-YYYY HH:mm"
+                  showTime
+                />
+              )
+              : (
+                <DatePicker style={{ width: '162px' }} value={startDate} format="DD-MM-YYYY HH:mm" showTime />
+
+              )}
           </div>
           <div className="taskDescription_date-day">
-            <span>Конец</span>
-            <DatePicker defaultValue={endDate} format="DD-MM-YYYY HH:mm" showTime />
+            <span className="date_title">Конец</span>
+            {isMentor
+              ? (
+                <DatePicker
+                  style={{ width: '162px' }}
+                  onChange={(value, dateString) => onChangeDate(value, dateString, 'startDate')}
+                  defaultValue={endDate}
+                  format="DD-MM-YYYY HH:mm"
+                  showTime
+                />
+              )
+              : (
+                <DatePicker style={{ width: '162px' }} value={endDate} format="DD-MM-YYYY HH:mm" showTime />
+              )}
           </div>
         </div>
         {data.description !== ''
@@ -231,6 +265,11 @@ const TaskDescription: React.FC<IProps> = (props: IProps) => {
               />
             </div>
           )}
+        {isMentor
+          ? <AddFeedback isFeedback={isFeedback} setIsFeedback={setIsFeedback} />
+          : (isFeedback
+          && <Feedback />)}
+
       </div>
     </>
   );

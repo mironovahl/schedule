@@ -6,5 +6,26 @@
 .taskDescription_date {
   display: flex;
   margin: 5px;
+  flex-direction: column;
+}
+
+.taskDescription_date-day {
+  margin: 5px 0;
+  display: flex;
+  align-items: center;
+  .date_title {
+    display: block;
+    width: 70px;
+  }
+}
+
+.task-feedback {
+  border: 1px solid #dedede;
+  padding: 24px;
+  margin: 20px 0;
+  //border-radius: 10px;
+  .feedback-button {
+    margin-bottom: 0;
+  }
 }
 
