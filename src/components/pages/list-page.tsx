@@ -8,25 +8,29 @@ import {
   Row,
   Button,
   Tag,
+  Popover,
 } from 'antd';
 import { EyeInvisibleOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import { eventsSortByDate, getDeadline, isDeadlinePassed } from '../../services/date-service';
 import RenderTag from '../type-task';
 import DownloadTasksButton from '../download-tasks';
-import { IEvent } from '../../interfaces/backend-interfaces';
+import { IEvent, IOrganizer } from '../../interfaces/backend-interfaces';
 import SettingsContext from '../../context/settings-context';
 import './list-page.scss';
 
 type ListProps = {
   dataSource: IEvent[] | undefined;
+  organizers: IOrganizer[] | undefined;
 };
 
 // eslint-disable-next-line sonarjs/cognitive-complexity
-const ListPage: React.FC<ListProps> = ({ dataSource }: ListProps) => {
+const ListPage: React.FC<ListProps> = ({ dataSource, organizers }: ListProps) => {
   if (!dataSource) return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />;
+  if (!organizers) return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />;
   const { completedTask, hiddenRows, changeContext } = useContext(SettingsContext);
   const [activeRows, changeActiveRows] = useState<string[]>([]);
+  const formatData = 'DD-MM-YYYY, h:mm';
 
   const onChange = (e: { target: any; }) => {
     if (e.target.checked) {
@@ -136,7 +140,7 @@ const ListPage: React.FC<ListProps> = ({ dataSource }: ListProps) => {
             />
             <List.Item.Meta
               title="Выдача таска"
-              description={moment(item.startDate).format('DD-MM-YYYY, h:mm')}
+              description={moment(item.startDate).format(formatData)}
               className={window.innerWidth >= 414 ? '' : 'hidden'}
             />
             <List.Item.Meta
@@ -145,7 +149,28 @@ const ListPage: React.FC<ListProps> = ({ dataSource }: ListProps) => {
             />
             <List.Item.Meta
               title="Deadline"
-              description={moment(item.endDate).format('DD-MM-YYYY, h:mm')}
+              description={moment(item.endDate).format(formatData)}
+              className={window.innerWidth >= 414 ? '' : 'hidden'}
+            />
+            <List.Item.Meta
+              description={(
+                <Popover
+                  content={organizers.find((organizer) => item.organizerID === organizer.id)!.name}
+                  className="list-item__organizer"
+                >
+                  <div>
+                    <a
+                      href={organizers.find((organizer) => item.organizerID === organizer.id)!
+                        .github}
+                      rel="noreferrer"
+                      target="_blank"
+                    >
+                      <div className="list-item__github-icon" />
+                    </a>
+                  </div>
+                </Popover>
+
+              )}
               className={window.innerWidth >= 414 ? '' : 'hidden'}
             />
             <List.Item.Meta
