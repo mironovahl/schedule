@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 
 import {
   List,
@@ -11,7 +11,7 @@ import {
 } from 'antd';
 import { EyeInvisibleOutlined } from '@ant-design/icons';
 import moment from 'moment';
-import { eventsSortByDate, getDeadline } from '../../services/date-service';
+import { eventsSortByDate, getDeadline, isDeadlinePassed } from '../../services/date-service';
 import RenderTag from '../type-task';
 import DownloadTasksButton from '../download-tasks';
 import { IEvent } from '../../interfaces/backend-interfaces';
@@ -22,23 +22,49 @@ type ListProps = {
   dataSource: IEvent[] | undefined;
 };
 
+// eslint-disable-next-line sonarjs/cognitive-complexity
 const ListPage: React.FC<ListProps> = ({ dataSource }: ListProps) => {
   if (!dataSource) return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />;
   const { completedTask, hiddenRows, changeContext } = useContext(SettingsContext);
   const [activeRows, changeActiveRows] = useState<string[]>([]);
-  // const selected: any[] = [];
 
   const onChange = (e: { target: any; }) => {
     if (e.target.checked) {
-      changeActiveRows([...activeRows, e.target.id]);
+      changeContext({ completedTask: [...completedTask, e.target.id] });
     } else {
-      changeActiveRows(activeRows.filter((id) => id !== e.target.id));
       changeContext({ completedTask: completedTask.filter((id) => id !== e.target.id) });
     }
   };
 
-  const onDoneClick = () => {
-    changeContext({ completedTask: [...completedTask, ...activeRows] });
+  let isShiftActive: boolean = false;
+  const handleShiftDown = (e: any): void => {
+    if (e.key === 'Shift') {
+      isShiftActive = true;
+    }
+  };
+  const handleShiftUp = (e: any): void => {
+    if (e.key === 'Shift') {
+      isShiftActive = false;
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener('keyup', handleShiftUp);
+    window.addEventListener('keydown', handleShiftDown);
+  });
+
+  const handleClick = (e: { currentTarget: any; target: any; }) => {
+    if (e.target.type !== 'checkbox') {
+      if (isShiftActive) {
+        if (activeRows.includes(e.currentTarget.id)) {
+          changeActiveRows(activeRows.filter((id) => id !== e.currentTarget.id));
+        } else {
+          changeActiveRows([...activeRows, e.currentTarget.id]);
+        }
+      } else {
+        changeActiveRows([e.currentTarget.id]);
+      }
+    }
   };
 
   const onHideClick = () => {
@@ -48,6 +74,20 @@ const ListPage: React.FC<ListProps> = ({ dataSource }: ListProps) => {
   const onShowClick = () => {
     changeActiveRows(hiddenRows);
     changeContext({ hiddenRows: [] });
+  };
+
+  const listClassName = (item: any): string => {
+    const classnames = ['list-item'];
+    if (activeRows.includes(item.id)) {
+      classnames.push('list-item_active');
+    }
+    if (completedTask.includes(item.id)) {
+      classnames.push('list-item_done');
+    }
+    if (isDeadlinePassed(item.endDate)) {
+      classnames.push('list-item_passed');
+    }
+    return classnames.join(' ');
   };
 
   return (
@@ -63,9 +103,6 @@ const ListPage: React.FC<ListProps> = ({ dataSource }: ListProps) => {
           </Button>
           <DownloadTasksButton data={dataSource} />
         </Col>
-        <Col>
-          <Button disabled={activeRows.length < 1} onClick={onDoneClick}>Done</Button>
-        </Col>
       </Row>
 
       <List
@@ -77,16 +114,10 @@ const ListPage: React.FC<ListProps> = ({ dataSource }: ListProps) => {
         renderItem={(item) => (
           <List.Item
             id={item.id}
-            className={completedTask.includes(item.id) ? 'list-item done' : 'list-item'}
+            className={listClassName(item)}
             key={item.id}
-            actions={[<a href={`/task-page/${item.id}`} key="list-item__load-more">See more</a>]}
+            onClick={handleClick}
           >
-            <Checkbox
-              onChange={onChange}
-              checked={activeRows.includes(item.id)}
-              id={item.id}
-              style={{ margin: 10 }}
-            />
             <List.Item.Meta
               title={item.name}
               description={<RenderTag type={item.type} />}
@@ -106,6 +137,7 @@ const ListPage: React.FC<ListProps> = ({ dataSource }: ListProps) => {
             <List.Item.Meta
               title="Выдача таска"
               description={moment(item.startDate).format('DD-MM-YYYY, h:mm')}
+              className={window.innerWidth >= 414 ? '' : 'hidden'}
             />
             <List.Item.Meta
               description={<Tag color="red">{getDeadline(item.endDate)}</Tag>}
@@ -116,6 +148,17 @@ const ListPage: React.FC<ListProps> = ({ dataSource }: ListProps) => {
               description={moment(item.endDate).format('DD-MM-YYYY, h:mm')}
               className={window.innerWidth >= 414 ? '' : 'hidden'}
             />
+            <List.Item.Meta
+              description={<a href={`/task-page/${item.id}`} key="list-item__load-more">See more</a>}
+            />
+            <Checkbox
+              onChange={onChange}
+              checked={completedTask.includes(item.id)}
+              id={item.id}
+              className="list-item__checkbox"
+            >
+              Done
+            </Checkbox>
           </List.Item>
         )}
       />

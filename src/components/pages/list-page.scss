@@ -1,18 +1,20 @@
 .list-item {
   transition: all 0.7s ease-in-out;
-
-  &:hover {
-    background-color: rgba(0, 0, 0, 0.034);
-  }
-
-  &.selected {
-    opacity: 0.6;
-    box-shadow: 0 0px 15px rgb(0 0 0 / 19%);
-  }
+  padding: 12px 10px !important;
+  user-select: none;
 }
 
-.done {
+.list-item_done {
+  background-color: rgba(0, 255, 42, 0.11);
   opacity: 0.5;
+}
+
+.list-item_active {
+  background-color: #f5f5f5;
+}
+
+.list-item_passed {
+  opacity: 0.6;
 }
 
 .hidden {
@@ -20,7 +22,10 @@
 }
 
 .list-item .ant-checkbox-wrapper {
-  width: 16px;
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  font-weight: 600;
 }
 
 .list-item__load-more {
