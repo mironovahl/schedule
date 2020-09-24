@@ -41,12 +41,13 @@ import {
   IColumnsVisibility,
   EditableCellProps,
 } from '../../interfaces/table-interfaces';
-import { IEvent } from '../../interfaces/backend-interfaces';
+import { IEvent, IOrganizer } from '../../interfaces/backend-interfaces';
 
 import './table.scss';
 
 type TableProps = {
   dataSource: IEvent[] | undefined;
+  organizers: IOrganizer[] | undefined;
 };
 
 const EditableCell: React.FC<EditableCellProps> = ({
@@ -99,8 +100,9 @@ function isDuplicate(arr: { text: string; value: string }[], value: string): boo
 }
 
 // eslint-disable-next-line sonarjs/cognitive-complexity
-const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
+const Table: React.FC<TableProps> = ({ dataSource, organizers }: TableProps) => {
   if (!dataSource) return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />;
+  if (!organizers) return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />;
   const backendService = new BackendService();
   const [columnsVisible, setColumnsVisible] = useState<IColumnsVisibility>({
     done: true,
@@ -182,7 +184,7 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
   const columns: ITableColumns[] = [
     {
       title: 'Date',
-      width: 90,
+      width: 150,
       dataIndex: 'startDate',
       key: 'date',
       columnVisible: columnsVisible.date,
@@ -205,7 +207,7 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
     },
     {
       title: 'Type',
-      width: 100,
+      width: 170,
       dataIndex: 'type',
       key: 'type',
       columnVisible: columnsVisible.type,
@@ -258,8 +260,22 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
       editable: true,
     },
     {
+      title: 'Organizer',
+      width: 100,
+      dataIndex: 'organizerID',
+      key: 'organizerID',
+      columnVisible: columnsVisible.description,
+      render: (organizerID: string) => (
+        <>
+          {
+            organizers.find((item) => item.id === organizerID)!.name
+          }
+        </>
+      ),
+    },
+    {
       title: 'Details Url',
-      width: 85,
+      width: 150,
       key: 'details',
       columnVisible: columnsVisible.details,
       render: (record: IEvent) => <a href={`/task-page/${record.id}`}>See more</a>,
@@ -283,7 +299,7 @@ const Table: React.FC<TableProps> = ({ dataSource }: TableProps) => {
     },
     {
       title: 'Done',
-      width: 50,
+      width: 70,
       key: 'done',
       columnVisible: columnsVisible.done,
       render: (record) => (

@@ -1,2 +1,61 @@
 //Base
 @import './base/normalize';
+
+html {
+  font-size: 10px;
+}
+
+body {
+  font-size: 1.4rem !important;
+}
+
+.ant-table {
+  font-size: 1.4rem !important;
+}
+
+.ant-tag {
+  font-size: 1.2rem !important;
+  line-height: 2rem !important;
+}
+
+// list-page
+.ant-list-item-meta-title,
+.ant-list-item-meta-description,
+.ant-list-item-action > li {
+  font-size: 1.4rem !important;
+}
+
+// calendar-page
+.ant-picker-calendar {
+  font-size: 1.4rem !important;
+}
+.ant-descriptions-title {
+  font-size: 1.6rem !important;
+}
+.ant-collapse,
+.ant-descriptions-item-label,
+.ant-descriptions-item-content {
+  font-size: 1.4rem !important;
+}
+.ant-divider-horizontal.ant-divider-with-text {
+  font-size: 1.4rem !important;
+}
+
+// modal
+.ant-modal-title,
+.ant-modal-body,
+.ant-modal-body .ant-list {
+  font-size: 1.4rem !important;
+}
+
+// others
+// .ant-btn,
+.ant-select,
+.ant-radio-button-wrapper,
+.ant-dropdown-menu-item,
+.ant-checkbox-wrapper {
+  font-size: 1.4rem !important;
+}
+.ant-menu {
+  font-size: 1.4rem !important;
+}
