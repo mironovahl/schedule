@@ -10,6 +10,9 @@ interface TVisibleInputs {
   photo: boolean;
   video: boolean;
   text: boolean;
+  comment: boolean;
+  url: boolean;
+  description: boolean;
 }
 
 interface IProps {

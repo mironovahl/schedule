@@ -3,7 +3,7 @@ import React, {
   useState, Dispatch, SetStateAction, useContext,
 } from 'react';
 import {
-  Typography, DatePicker, Image, Button, Tooltip,
+  Typography, DatePicker, Image, Button, Tooltip, Divider,
 } from 'antd';
 import { EditOutlined } from '@ant-design/icons';
 import { IEvent } from '../../interfaces/backend-interfaces';
@@ -16,6 +16,10 @@ import AddItem from './addSection-item';
 import SettingsContext from '../../context/settings-context';
 import AddFeedback from './addFeedback';
 import Feedback from './task-feedback';
+import {
+  getDate,
+  getTime,
+} from '../../services/date-service';
 
 const { Paragraph, Title } = Typography;
 
@@ -24,6 +28,9 @@ interface TVisibleInputs {
   photo: boolean;
   video: boolean;
   text: boolean;
+  comment: boolean;
+  url: boolean;
+  description: boolean;
 }
 interface IProps {
   data: IEvent;
@@ -37,12 +44,18 @@ const TaskDescription: React.FC<IProps> = (props: IProps) => {
   const [photo, setPhoto] = useState<string>(data.photo);
   const [video, setVideo] = useState<string>(data.video);
   const [text, setText] = useState<string>(data.text);
-  const [isFeedback, setIsFeedback] = useState<boolean>(false);
+  const [comment, setComment] = useState<string>(data.comment);
+  const [url, setUrl] = useState<string>(data.url);
+  const [description, setDescription] = useState<string>(data.description);
+  const isFeedback: boolean = data.feedbacks.isFeedbackEnable;
 
   const [visibleInputs, setVisibleInputs] = useState<TVisibleInputs>({
     photo: false,
     video: false,
     text: false,
+    comment: false,
+    url: false,
+    description: false,
   });
   const isMentor: boolean = user === 'mentor';
 
@@ -71,14 +84,20 @@ const TaskDescription: React.FC<IProps> = (props: IProps) => {
   return (
     <>
       <div className="taskDescription">
-        <Title
-          level={2}
-          editable={isMentor ? { onChange: (e) => changeValue(e, 'name') } : false}
-        >
-          {data?.name}
-        </Title>
-        <RenderTag type={data.type} />
-        <div className="taskDescription_date">
+        <div className="taskDescription_title taskDescription__section">
+          <Title
+            level={2}
+            editable={isMentor ? { onChange: (e) => changeValue(e, 'name') } : false}
+          >
+            {data?.name}
+          </Title>
+          <div>
+            {' '}
+            <RenderTag type={data.type} />
+          </div>
+        </div>
+
+        <div className="taskDescription_date taskDescription__section">
           <div className="taskDescription_date-day">
             <span className="date_title">Начало</span>
             {isMentor
@@ -92,7 +111,11 @@ const TaskDescription: React.FC<IProps> = (props: IProps) => {
                 />
               )
               : (
-                <DatePicker style={{ width: '162px' }} value={startDate} format="DD-MM-YYYY HH:mm" showTime />
+                <p style={{ width: '162px', margin: '0' }}>
+                  {getDate(startDate)}
+                  {' '}
+                  {getTime(startDate)}
+                </p>
 
               )}
           </div>
@@ -102,20 +125,24 @@ const TaskDescription: React.FC<IProps> = (props: IProps) => {
               ? (
                 <DatePicker
                   style={{ width: '162px' }}
-                  onChange={(value, dateString) => onChangeDate(value, dateString, 'startDate')}
+                  onChange={(value, dateString) => onChangeDate(value, dateString, 'endDate')}
                   defaultValue={endDate}
                   format="DD-MM-YYYY HH:mm"
                   showTime
                 />
               )
               : (
-                <DatePicker style={{ width: '162px' }} value={endDate} format="DD-MM-YYYY HH:mm" showTime />
+                <p style={{ width: '162px', margin: '0' }}>
+                  {getDate(endDate)}
+                  {' '}
+                  {getTime(endDate)}
+                </p>
               )}
           </div>
         </div>
-        {data.description !== ''
+        {data.description
           && (
-            <div>
+            <div className="taskDescription__section">
               <h3>Описание</h3>
               <Paragraph
                 editable={isMentor ? { onChange: (e) => changeValue(e, 'description') } : false}
@@ -124,72 +151,61 @@ const TaskDescription: React.FC<IProps> = (props: IProps) => {
               </Paragraph>
             </div>
           )}
-        <div>
+        <div className="taskDescription__section">
           <h3>Место проведения</h3>
           <TaskPlace data={data} setData={setData} />
         </div>
-        {data.url !== ''
+        {data.url
           && (
-            <div>
+            <div className="taskDescription__section">
               <h3>Ссылка</h3>
               <Paragraph
                 editable={isMentor ? { onChange: (e) => changeValue(e, 'url') } : false}
               >
                 <a href={data?.url}>{data?.url}</a>
               </Paragraph>
+              {visibleInputs.url
+                && (
+                  <AddItem
+                    link={url}
+                    setFunc={setUrl}
+                    setData={setData}
+                    visibleInputs={visibleInputs}
+                    setVisibleInputs={setVisibleInputs}
+                    property="url"
+                    placeholder="Link"
+                  />
+                )}
             </div>
           )}
 
-        {data.comment !== ''
+        {data.comment
           && (
-            <div>
-              <h3>Комментарий</h3>
+            <div className="taskDescription__section">
+              <Divider>Комментарий</Divider>
               <Paragraph
                 editable={isMentor ? { onChange: (e) => changeValue(e, 'comment') } : false}
               >
                 {data?.comment}
               </Paragraph>
-            </div>
-          )}
-        {data.photo
-          && (
-            <div>
-              <Image
-                width={500}
-                src={data.photo}
-              />
-              {isMentor
+              {visibleInputs.comment
                 && (
-                  <Tooltip title="Edit">
-                    <Button
-                      shape="circle"
-                      icon={(<EditOutlined />)}
-                      onClick={() => {
-                        setVisibleInputs({
-                          ...visibleInputs,
-                          photo: !visibleInputs.photo,
-                        });
-                      }}
-                    />
-                  </Tooltip>
+                  <AddItem
+                    link={comment}
+                    setFunc={setComment}
+                    setData={setData}
+                    visibleInputs={visibleInputs}
+                    setVisibleInputs={setVisibleInputs}
+                    property="comment"
+                    placeholder="Comment"
+                  />
                 )}
-                {visibleInputs.photo
-                  && (
-                    <AddItem
-                      link={photo}
-                      setFunc={setPhoto}
-                      setData={setData}
-                      visibleInputs={visibleInputs}
-                      setVisibleInputs={setVisibleInputs}
-                      property="photo"
-                      placeholder="Image link"
-                    />
-                  )}
             </div>
           )}
         {data.text
         && (
-          <div>
+          <div className="taskDescription__section">
+            <Divider>Дополнительно</Divider>
             <Paragraph
               editable={isMentor ? { onChange: (e) => changeValue(e, 'text') } : false}
             >
@@ -209,10 +225,71 @@ const TaskDescription: React.FC<IProps> = (props: IProps) => {
             )}
           </div>
         )}
-
-        {data.video
+        {data.photo
           && (
-            <div>
+            <div className="taskDescription__section">
+
+              {isMentor
+                ? (
+                  <div>
+                    <h3 style={{ display: 'inline' }}>Фото</h3>
+                    <Tooltip title="Edit">
+                      <Button
+                        type="link"
+                        icon={(<EditOutlined />)}
+                        onClick={() => {
+                          setVisibleInputs({
+                            ...visibleInputs,
+                            photo: !visibleInputs.photo,
+                          });
+                        }}
+                      />
+                    </Tooltip>
+                  </div>
+                )
+                : (<h3>Фото</h3>)}
+              <Image
+                width={320}
+                src={data.photo}
+              />
+
+                {visibleInputs.photo
+                  && (
+                    <AddItem
+                      link={photo}
+                      setFunc={setPhoto}
+                      setData={setData}
+                      visibleInputs={visibleInputs}
+                      setVisibleInputs={setVisibleInputs}
+                      property="photo"
+                      placeholder="Image link"
+                    />
+                  )}
+            </div>
+          )}
+        {data.video && data.video !== ' '
+          && (
+            <div className="taskDescription__section">
+              {isMentor
+                ? (
+                  <div>
+                    <h3 style={{ display: 'inline' }}>Видео</h3>
+                    <Tooltip title="Edit">
+                      <Button
+                        type="link"
+                        icon={(<EditOutlined />)}
+                        onClick={() => {
+                          setVisibleInputs({
+                            ...visibleInputs,
+                            video: !visibleInputs.video,
+                          });
+                        }}
+                      />
+                    </Tooltip>
+                  </div>
+
+                )
+                : (<h3>Видео</h3>)}
               <iframe
                 src={data.video}
                 frameBorder="0"
@@ -220,21 +297,7 @@ const TaskDescription: React.FC<IProps> = (props: IProps) => {
                 allowFullScreen
                 title="video"
               />
-              {isMentor
-                && (
-                  <Tooltip title="Edit">
-                    <Button
-                      shape="circle"
-                      icon={(<EditOutlined />)}
-                      onClick={() => {
-                        setVisibleInputs({
-                          ...visibleInputs,
-                          video: !visibleInputs.video,
-                        });
-                      }}
-                    />
-                  </Tooltip>
-                )}
+
               {visibleInputs.video
                 && (
                   <AddItem
@@ -250,6 +313,20 @@ const TaskDescription: React.FC<IProps> = (props: IProps) => {
 
             </div>
           )}
+        <div>
+          {data.feedbacks.taskFeedbacks.map((item) => (
+            <p>
+              {item.rate}
+              {' '}
+              {item.comment}
+            </p>
+          ))}
+
+        </div>
+        {isMentor
+          ? <AddFeedback isFeedback={isFeedback} setData={setData} />
+          : (isFeedback
+          && <Feedback setData={setData} />)}
         {isMentor
           && (
             <div>
@@ -262,14 +339,15 @@ const TaskDescription: React.FC<IProps> = (props: IProps) => {
                 setVideo={setVideo}
                 text={text}
                 setText={setText}
+                comment={comment}
+                setComment={setComment}
+                url={url}
+                setUrl={setUrl}
+                description={description}
+                setDescription={setDescription}
               />
             </div>
           )}
-        {isMentor
-          ? <AddFeedback isFeedback={isFeedback} setIsFeedback={setIsFeedback} />
-          : (isFeedback
-          && <Feedback />)}
-
       </div>
     </>
   );

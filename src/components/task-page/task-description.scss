@@ -1,12 +1,31 @@
 .taskDescription {
-  width: 1020px;
+  width: 520px;
   margin: auto;
+  text-align: center;
+}
+
+.taskDescription__section {
+  margin: 24px 0;
+}
+
+.task-place {
+  > div{
+    margin: auto;
+  }
 }
 
 .taskDescription_date {
   display: flex;
-  margin: 5px;
-  flex-direction: column;
+  justify-content: center;
+}
+
+.taskDescription_title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  :first-child {
+    margin: 0 10px 0 0;
+  }
 }
 
 .taskDescription_date-day {

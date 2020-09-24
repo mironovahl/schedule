@@ -7,6 +7,9 @@ interface TVisibleInputs {
   photo: boolean;
   video: boolean;
   text: boolean;
+  comment: boolean;
+  url: boolean;
+  description: boolean;
 }
 
 interface IProps {
@@ -30,6 +33,14 @@ const addValue = (props: IProps): void => {
         ...visibleInputs,
         [property]: ![property],
       });
+      if (link === ' ') {
+        const newData = {
+          ...oldData,
+          [property]: '',
+        };
+        backendService.updateEvent(newData);
+        return newData;
+      }
       const newData = {
         ...oldData,
         [property]: link,

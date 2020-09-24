@@ -5,15 +5,42 @@ import {
   Button,
   Rate,
 } from 'antd';
+import { IEvent, IFeedbacks, IFeedback } from '../../interfaces/backend-interfaces';
+
+import BackendService from '../../services/backend-service';
 
 interface IProps {
   rate: number;
-  feedback: string;
+  comment: string;
+}
+interface IPropsData {
+  setData: React.Dispatch<React.SetStateAction<IEvent | null>>;
 }
 
-const Feedback = () => {
+const Feedback: React.FC<IPropsData> = ({ setData }: IPropsData) => {
+  const backendService = new BackendService();
   const onFinish = (values: IProps) => {
-    console.log('Received values of form: ', values);
+    const { rate, comment } = values;
+    setData((oldData: IEvent | null) => {
+      if (oldData) {
+        const newFeedback: IFeedback = {
+          rate,
+          comment,
+        };
+        const newTaskFeedbacks: IFeedback[] = [...oldData.feedbacks.taskFeedbacks, newFeedback];
+        const newFeedbacks: IFeedbacks = {
+          ...oldData.feedbacks,
+          taskFeedbacks: newTaskFeedbacks,
+        };
+        const newData = {
+          ...oldData,
+          feedbacks: newFeedbacks,
+        };
+        backendService.updateEvent(newData);
+        return newData;
+      }
+      return oldData;
+    });
   };
 
   return (
@@ -33,8 +60,8 @@ const Feedback = () => {
           <Rate />
         </Form.Item>
         <Form.Item
-          name="feedback"
-          label="Feedback"
+          name="comment"
+          label="Comment"
         >
           <Input placeholder="Поделитесь впечатлениями (необязательно)" />
         </Form.Item>
