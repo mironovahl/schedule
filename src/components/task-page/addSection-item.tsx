@@ -32,13 +32,16 @@ const AddItem = (props: IProps) => {
   return (
     <div>
       <p>Вставьте ссылку</p>
-      <Input placeholder={placeholder} onChange={(e) => onChangeValue(e, setFunc)} />
-      <Button onClick={() => addValue({
-        link, property, setData, visibleInputs, setVisibleInputs,
-      })}
-      >
-        Добавить
-      </Button>
+      <div className="addSection-inputs">
+        <Input placeholder={placeholder} onChange={(e) => onChangeValue(e, setFunc)} />
+        <Button onClick={() => addValue({
+          link, property, setData, visibleInputs, setVisibleInputs,
+        })}
+        >
+          Добавить
+        </Button>
+      </div>
+
     </div>
   );
 };

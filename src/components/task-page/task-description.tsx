@@ -16,6 +16,7 @@ import AddItem from './addSection-item';
 import SettingsContext from '../../context/settings-context';
 import AddFeedback from './addFeedback';
 import Feedback from './task-feedback';
+import ShowFeeback from './showFeedback';
 import {
   getDate,
   getTime,
@@ -159,11 +160,23 @@ const TaskDescription: React.FC<IProps> = (props: IProps) => {
           && (
             <div className="taskDescription__section">
               <h3>Ссылка</h3>
-              <Paragraph
-                editable={isMentor ? { onChange: (e) => changeValue(e, 'url') } : false}
-              >
-                <a href={data?.url}>{data?.url}</a>
-              </Paragraph>
+
+              <a href={data?.url}>{data?.url}</a>
+              {isMentor
+                && (
+                  <Tooltip title="Edit">
+                    <Button
+                      type="link"
+                      icon={(<EditOutlined />)}
+                      onClick={() => {
+                        setVisibleInputs({
+                          ...visibleInputs,
+                          url: !visibleInputs.url,
+                        });
+                      }}
+                    />
+                  </Tooltip>
+                )}
               {visibleInputs.url
                 && (
                   <AddItem
@@ -313,41 +326,36 @@ const TaskDescription: React.FC<IProps> = (props: IProps) => {
 
             </div>
           )}
-        <div>
-          {data.feedbacks.taskFeedbacks.map((item) => (
-            <p>
-              {item.rate}
-              {' '}
-              {item.comment}
-            </p>
-          ))}
-
-        </div>
         {isMentor
           ? <AddFeedback isFeedback={isFeedback} setData={setData} />
           : (isFeedback
           && <Feedback setData={setData} />)}
         {isMentor
           && (
-            <div>
-              <AddSection
-                data={data}
-                setData={setData}
-                photo={photo}
-                setPhoto={setPhoto}
-                video={video}
-                setVideo={setVideo}
-                text={text}
-                setText={setText}
-                comment={comment}
-                setComment={setComment}
-                url={url}
-                setUrl={setUrl}
-                description={description}
-                setDescription={setDescription}
-              />
-            </div>
+            <>
+              <div>
+                <AddSection
+                  data={data}
+                  setData={setData}
+                  photo={photo}
+                  setPhoto={setPhoto}
+                  video={video}
+                  setVideo={setVideo}
+                  text={text}
+                  setText={setText}
+                  comment={comment}
+                  setComment={setComment}
+                  url={url}
+                  setUrl={setUrl}
+                  description={description}
+                  setDescription={setDescription}
+                />
+              </div>
+              <ShowFeeback data={data} />
+
+            </>
           )}
+
       </div>
     </>
   );

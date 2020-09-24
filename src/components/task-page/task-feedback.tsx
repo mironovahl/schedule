@@ -45,9 +45,7 @@ const Feedback: React.FC<IPropsData> = ({ setData }: IPropsData) => {
 
   return (
     <div className="task-feedback">
-
       <h3>Оцените задание</h3>
-
       <Form
         name="feedback-form"
         onFinish={onFinish}

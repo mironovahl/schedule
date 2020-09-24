@@ -2,6 +2,10 @@
   width: 520px;
   margin: auto;
   text-align: center;
+  @media screen and (max-width: 520px) {
+    width: 100%;
+  }
+
 }
 
 .taskDescription__section {
@@ -17,6 +21,10 @@
 .taskDescription_date {
   display: flex;
   justify-content: center;
+  @media screen and (max-width: 480px) {
+    align-items: center;
+    flex-direction: column;
+  }
 }
 
 .taskDescription_title {
@@ -48,3 +56,14 @@
   }
 }
 
+.allFeedbacks-list {
+  max-height: 200px;
+  overflow: scroll;
+  overflow-x:hidden;
+  .feedback-item {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+  align-items: center;    
+  }
+}
