@@ -184,7 +184,7 @@ const Table: React.FC<TableProps> = ({ dataSource, organizers }: TableProps) => 
   const columns: ITableColumns[] = [
     {
       title: 'Date',
-      width: 150,
+      width: 100,
       dataIndex: 'startDate',
       key: 'date',
       columnVisible: columnsVisible.date,
@@ -207,7 +207,7 @@ const Table: React.FC<TableProps> = ({ dataSource, organizers }: TableProps) => 
     },
     {
       title: 'Type',
-      width: 170,
+      width: 120,
       dataIndex: 'type',
       key: 'type',
       columnVisible: columnsVisible.type,
@@ -234,7 +234,7 @@ const Table: React.FC<TableProps> = ({ dataSource, organizers }: TableProps) => 
     },
     {
       title: 'Place',
-      width: 200,
+      width: 140,
       dataIndex: 'place',
       key: 'place',
       columnVisible: columnsVisible.place,
@@ -275,7 +275,7 @@ const Table: React.FC<TableProps> = ({ dataSource, organizers }: TableProps) => 
     },
     {
       title: 'Details Url',
-      width: 150,
+      width: 110,
       key: 'details',
       columnVisible: columnsVisible.details,
       render: (record: IEvent) => <a href={`/task-page/${record.id}`}>See more</a>,
@@ -452,7 +452,7 @@ const Table: React.FC<TableProps> = ({ dataSource, organizers }: TableProps) => 
       classnames.push('table__row-active');
     }
     if (completedTask.includes(record.id)) {
-      classnames.push('done');
+      classnames.push('table__row_done');
     }
     if (isDeadlinePassed(record.endDate)) {
       classnames.push('passed');
