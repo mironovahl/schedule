@@ -30,6 +30,10 @@ const setCompletedTask = (completedTask: string[]): void => {
   localStorage.setItem('completedTask', JSON.stringify(completedTask));
 };
 
+const setFontSize = (fontSize: string): void => {
+  localStorage.setItem('fontSize', fontSize);
+};
+
 const getTimezone = (): SettingsInterfaces.Timezone => {
   if (localStorage.getItem('timezone') === null) {
     const timezone = Intl.DateTimeFormat()
@@ -64,6 +68,8 @@ const getCompletedTask = (): string[] => {
   return JSON.parse(completedTask);
 };
 
+const getFontSize = (): string => localStorage.getItem('fontSize') || defaultSettings.fontSize;
+
 export default class SettingsService {
   static getAllSettings(): SettingsInterfaces.ISettings {
     const scheduleView: SettingsInterfaces.ScheduleView = getScheduleView();
@@ -73,6 +79,7 @@ export default class SettingsService {
     const hiddenCols: IColumnsVisibility = getHiddenCols();
     const user: string = getUser();
     const completedTask: string[] = getCompletedTask();
+    const fontSize: string = getFontSize();
 
     return {
       scheduleView,
@@ -82,6 +89,7 @@ export default class SettingsService {
       hiddenCols,
       user,
       completedTask,
+      fontSize,
     };
   }
 
@@ -93,5 +101,6 @@ export default class SettingsService {
     setHiddenCols(settings.hiddenCols);
     setUser(settings.user);
     setCompletedTask(settings.completedTask);
+    setFontSize(settings.fontSize);
   }
 }

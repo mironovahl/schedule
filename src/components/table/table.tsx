@@ -261,7 +261,7 @@ const Table: React.FC<TableProps> = ({ dataSource, organizers }: TableProps) => 
     },
     {
       title: 'Organizer',
-      width: 100,
+      width: 120,
       dataIndex: 'organizerID',
       key: 'organizerID',
       columnVisible: columnsVisible.description,

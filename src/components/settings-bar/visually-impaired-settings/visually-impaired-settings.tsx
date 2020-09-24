@@ -1,12 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import {
   Button, Modal, Space, Radio,
 } from 'antd';
 import { EyeOutlined } from '@ant-design/icons';
 
+import SettingsContext from '../../../context/settings-context';
+
 const VisuallyImpairedSettings = () => {
   const [isSettingsVisible, setSettingsVisible] = useState<boolean>(false);
-  const [fontSize, setFontSize] = useState<string>('10px');
+  const { fontSize, changeContext } = useContext(SettingsContext);
+
+  useEffect(() => {
+    const html = document.querySelector('html');
+    html!.style.fontSize = fontSize;
+  });
+
   const showSettings = () => {
     setSettingsVisible(true);
   };
@@ -18,7 +26,7 @@ const VisuallyImpairedSettings = () => {
   const handleFontSizeChange = (e: any): void => {
     const html = document.querySelector('html');
     html!.style.fontSize = e.target.value;
-    setFontSize(e.target.value);
+    changeContext({ fontSize: e.target.value });
   };
 
   return (
