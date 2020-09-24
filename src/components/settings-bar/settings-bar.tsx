@@ -3,6 +3,7 @@ import { Row, Col, Select } from 'antd';
 import { Timezone, TaskSettings } from '../../interfaces/settings-interfaces';
 import timezones from '../../config/timezones';
 import ColorSettings from './color-settings/color-settings';
+import VisuallyImpairedSettings from './visually-impaired-settings/visually-impaired-settings';
 
 type SettingsBarProps = {
   timezone: Timezone;
@@ -29,7 +30,8 @@ const SettingsBar: React.FC<SettingsBarProps> = ({
           ))}
         </Select>
       </Col>
-      <Col>
+      <Col style={{ display: 'flex', alignItems: 'center' }}>
+        <VisuallyImpairedSettings />
         <ColorSettings defaultValue={tasksSettings} onChange={onTasksSettingsChange} />
       </Col>
     </Row>
