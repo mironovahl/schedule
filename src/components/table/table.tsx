@@ -260,7 +260,8 @@ const Table: React.FC<TableProps> = ({ dataSource, organizers }: TableProps) => 
       editable: true,
     },
     {
-      title: 'Организатор',
+      title: 'Organizer',
+      width: 100,
       dataIndex: 'organizerID',
       key: 'organizerID',
       columnVisible: columnsVisible.description,
