@@ -128,7 +128,9 @@ const Table: React.FC<TableProps> = ({ dataSource, organizers }: TableProps) => 
   });
   const [menuVisible, setMenuVisible] = useState<boolean>(false);
 
-  const { taskSettings, completedTask, hiddenRows, changeContext } = useContext(
+  const {
+    taskSettings, completedTask, hiddenRows, changeContext,
+  } = useContext(
     SettingsContext,
   );
 
@@ -396,6 +398,12 @@ const Table: React.FC<TableProps> = ({ dataSource, organizers }: TableProps) => 
       (column) => column.columnVisible === true,
     );
   }
+
+  useEffect(() => {
+    if (user !== 'mentor') {
+      setEditingKey('');
+    }
+  }, [user]);
 
   const menu: JSX.Element = (
     <Menu>
