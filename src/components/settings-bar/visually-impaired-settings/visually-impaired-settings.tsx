@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
 import {
-  Button, Modal, Space, Radio,
+  Button, Modal, Space, Radio, Tooltip,
 } from 'antd';
 import { EyeOutlined } from '@ant-design/icons';
 
@@ -31,19 +31,22 @@ const VisuallyImpairedSettings = () => {
 
   return (
     <>
-      <Button
-        style={{ marginRight: 10 }}
-        icon={<EyeOutlined />}
-        onClick={showSettings}
-      />
+      <Tooltip placement="topLeft" title="Font settings">
+        <Button
+          style={{ marginRight: 10 }}
+          icon={<EyeOutlined />}
+          onClick={showSettings}
+        />
+      </Tooltip>
+
       <Modal
-        title="Visually Impaired Settings"
+        title="Font settings"
         visible={isSettingsVisible}
         footer={null}
         onCancel={handleCancelClick}
       >
         <Space direction="vertical">
-          <Space>Font size:</Space>
+          <Space>Choose font size:</Space>
           <Space>
             <Radio.Group
               value={fontSize}
