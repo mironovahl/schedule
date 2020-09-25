@@ -128,7 +128,9 @@ const Table: React.FC<TableProps> = ({ dataSource, organizers }: TableProps) => 
   });
   const [menuVisible, setMenuVisible] = useState<boolean>(false);
 
-  const { taskSettings, completedTask, hiddenRows, changeContext } = useContext(
+  const {
+    taskSettings, completedTask, hiddenRows, changeContext,
+  } = useContext(
     SettingsContext,
   );
 

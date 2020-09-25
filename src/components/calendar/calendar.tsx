@@ -167,10 +167,16 @@ const Calendar: React.FC<CalendarProps> = ({ dataSource }: CalendarProps) => {
           </div>
           <div className="calendar__legend">
             <List
-              dataSource={DateService.eventsSortByDate(getMonthData(value))}
+              dataSource={
+                Array.from(
+                  new Set(
+                    DateService.eventsSortByDate(getMonthData(value)).map(({ type }) => type),
+                  ),
+                )
+              }
               split={false}
               size="small"
-              renderItem={({ type }: IEvent) => (
+              renderItem={(type: string) => (
                 <List.Item>
                   <Badge
                     color={taskSettings[type].color}
