@@ -1,7 +1,11 @@
 .list-item {
-  transition: all 0.7s ease-in-out;
   padding: 12px 10px !important;
   user-select: none;
+  transition: all 0.7s ease-in-out;
+}
+
+.list-item_passed {
+  opacity: 0.35;
 }
 
 .list-item_done {
@@ -11,10 +15,6 @@
 
 .list-item_active {
   background-color: #f5f5f5;
-}
-
-.list-item_passed {
-  opacity: 0.6;
 }
 
 .hidden {
@@ -43,9 +43,9 @@
 }
 
 .list-item__github-icon {
-  background-image: url(../../../public/img/github.svg);
-  background-repeat: no-repeat;
-  margin: 0 auto;
   width: 30px;
   height: 30px;
+  margin: 0 auto;
+  background-image: url(../../../public/img/github.svg);
+  background-repeat: no-repeat;
 }

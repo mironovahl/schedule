@@ -3,10 +3,14 @@
 }
 
 .passed {
-  opacity: 0.6;
+  opacity: 0.35;
 }
 
-.done {
+.table__row-active {
+  background-color: #f5f5f5;
+}
+
+.table__row_done {
   background-color: rgba(0, 255, 42, 0.11);
   opacity: 0.5;
 }
@@ -20,8 +24,4 @@
       background: unset !important;
     }
   }
-}
-
-.table__row-active {
-  background-color: #f5f5f5;
 }
