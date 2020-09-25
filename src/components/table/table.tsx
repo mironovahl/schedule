@@ -61,6 +61,13 @@ const EditableCell: React.FC<EditableCellProps> = ({
   const inputNode = <Input />;
   const dateFormat = 'DD-MM-YYYY';
 
+  const onChange = (date: any) => {
+    // const [taskDate, setTaskDate] = useState(record.startDate);
+    // console.log(taskDate);
+    // setTaskDate(date);
+    console.log(date);
+  };
+
   return (
     // eslint-disable-next-line react/jsx-props-no-spreading
     <td {...restProps}>
@@ -68,6 +75,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
         <DatePicker
           defaultValue={moment(getDate(record.startDate), dateFormat)}
           format={dateFormat}
+          onChange={onChange}
         />
       ) : editing ? (
         <Form.Item
@@ -142,6 +150,7 @@ const Table: React.FC<TableProps> = ({ dataSource, organizers }: TableProps) => 
   const [form] = Form.useForm();
   const [data, setData] = useState(dataSource);
   const [editingKey, setEditingKey] = useState<string>('');
+  // const [taskDate, setTaskDate] = useState(dataSource.startDate);
 
   const { user } = useContext(SettingsContext);
 
@@ -161,15 +170,18 @@ const Table: React.FC<TableProps> = ({ dataSource, organizers }: TableProps) => 
       const row = (await form.validateFields()) as IEvent;
       const newData = [...data];
       const index = newData.findIndex((item) => key === item.key);
+      // const [taskDate, setTaskDate] = useState(newData[index].startDate);
       if (index > -1) {
         const item = newData[index];
+        // setTaskDate(date);
+        console.log(item);
         newData.splice(index, 1, {
           ...item,
           ...row,
         });
         setData(newData);
         backendService.updateEvent(newData[index]);
-
+        console.log(newData[index]);
         setEditingKey('');
       } else {
         newData.push(row);

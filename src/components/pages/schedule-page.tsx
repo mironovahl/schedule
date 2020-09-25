@@ -50,7 +50,7 @@ const SchedulePage: React.FC = () => {
 
   const viewMapping = {
     table: <Table dataSource={tableData} organizers={organizersData} />,
-    list: <ListPage dataSource={tableData} />,
+    list: <ListPage dataSource={tableData} organizers={organizersData} />,
     calendar: <Calendar dataSource={tableData} />,
   };
 

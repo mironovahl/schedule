@@ -37,3 +37,15 @@
   transform: scale(1, 1);
   transform: translateY(30px);
 }
+
+.list-item__organizer {
+  max-width: 30px;
+}
+
+.list-item__github-icon {
+  width: 30px;
+  height: 30px;
+  margin: 0 auto;
+  background-image: url(../../../public/img/github.svg);
+  background-repeat: no-repeat;
+}
