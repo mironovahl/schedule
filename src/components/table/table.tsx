@@ -21,8 +21,6 @@ import {
 } from 'antd';
 import { DownOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
 
-import moment from 'moment';
-
 import RenderTag from '../type-task';
 import DownloadTasksButton from '../download-tasks';
 import SettingsContext from '../../context/settings-context';
@@ -55,28 +53,32 @@ const EditableCell: React.FC<EditableCellProps> = ({
   dataIndex,
   title,
   children,
-  record,
   ...restProps
 }: EditableCellProps) => {
   const inputNode = <Input />;
   const dateFormat = 'DD-MM-YYYY';
-
-  const onChange = (date: any) => {
-    // const [taskDate, setTaskDate] = useState(record.startDate);
-    // console.log(taskDate);
-    // setTaskDate(date);
-    console.log(date);
-  };
+  const dateNode = (
+    <DatePicker
+      format={dateFormat}
+    />
+  );
 
   return (
     // eslint-disable-next-line react/jsx-props-no-spreading
     <td {...restProps}>
       {title === 'Date' && editing ? (
-        <DatePicker
-          defaultValue={moment(getDate(record.startDate), dateFormat)}
-          format={dateFormat}
-          onChange={onChange}
-        />
+        <Form.Item
+          name={dataIndex}
+          style={{ margin: 0 }}
+          rules={[
+            {
+              required: true,
+              message: `Please Input ${title}!`,
+            },
+          ]}
+        >
+          {dateNode}
+        </Form.Item>
       ) : editing ? (
         <Form.Item
           name={dataIndex}
@@ -126,9 +128,7 @@ const Table: React.FC<TableProps> = ({ dataSource, organizers }: TableProps) => 
   });
   const [menuVisible, setMenuVisible] = useState<boolean>(false);
 
-  const {
-    taskSettings, completedTask, hiddenRows, changeContext,
-  } = useContext(
+  const { taskSettings, completedTask, hiddenRows, changeContext } = useContext(
     SettingsContext,
   );
 
@@ -150,7 +150,6 @@ const Table: React.FC<TableProps> = ({ dataSource, organizers }: TableProps) => 
   const [form] = Form.useForm();
   const [data, setData] = useState(dataSource);
   const [editingKey, setEditingKey] = useState<string>('');
-  // const [taskDate, setTaskDate] = useState(dataSource.startDate);
 
   const { user } = useContext(SettingsContext);
 
@@ -170,18 +169,14 @@ const Table: React.FC<TableProps> = ({ dataSource, organizers }: TableProps) => 
       const row = (await form.validateFields()) as IEvent;
       const newData = [...data];
       const index = newData.findIndex((item) => key === item.key);
-      // const [taskDate, setTaskDate] = useState(newData[index].startDate);
       if (index > -1) {
         const item = newData[index];
-        // setTaskDate(date);
-        console.log(item);
         newData.splice(index, 1, {
           ...item,
           ...row,
         });
         setData(newData);
         backendService.updateEvent(newData[index]);
-        console.log(newData[index]);
         setEditingKey('');
       } else {
         newData.push(row);
@@ -278,11 +273,7 @@ const Table: React.FC<TableProps> = ({ dataSource, organizers }: TableProps) => 
       key: 'organizerID',
       columnVisible: columnsVisible.description,
       render: (organizerID: string) => (
-        <>
-          {
-            organizers.find((item) => item.id === organizerID)!.name
-          }
-        </>
+        <>{organizers.find((item) => item.id === organizerID)!.name}</>
       ),
     },
     {
@@ -476,17 +467,30 @@ const Table: React.FC<TableProps> = ({ dataSource, organizers }: TableProps) => 
     <>
       <Row justify="space-between">
         <Col>
-          <Button style={{ margin: '0 10px 0 0' }} disabled={hiddenRows.length < 1} onClick={onShowClick}>
+          <Button
+            style={{ margin: '0 10px 0 0' }}
+            disabled={hiddenRows.length < 1}
+            onClick={onShowClick}
+          >
             Show hidden rows
           </Button>
-          <Button style={{ margin: '0 10px 0 0' }} type="dashed" disabled={activeRows.length < 1} onClick={onHideClick}>
+          <Button
+            style={{ margin: '0 10px 0 0' }}
+            type="dashed"
+            disabled={activeRows.length < 1}
+            onClick={onHideClick}
+          >
             <EyeInvisibleOutlined />
             Hide rows
           </Button>
           <DownloadTasksButton data={dataSource} />
         </Col>
         <Col>
-          <Dropdown overlay={menu} onVisibleChange={handleVisibleChange} visible={menuVisible}>
+          <Dropdown
+            overlay={menu}
+            onVisibleChange={handleVisibleChange}
+            visible={menuVisible}
+          >
             <Button style={{ marginBottom: 15 }}>
               Show/Hide columns
               <DownOutlined />
