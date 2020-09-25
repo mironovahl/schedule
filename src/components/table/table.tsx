@@ -21,8 +21,6 @@ import {
 } from 'antd';
 import { DownOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
 
-import moment from 'moment';
-
 import RenderTag from '../type-task';
 import DownloadTasksButton from '../download-tasks';
 import SettingsContext from '../../context/settings-context';
@@ -55,20 +53,32 @@ const EditableCell: React.FC<EditableCellProps> = ({
   dataIndex,
   title,
   children,
-  record,
   ...restProps
 }: EditableCellProps) => {
   const inputNode = <Input />;
   const dateFormat = 'DD-MM-YYYY';
+  const dateNode = (
+    <DatePicker
+      format={dateFormat}
+    />
+  );
 
   return (
     // eslint-disable-next-line react/jsx-props-no-spreading
     <td {...restProps}>
       {title === 'Date' && editing ? (
-        <DatePicker
-          defaultValue={moment(getDate(record.startDate), dateFormat)}
-          format={dateFormat}
-        />
+        <Form.Item
+          name={dataIndex}
+          style={{ margin: 0 }}
+          rules={[
+            {
+              required: true,
+              message: `Please Input ${title}!`,
+            },
+          ]}
+        >
+          {dateNode}
+        </Form.Item>
       ) : editing ? (
         <Form.Item
           name={dataIndex}
@@ -118,9 +128,7 @@ const Table: React.FC<TableProps> = ({ dataSource, organizers }: TableProps) => 
   });
   const [menuVisible, setMenuVisible] = useState<boolean>(false);
 
-  const {
-    taskSettings, completedTask, hiddenRows, changeContext,
-  } = useContext(
+  const { taskSettings, completedTask, hiddenRows, changeContext } = useContext(
     SettingsContext,
   );
 
@@ -169,7 +177,6 @@ const Table: React.FC<TableProps> = ({ dataSource, organizers }: TableProps) => 
         });
         setData(newData);
         backendService.updateEvent(newData[index]);
-
         setEditingKey('');
       } else {
         newData.push(row);
@@ -184,7 +191,7 @@ const Table: React.FC<TableProps> = ({ dataSource, organizers }: TableProps) => 
   const columns: ITableColumns[] = [
     {
       title: 'Date',
-      width: 150,
+      width: 100,
       dataIndex: 'startDate',
       key: 'date',
       columnVisible: columnsVisible.date,
@@ -207,7 +214,7 @@ const Table: React.FC<TableProps> = ({ dataSource, organizers }: TableProps) => 
     },
     {
       title: 'Type',
-      width: 170,
+      width: 120,
       dataIndex: 'type',
       key: 'type',
       columnVisible: columnsVisible.type,
@@ -234,7 +241,7 @@ const Table: React.FC<TableProps> = ({ dataSource, organizers }: TableProps) => 
     },
     {
       title: 'Place',
-      width: 200,
+      width: 140,
       dataIndex: 'place',
       key: 'place',
       columnVisible: columnsVisible.place,
@@ -266,16 +273,12 @@ const Table: React.FC<TableProps> = ({ dataSource, organizers }: TableProps) => 
       key: 'organizerID',
       columnVisible: columnsVisible.description,
       render: (organizerID: string) => (
-        <>
-          {
-            organizers.find((item) => item.id === organizerID)!.name
-          }
-        </>
+        <>{organizers.find((item) => item.id === organizerID)!.name}</>
       ),
     },
     {
       title: 'Details Url',
-      width: 150,
+      width: 110,
       key: 'details',
       columnVisible: columnsVisible.details,
       render: (record: IEvent) => <a href={`/task-page/${record.id}`}>See more</a>,
@@ -452,7 +455,7 @@ const Table: React.FC<TableProps> = ({ dataSource, organizers }: TableProps) => 
       classnames.push('table__row-active');
     }
     if (completedTask.includes(record.id)) {
-      classnames.push('done');
+      classnames.push('table__row_done');
     }
     if (isDeadlinePassed(record.endDate)) {
       classnames.push('passed');
@@ -464,17 +467,30 @@ const Table: React.FC<TableProps> = ({ dataSource, organizers }: TableProps) => 
     <>
       <Row justify="space-between">
         <Col>
-          <Button style={{ margin: '0 10px 0 0' }} disabled={hiddenRows.length < 1} onClick={onShowClick}>
+          <Button
+            style={{ margin: '0 10px 0 0' }}
+            disabled={hiddenRows.length < 1}
+            onClick={onShowClick}
+          >
             Show hidden rows
           </Button>
-          <Button style={{ margin: '0 10px 0 0' }} type="dashed" disabled={activeRows.length < 1} onClick={onHideClick}>
+          <Button
+            style={{ margin: '0 10px 0 0' }}
+            type="dashed"
+            disabled={activeRows.length < 1}
+            onClick={onHideClick}
+          >
             <EyeInvisibleOutlined />
             Hide rows
           </Button>
           <DownloadTasksButton data={dataSource} />
         </Col>
         <Col>
-          <Dropdown overlay={menu} onVisibleChange={handleVisibleChange} visible={menuVisible}>
+          <Dropdown
+            overlay={menu}
+            onVisibleChange={handleVisibleChange}
+            visible={menuVisible}
+          >
             <Button style={{ marginBottom: 15 }}>
               Show/Hide columns
               <DownOutlined />
