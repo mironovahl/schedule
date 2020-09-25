@@ -1,6 +1,6 @@
 /* eslint-disable sonarjs/cognitive-complexity */
 import React, {
-  useState, Dispatch, SetStateAction, useContext,
+  useState, Dispatch, SetStateAction, useContext, useEffect,
 } from 'react';
 import {
   Typography, DatePicker, Image, Button, Tooltip, Divider,
@@ -49,6 +49,12 @@ const TaskDescription: React.FC<IProps> = (props: IProps) => {
   const [url, setUrl] = useState<string>(data.url);
   const [description, setDescription] = useState<string>(data.description);
   const isFeedback: boolean = data.feedbacks.isFeedbackEnable;
+  const { fontSize } = useContext(SettingsContext);
+
+  useEffect(() => {
+    const html = document.querySelector('html');
+    html!.style.fontSize = fontSize;
+  });
 
   const [visibleInputs, setVisibleInputs] = useState<TVisibleInputs>({
     photo: false,

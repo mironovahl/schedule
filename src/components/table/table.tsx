@@ -128,7 +128,9 @@ const Table: React.FC<TableProps> = ({ dataSource, organizers }: TableProps) => 
   });
   const [menuVisible, setMenuVisible] = useState<boolean>(false);
 
-  const { taskSettings, completedTask, hiddenRows, changeContext } = useContext(
+  const {
+    taskSettings, completedTask, hiddenRows, changeContext,
+  } = useContext(
     SettingsContext,
   );
 
@@ -191,13 +193,14 @@ const Table: React.FC<TableProps> = ({ dataSource, organizers }: TableProps) => 
   const columns: ITableColumns[] = [
     {
       title: 'Date',
-      width: 100,
+      width: 150,
       dataIndex: 'startDate',
       key: 'date',
       columnVisible: columnsVisible.date,
       render: (date, record) => (
         <>
           {getDate(date)}
+          <br />
           <Tag color="red">{getDeadline(record.endDate)}</Tag>
         </>
       ),
@@ -214,7 +217,7 @@ const Table: React.FC<TableProps> = ({ dataSource, organizers }: TableProps) => 
     },
     {
       title: 'Type',
-      width: 120,
+      width: 170,
       dataIndex: 'type',
       key: 'type',
       columnVisible: columnsVisible.type,
@@ -241,7 +244,7 @@ const Table: React.FC<TableProps> = ({ dataSource, organizers }: TableProps) => 
     },
     {
       title: 'Place',
-      width: 140,
+      width: 200,
       dataIndex: 'place',
       key: 'place',
       columnVisible: columnsVisible.place,
@@ -278,7 +281,7 @@ const Table: React.FC<TableProps> = ({ dataSource, organizers }: TableProps) => 
     },
     {
       title: 'Details Url',
-      width: 110,
+      width: 150,
       key: 'details',
       columnVisible: columnsVisible.details,
       render: (record: IEvent) => <a href={`/task-page/${record.id}`}>See more</a>,
