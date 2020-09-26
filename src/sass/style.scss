@@ -41,6 +41,16 @@ body {
   font-size: 1.4rem !important;
 }
 
+// task-page
+.taskDescription {
+  h2.ant-typography {
+    font-size: 3rem !important;
+  }
+  .ant-list-item {
+    font-size: 1.4rem !important;
+  }
+}
+
 // modal
 .ant-modal-title,
 .ant-modal-body,
@@ -49,7 +59,6 @@ body {
 }
 
 // others
-// .ant-btn,
 .ant-select,
 .ant-radio-button-wrapper,
 .ant-dropdown-menu-item,

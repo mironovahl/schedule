@@ -1,12 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import {
-  Button, Modal, Space, Radio,
+  Button, Modal, Space, Radio, Tooltip,
 } from 'antd';
 import { EyeOutlined } from '@ant-design/icons';
 
+import SettingsContext from '../../../context/settings-context';
+
 const VisuallyImpairedSettings = () => {
   const [isSettingsVisible, setSettingsVisible] = useState<boolean>(false);
-  const [fontSize, setFontSize] = useState<string>('10px');
+  const { fontSize, changeContext } = useContext(SettingsContext);
+
+  useEffect(() => {
+    const html = document.querySelector('html');
+    html!.style.fontSize = fontSize;
+  });
+
   const showSettings = () => {
     setSettingsVisible(true);
   };
@@ -18,24 +26,27 @@ const VisuallyImpairedSettings = () => {
   const handleFontSizeChange = (e: any): void => {
     const html = document.querySelector('html');
     html!.style.fontSize = e.target.value;
-    setFontSize(e.target.value);
+    changeContext({ fontSize: e.target.value });
   };
 
   return (
     <>
-      <Button
-        style={{ marginRight: 10 }}
-        icon={<EyeOutlined />}
-        onClick={showSettings}
-      />
+      <Tooltip placement="topLeft" title="Font settings">
+        <Button
+          style={{ marginRight: 10 }}
+          icon={<EyeOutlined />}
+          onClick={showSettings}
+        />
+      </Tooltip>
+
       <Modal
-        title="Visually Impaired Settings"
+        title="Font settings"
         visible={isSettingsVisible}
         footer={null}
         onCancel={handleCancelClick}
       >
         <Space direction="vertical">
-          <Space>Font size:</Space>
+          <Space>Choose font size:</Space>
           <Space>
             <Radio.Group
               value={fontSize}

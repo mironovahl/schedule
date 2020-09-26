@@ -28,4 +28,5 @@ export interface ISettings {
   hiddenCols: IColumnsVisibility;
   user: string;
   completedTask: string[];
+  fontSize: string;
 }

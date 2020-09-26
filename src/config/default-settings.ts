@@ -120,6 +120,7 @@ const defaultSettings: ISettings = {
   },
   user: 'student',
   completedTask: [],
+  fontSize: '10px',
 };
 
 export default defaultSettings;
