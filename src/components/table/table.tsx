@@ -400,6 +400,12 @@ const Table: React.FC<TableProps> = ({ dataSource, organizers }: TableProps) => 
     );
   }
 
+  useEffect(() => {
+    if (user !== 'mentor') {
+      setEditingKey('');
+    }
+  }, [user]);
+
   const menu: JSX.Element = (
     <Menu>
       <Menu.ItemGroup>
