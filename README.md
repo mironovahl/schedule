@@ -1,4 +1,96 @@
-# Schedule
+# RsSchedule
+
+### Educational project within [RsSchool](https://rs.school/) 2020 React
+
+###### You can peek into [Task requirements](https://github.com/rolling-scopes-school/tasks/blob/master/tasks/schedule.md) yourself.
+
+##### The project is an application, dedicated for RsSchool students, which allows you to use the built-in schedule. It is presented in the form of a table, list and calendar. 
+
+###### Design of our application [Figma Design](https://www.figma.com/file/v3tY3yYAt4oPpaBsBxR1nd/RSSchedule?node-id=0%3A1).
+
+#### You can try it [here]().
+
+<hr>
+
+### Some screenshots:
+
+##### Table
+
+[![Alt text](https://i.ibb.co/kQ2BgKK/Table.png)](https://ibb.co/Bq23VLL)
+
+<hr>
+
+##### List
+
+[![Alt text](https://i.ibb.co/LhJkGrN/List.png)](https://ibb.co/R4Bv5Nj)
+
+<hr>
+
+##### Calendar
+
+[![Alt text](https://i.ibb.co/Gpyy36f/Calendar.png)](https://ibb.co/yPttB9m)
+
+<hr>
+
+##### Task Page
+
+[![Alt text](https://i.ibb.co/dPgjtNq/Task-Page.png)](https://ibb.co/WktG0rw)
+
+<hr>
+
+### Our development team:
+
+- [Oleg Rashinskiy](https://github.com/Kefan1997) : Project Manager, Developer
+- [Valeria Korzhenevskaya](https://github.com/ValeriaKorzhenevskaya) : Developer
+- [Katefaith](https://github.com/katefaith) : Developer
+- [RemyJS](https://github.com/RemyJS) : Developer
+- [Elena Mironovah](https://github.com/mironovahl) : Developer
+- [Evgeniy](https://github.com/jeka2100) : Developer
+- [Mergen](https://github.com/skaltus) : Developer
+
+<hr>
+
+### We are using:
+
+- React: 16.13.1,
+- Ant-Design: 4.2.2, 
+- TypeScript: 4.0.2,
+- TypeScript-eslint: 3.10.1,
+- Moment: 2.27.0,
+- Eslint: 6.7.2,
+- Babel-eslint: 10.1.0,
+- Husky: 4.2.5,
+- Webpack: 4.44.1,
+- and other stuff
+
+<hr>
+
+#### Project setup
+
+##### If you want to run it yourself you should use those comands:
+
+```
+npm install
+```
+
+##### Compiles and hot-reloads for development
+
+```
+npm run start
+```
+
+##### Compiles and minifies for production
+
+```
+npm run build
+```
+
+##### Lints and fixes files
+
+```
+npm run lint
+```
+
 
 ## Критерии оценки:
 
@@ -43,10 +135,10 @@
   - [x] в процессе редактирования ментор сразу видит, как будет выглядеть таблица с расписанием +10
   - [ ] в процессе редактирования есть возможность предпросмотра расписания в виде календаря +10
   - [ ] в процессе редактирования есть возможность предпросмотра расписания в виде списка +10
-  - [ ] при редактировании расписания дату можно выбрать на календаре +10
+  - [x] при редактировании расписания дату можно выбрать на календаре +10
   - [x] при редактировании расписания есть возможность выбора часового пояса +10
   - [x] при редактировании расписания есть возможность изменять цвет фона и цвет шрифта для выделения заданий разных типов +10
-  - [] *????* в ходе редактирования расписания есть возможность добавлять новые типы заданий и выбирать для них цвет фона и цвет шрифта +20
+  - [ ] в ходе редактирования расписания есть возможность добавлять новые типы заданий и выбирать для них цвет фона и цвет шрифта +20
   - [x] у ментора есть возможность редактирования страницы задания +10
   - [x] редактирование страницы задания организовано понятно и удобно - интуитивно понятный интерфейс, наличие необходимых подсказок, доступные элементы управления +10
   - [x] в процессе редактирования на страницу задания можно добавлять текст, ссылки, фото и видео +20
@@ -58,7 +150,7 @@
 
   - [x] выбранные пользователем способ отображения расписания, часовой пояс, видимость колонок, применённые фильтры, выбранный цвет фона и цвет шрифта, скрытые ряды, другие применённые настройки, если они есть, сохраняются в localStorage так, что при обновлении страницы состояние расписания сохраняется +10
   - [ ] определите эффективность использования [виртуализации рядов](https://web.dev/virtualize-long-lists-react-window/), других способы оптимизации производительности приложения. Примените наиболее эффективные способы для оптимизации производительности приложения +20
-  - [ ] в расписание внесены дополнительные не указанные в задании полезные усовершенствования, которые облегчают работу с ним, делают его более удобным и функциональным, улучшают внешний вид и т.д. +10 баллов за каждое полезное качественно выполненное усовершенствование\*, но не более 80 баллов
+  - [x] в расписание внесены дополнительные не указанные в задании полезные усовершенствования, которые облегчают работу с ним, делают его более удобным и функциональным, улучшают внешний вид и т.д. +10 баллов за каждое полезное качественно выполненное усовершенствование\*, но не более 80 баллов
 
 - **Использованные технологии +40**
 
@@ -66,7 +158,7 @@
   - [x] Ant Design of React +10
 
 - **Документирование кода +20**
-  - [ ] создана и оформлена документация, позволяющая другим разработчикам понять особенности работы приложения + 20
+  - [x] создана и оформлена документация, позволяющая другим разработчикам понять особенности работы приложения + 20
 
 - **Целесообразность интеграции в rs app +40**
 
