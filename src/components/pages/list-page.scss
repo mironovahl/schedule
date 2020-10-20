@@ -1,0 +1,51 @@
+.list-item {
+  padding: 12px 10px !important;
+  user-select: none;
+  transition: all 0.7s ease-in-out;
+}
+
+.list-item_passed {
+  opacity: 0.35;
+}
+
+.list-item_done {
+  background-color: rgba(0, 255, 42, 0.11);
+  opacity: 0.5;
+}
+
+.list-item_active {
+  background-color: #dee1e8;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.list-item .ant-checkbox-wrapper {
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  font-weight: 600;
+}
+
+.list-item__load-more {
+  width: 100%;
+}
+
+.list-item.active {
+  box-shadow: 0 0px 15px rgb(0 0 0 / 19%);
+  transform: scale(1, 1);
+  transform: translateY(30px);
+}
+
+.list-item__organizer {
+  max-width: 30px;
+}
+
+.list-item__github-icon {
+  width: 30px;
+  height: 30px;
+  margin: 0 auto;
+  background-image: url(../../../public/img/github.svg);
+  background-repeat: no-repeat;
+}

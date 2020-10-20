@@ -1,0 +1,27 @@
+.hidden {
+  display: none;
+}
+
+.passed {
+  opacity: 0.35;
+}
+
+.table__row-active {
+  background-color: #dee1e8;
+}
+
+.table__row_done {
+  background-color: rgba(0, 255, 42, 0.11);
+  opacity: 0.5;
+}
+
+.table__row {
+  cursor: pointer;
+  user-select: none;
+
+  &:hover {
+    td {
+      background: unset !important;
+    }
+  }
+}

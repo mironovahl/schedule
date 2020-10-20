@@ -1,0 +1,12 @@
+.addIcon {
+  font-size: 32px;
+}
+
+.addSection-inputs {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  input {
+    width: calc(100% - 100px);
+  }
+}
